@@ -1,0 +1,43 @@
+<idea-plugin>
+    <id>com.github.passerr.idea.plugins</id>
+    <name>PasseRR Idea Plugins</name>
+    <vendor email="xie__hai@sina.com" url="https://github.com/PasseRR/idea-passerr-plugin">
+        PasseRR
+    </vendor>
+
+    <description><![CDATA[
+      <p>
+        Switch easily between CamelCase, camelCase, snake_case and SNAKE_CASE. See Edit menu or use SHIFT + ALT + U.
+      </p>
+      ]]></description>
+
+    <change-notes>
+        <![CDATA[
+          <p>1.0.0:
+          <ul>
+            <li>Add Camel Case Plugin</li>
+          </ul>
+          </p>
+      ]]>
+    </change-notes>
+
+    <idea-version since-build="140.0"/>
+
+    <depends>com.intellij.modules.lang</depends>
+
+    <application-components/>
+
+    <project-components/>
+
+    <actions>
+        <action id="ToggleCamelCase"
+                class="com.github.passerr.idea.plugins.camel.ToggleCamelCase"
+                text="Toggle Camel Case"
+                description="Switches between CamelCase, camelCase, snake_case and SNAKE_CASE">
+            <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij"/>
+</idea-plugin>
