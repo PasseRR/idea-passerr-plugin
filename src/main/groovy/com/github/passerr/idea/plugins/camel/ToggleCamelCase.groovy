@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils
 import org.jetbrains.annotations.NotNull
 
 import java.util.stream.IntStream
+
 /**
  * 驼峰命名切换
  * @author xiehai1
@@ -76,6 +77,11 @@ class ToggleCamelCase extends MultiCaretCodeInsightAction {
         }
     }
 
+    /**
+     * camelCase to snake_case
+     * @param text camelCase
+     * @return snake_case
+     */
     private static String toSnakeCase(String text) {
         def result = new StringBuilder().append(Character.toLowerCase(text.charAt(0)))
         IntStream.range(1, text.length()).forEach({ i ->
@@ -91,6 +97,11 @@ class ToggleCamelCase extends MultiCaretCodeInsightAction {
         result.toString()
     }
 
+    /**
+     * SNAKE_CASE to SnakeCase
+     * @param text SNAKE_CASE
+     * @return SnakeCase
+     */
     private static String toCamelCase(String text) {
         def result = new StringBuilder()
         Arrays.stream(text.split(UNDERSCORE)).forEach({ token ->
