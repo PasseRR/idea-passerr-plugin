@@ -16,6 +16,7 @@
           <p>1.0.0:
           <ul>
             <li>Add Camel Case Plugin</li>
+            <li>Add Json Format Plugin</li>
           </ul>
           </p>
       ]]>
@@ -39,5 +40,8 @@
         </action>
     </actions>
 
-    <extensions defaultExtensionNs="com.intellij"/>
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Json Format" anchor="right" icon="/icon/json.jpg"
+                    factoryClass="com.github.passerr.idea.plugins.json.JsonFormatToolWindow"/>
+    </extensions>
 </idea-plugin>
