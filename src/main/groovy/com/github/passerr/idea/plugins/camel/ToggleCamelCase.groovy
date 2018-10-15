@@ -21,7 +21,7 @@ import java.util.stream.IntStream
  * 驼峰命名切换
  * @author xiehai1
  * @date 2018/10/12 12:31
- * @Copyright ( c ) gome inc Gome Co.,LTD
+ * @Copyright tellyes tech. inc. co.,ltd
  */
 class ToggleCamelCase extends MultiCaretCodeInsightAction {
     private static final String UNDERSCORE = "_"

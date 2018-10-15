@@ -13,7 +13,7 @@ import javax.swing.*
  * json格式化窗口
  * @author xiehai1
  * @date 2018/10/12 15:55
- * @Copyright ( c ) gome inc Gome Co.,LTD
+ * @Copyright tellyes tech. inc. co.,ltd
  */
 class JsonFormatToolWindow implements ToolWindowFactory {
     @Override

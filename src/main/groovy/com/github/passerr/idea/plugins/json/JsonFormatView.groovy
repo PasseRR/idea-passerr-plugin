@@ -20,12 +20,11 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
-
 /**
  * 格式化视图
  * @author xiehai1
  * @date 2018/10/12 16:02
- * @Copyright ( c ) gome inc Gome Co.,LTD
+ * @Copyright tellyes tech. inc. co.,ltd
  */
 class JsonFormatView {
     JPanel panel = new JPanel(new BorderLayout())
@@ -45,7 +44,6 @@ class JsonFormatView {
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON)
         textArea.setCodeFoldingEnabled(true)
         textArea.setAutoIndentEnabled(true)
-
         textArea.getInputMap(JComponent.WHEN_FOCUSED)
             .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK), "format")
         textArea.getActionMap().put("format", new AbstractAction() {
@@ -88,6 +86,7 @@ class JsonFormatView {
             }
         })
 
+        // 设置高亮主题
         InputStream inputStream = this.getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/idea.xml")
         try {
             Theme theme = Theme.load(inputStream)
