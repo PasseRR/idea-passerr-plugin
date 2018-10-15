@@ -8,13 +8,16 @@ import com.intellij.openapi.project.Project
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 import org.fife.ui.rsyntaxtextarea.Theme
+import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rtextarea.RTextScrollPane
+import org.fife.ui.rtextarea.ToolTipSupplier
 
 import javax.swing.*
 import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
+import java.awt.event.MouseEvent
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
@@ -49,6 +52,7 @@ class JsonFormatView {
             @Override
             void actionPerformed(ActionEvent e) {
                 try {
+                    textArea.setToolTipSupplier(null)
                     textArea.removeAllLineHighlights()
                     JsonParser jsonParser = new JsonParser()
                     JsonObject jsonObject = jsonParser.parse(textArea.getText()).getAsJsonObject()
@@ -59,7 +63,14 @@ class JsonFormatView {
                     def matcher = ERROR_PATTERN.matcher(msg)
                     if (matcher.find()) {
                         // 行索引从0开始
-                        textArea.addLineHighlight((matcher.group(1) as int) - 1, Color.RED)
+                        int lineIndex = (matcher.group(1) as int) - 1
+                        // 设置错误行背景色
+                        textArea.addLineHighlight(lineIndex, Color.RED)
+                        // 设置提示信息
+                        textArea.setToolTipSupplier({ RTextArea rt, MouseEvent me ->
+                            def offset = textArea.getLineOfOffset(textArea.viewToModel(me.getPoint()))
+                            offset == lineIndex ? msg : null
+                        } as ToolTipSupplier)
                     } else {
                         Notification n = new Notification("Json Format", "Json Format", msg, NotificationType.ERROR)
                         Notifications.Bus.notify(n)
