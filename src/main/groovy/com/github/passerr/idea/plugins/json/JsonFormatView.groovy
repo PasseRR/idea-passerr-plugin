@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 /**
  * 格式化视图
@@ -26,8 +27,14 @@ import java.util.concurrent.TimeUnit
 class JsonFormatView {
     JPanel panel = new JPanel(new BorderLayout())
     Project project
-    // cache instance by project
+    /**
+     * cache instance by project
+     */
     def private static INSTANCES = [:]
+    /**
+     * json错误信息正则匹配
+     */
+    private static final Pattern ERROR_PATTERN = Pattern.compile("line (\\w+) column")
 
     private JsonFormatView(Project project) {
         this.project = project
@@ -42,20 +49,28 @@ class JsonFormatView {
             @Override
             void actionPerformed(ActionEvent e) {
                 try {
+                    textArea.removeAllLineHighlights()
                     JsonParser jsonParser = new JsonParser()
                     JsonObject jsonObject = jsonParser.parse(textArea.getText()).getAsJsonObject()
                     Gson gson = new GsonBuilder().setPrettyPrinting().create()
                     textArea.setText(gson.toJson(jsonObject))
                 } catch (JsonSyntaxException ex) {
-                    Notification n = new Notification("Json Format", "Json Format", ex.getMessage(), NotificationType.ERROR)
-                    Notifications.Bus.notify(n)
-                    new Thread() {
-                        @Override
-                        void run() {
-                            TimeUnit.SECONDS.sleep(2)
-                            n.expire()
-                        }
-                    }.start()
+                    String msg = ex.getMessage()
+                    def matcher = ERROR_PATTERN.matcher(msg)
+                    if (matcher.find()) {
+                        // 行索引从0开始
+                        textArea.addLineHighlight((matcher.group(1) as int) - 1, Color.RED)
+                    } else {
+                        Notification n = new Notification("Json Format", "Json Format", msg, NotificationType.ERROR)
+                        Notifications.Bus.notify(n)
+                        new Thread() {
+                            @Override
+                            void run() {
+                                TimeUnit.SECONDS.sleep(2)
+                                n.expire()
+                            }
+                        }.start()
+                    }
                 } finally {
                     JsonFormatView.this.getPanel().repaint()
                 }
