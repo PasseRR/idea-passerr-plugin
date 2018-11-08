@@ -9,6 +9,7 @@ import org.fife.ui.rsyntaxtextarea.Theme
 import org.fife.ui.rtextarea.RTextScrollPane
 
 import javax.swing.*
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
@@ -77,9 +78,6 @@ class TextFormatView extends JRootPane {
      * 菜单初始化
      */
     private void initMenu(RSyntaxTextArea textArea) {
-        JMenuBar menuBar = new JMenuBar()
-        JMenu menu = new JMenu("转换类型")
-
         // json转换
         def jsonAction = new AbstractAction() {
             @Override
@@ -89,8 +87,8 @@ class TextFormatView extends JRootPane {
                 textArea.setSyntaxEditingStyle(ConvertType.JSON.style)
             }
         }
-        jsonAction.putValue(AbstractAction.NAME, "json格式化")
-        JRadioButtonMenuItem json = new JRadioButtonMenuItem(jsonAction)
+        jsonAction.putValue(AbstractAction.NAME, "Json格式化")
+        JRadioButton json = new JRadioButton(jsonAction)
         json.setSelected(true)
 
         // mybatis日志转sql
@@ -103,18 +101,17 @@ class TextFormatView extends JRootPane {
             }
         }
         sqlAction.putValue(AbstractAction.NAME, "Mybatis日志转Sql")
-        JRadioButtonMenuItem sql = new JRadioButtonMenuItem(sqlAction)
+        JRadioButton sql = new JRadioButton(sqlAction)
 
         // 按钮组
-        def buttonGroup = new ButtonGroup()
+        ButtonGroup buttonGroup = new ButtonGroup()
         buttonGroup.add(json)
-        menu.add(json)
         buttonGroup.add(sql)
-        menu.add(sql)
-        menuBar.add(menu)
+        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT))
+        radioPanel.add(json)
+        radioPanel.add(sql)
 
-        // 设置菜单
-        super.setJMenuBar(menuBar)
+        super.getContentPane().add(radioPanel, BorderLayout.NORTH)
 
         // 默认为为json转换
         this.convertType = ConvertType.JSON
