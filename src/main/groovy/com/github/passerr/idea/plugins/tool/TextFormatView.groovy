@@ -47,6 +47,8 @@ class TextFormatView extends JRootPane {
                     return
                 }
                 try {
+                    textArea.setToolTipSupplier(null)
+                    textArea.removeAllLineHighlights()
                     switch (TextFormatView.this.convertType) {
                         case ConvertType.JSON:
                             JsonTextHandler.handle(textArea)
