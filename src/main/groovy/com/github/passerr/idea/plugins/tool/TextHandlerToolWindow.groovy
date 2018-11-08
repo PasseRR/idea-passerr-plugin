@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.json
+package com.github.passerr.idea.plugins.tool
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
@@ -10,15 +10,15 @@ import org.jetbrains.annotations.NotNull
 import javax.swing.*
 
 /**
- * json格式化窗口
+ * 字符串处理窗口
  * @author xiehai1
  * @date 2018/10/12 15:55
  * @Copyright tellyes tech. inc. co.,ltd
  */
-class JsonFormatToolWindow implements ToolWindowFactory {
+class TextHandlerToolWindow implements ToolWindowFactory {
     @Override
     void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        JComponent component = JsonFormatView.getInstance(project).getPanel()
+        JComponent component = TextFormatView.getInstance(project)
         ContentManager contentManager = toolWindow.getContentManager()
         ContentFactory contentFactory = contentManager.getFactory()
         contentManager.removeAllContents(true)

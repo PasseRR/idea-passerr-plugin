@@ -13,6 +13,11 @@
 
     <change-notes>
         <![CDATA[
+          <p>1.0.2:
+          <ul>
+            <li>Add mybatis log convert to executable sql</li>
+            <li>Copy log as executable sql in console</li>
+          </ul>
           <p>1.0.1:
           <ul>
             <li>Fixed json format can not format array</li>
@@ -45,10 +50,17 @@
             <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
         </action>
+
+        <action id="MybatisLog2Sql"
+                class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
+                text="Copy As Executable Sql"
+                description="Convert log to executable sql">
+            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Json Format" anchor="right" icon="/icon/json.jpg"
-                    factoryClass="com.github.passerr.idea.plugins.json.JsonFormatToolWindow"/>
+        <toolWindow id="PTools" anchor="right" icon="/icon/tool.jpg"
+                    factoryClass="com.github.passerr.idea.plugins.tool.TextHandlerToolWindow"/>
     </extensions>
 </idea-plugin>
