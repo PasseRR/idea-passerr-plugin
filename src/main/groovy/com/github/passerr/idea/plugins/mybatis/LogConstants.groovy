@@ -20,13 +20,13 @@ interface LogConstants {
      */
     String BREAK_LINE = "\n"
     /**
-     * sql参数前缀
-     */
-    String PREFIX_PARAMS = "Parameters: "
-    /**
      * 无sql参数前缀
      */
     String PREFIX_PARAMS_WITHOUT_SPACE = "Parameters:"
+    /**
+     * sql参数前缀
+     */
+    String PREFIX_PARAMS = PREFIX_PARAMS_WITHOUT_SPACE + SPACE
     /**
      * 参数值分隔符
      */
