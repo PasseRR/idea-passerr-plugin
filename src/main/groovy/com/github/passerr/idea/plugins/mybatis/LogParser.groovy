@@ -12,8 +12,10 @@ import static com.github.passerr.idea.plugins.mybatis.LogConstants.*
  * @date 2018/11/08 11:49
  * @Copyright ( c ) gome inc Gome Co.,LTD
  */
-@Singleton
 class LogParser {
+    private LogParser() {
+
+    }
     /**
      * 日志解析为可执行的sql语句
      * @param log 日志内容

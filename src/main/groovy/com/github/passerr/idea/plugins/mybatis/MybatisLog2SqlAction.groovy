@@ -22,7 +22,7 @@ class MybatisLog2SqlAction extends AnAction {
         // 选中的日志内容
         def log = e.getData(PlatformDataKeys.EDITOR).getSelectionModel().getSelectedText()
         if (StringUtils.isNotEmpty(log)) {
-            Optional.ofNullable(LogParser.instance.toSql(log))
+            Optional.ofNullable(LogParser.toSql(log))
                 .filter(StringUtils.&isNotEmpty)
                 // 自动发送到剪贴板
                 .ifPresent({ sql ->
