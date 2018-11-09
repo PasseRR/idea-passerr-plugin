@@ -14,7 +14,7 @@ interface LogConstants {
     /**
      * 参数占位符
      */
-    String PARAM_PLACEHOLDER = "?"
+    String PARAM_PLACEHOLDER = "\\?"
     /**
      * 换行符
      */

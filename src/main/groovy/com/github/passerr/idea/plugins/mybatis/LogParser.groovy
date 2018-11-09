@@ -26,7 +26,7 @@ class LogParser {
                 sqlLine = line
             } else if (line.contains(PREFIX_PARAMS)) {
                 valueLine = line
-            } else if(line.contains(PREFIX_PARAMS_WITHOUT_SPACE)) {
+            } else if (line.contains(PREFIX_PARAMS_WITHOUT_SPACE)) {
                 // 没有参数的sql 自动补齐一个空格
                 valueLine = line + SPACE
             }
@@ -66,19 +66,19 @@ class LogParser {
         int paramPrefixIndex = valueLine.indexOf(PREFIX_PARAMS)
         String paramValues = valueLine.substring(paramPrefixIndex + PREFIX_PARAMS.length(), valueLine.length())
 
-        List<String> originSqlSections = originSql.tokenize(PARAM_PLACEHOLDER)
-        List<String> paramValuesSections = paramValues.tokenize(PARAM_SEPARATOR)
+        List<String> originSqlSections = originSql.split(PARAM_PLACEHOLDER)
+        List<String> paramValuesSections = paramValues.split(PARAM_SEPARATOR)
         int i = 0
         StringBuilder sb = new StringBuilder()
-        // 参数列表为空 直接以sql返回
-        if(paramValuesSections.isEmpty()) {
-            sb.append(originSql)
-        } else {
-            while (originSqlSections.size() > i && paramValuesSections.size() > i) {
-                sb.append(originSqlSections.get(i))
-                sb.append(parseParam(paramValuesSections.get(i)))
-                i++
-            }
+        while (originSqlSections.size() > i && paramValuesSections.size() > i) {
+            sb.append(originSqlSections.get(i))
+            sb.append(parseParam(paramValuesSections.get(i)))
+            i++
+        }
+
+        while (originSqlSections.size() > i) {
+            sb.append(originSqlSections.get(i))
+            i++
         }
 
         sb.toString()
@@ -90,6 +90,11 @@ class LogParser {
      * @return 参数值
      */
     private static String parseParam(String paramValue) {
+        // 如果是空字符串直接返回
+        if (paramValue.size() == 0) {
+            return EMPTY
+        }
+
         // 括号的索引
         int lastLeftBracketIndex = paramValue.lastIndexOf(LEFT_BRACKET)
         int lastRightBracketIndex = paramValue.lastIndexOf(RIGHT_BRACKET)
