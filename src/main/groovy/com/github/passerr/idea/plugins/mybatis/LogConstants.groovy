@@ -14,7 +14,7 @@ interface LogConstants {
     /**
      * 参数占位符
      */
-    String PARAM_PLACEHOLDER = "\\?"
+    String PARAM_PLACEHOLDER = "?"
     /**
      * 换行符
      */
@@ -23,6 +23,10 @@ interface LogConstants {
      * sql参数前缀
      */
     String PREFIX_PARAMS = "Parameters: "
+    /**
+     * 无sql参数前缀
+     */
+    String PREFIX_PARAMS_WITHOUT_SPACE = "Parameters:"
     /**
      * 参数值分隔符
      */
@@ -39,6 +43,10 @@ interface LogConstants {
      * 空字符串
      */
     String EMPTY = ""
+    /**
+     * 空格
+     */
+    String SPACE = " "
     /**
      * 不需要加单引号的类型
      */

@@ -26,6 +26,9 @@ class LogParser {
                 sqlLine = line
             } else if (line.contains(PREFIX_PARAMS)) {
                 valueLine = line
+            } else if(line.contains(PREFIX_PARAMS_WITHOUT_SPACE)) {
+                // 没有参数的sql 自动补齐一个空格
+                valueLine = line + SPACE
             }
         }
 
@@ -65,12 +68,17 @@ class LogParser {
 
         List<String> originSqlSections = originSql.tokenize(PARAM_PLACEHOLDER)
         List<String> paramValuesSections = paramValues.tokenize(PARAM_SEPARATOR)
-        StringBuilder sb = new StringBuilder()
         int i = 0
-        while (originSqlSections.size() > i && paramValuesSections.size() > i) {
-            sb.append(originSqlSections.get(i))
-            sb.append(parseParam(paramValuesSections.get(i)))
-            i++
+        StringBuilder sb = new StringBuilder()
+        // 参数列表为空 直接以sql返回
+        if(paramValuesSections.isEmpty()) {
+            sb.append(originSql)
+        } else {
+            while (originSqlSections.size() > i && paramValuesSections.size() > i) {
+                sb.append(originSqlSections.get(i))
+                sb.append(parseParam(paramValuesSections.get(i)))
+                i++
+            }
         }
 
         sb.toString()
