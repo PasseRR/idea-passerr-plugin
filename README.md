@@ -9,8 +9,10 @@
 * Json格式化  
 ![Json](https://raw.githubusercontent.com/PasseRR/idea-passerr-plugin/images/json.gif)
 
-* Mybatis日志格式化  
+* Mybatis日志格式化[^注]  
 ![Mybatis](https://raw.githubusercontent.com/PasseRR/idea-passerr-plugin/images/log.gif)
 
-## 3.Console栏直接复制mybatis日志为可执行的sql
+## 3.Console栏直接复制mybatis日志为可执行的sql [^注]
 ![log](https://raw.githubusercontent.com/PasseRR/idea-passerr-plugin/images/log_copy.gif)
+
+[^注]: 复制的日志必须包含
