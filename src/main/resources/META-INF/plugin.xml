@@ -13,6 +13,10 @@
 
     <change-notes>
         <![CDATA[
+          <p>1.0.3:
+          <ul>
+            <li>Fixed mybatis null value bug</li>
+          </ul>
           <p>1.0.2:
           <ul>
             <li>Add mybatis log convert to executable sql</li>

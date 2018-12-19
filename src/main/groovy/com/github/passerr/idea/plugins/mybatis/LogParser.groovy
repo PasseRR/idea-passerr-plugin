@@ -97,6 +97,11 @@ class LogParser {
             return EMPTY
         }
 
+        // 如果是null 直接返回null
+        if (paramValue.trim() == NULL) {
+            return NULL
+        }
+
         // 括号的索引
         int lastLeftBracketIndex = paramValue.lastIndexOf(LEFT_BRACKET)
         int lastRightBracketIndex = paramValue.lastIndexOf(RIGHT_BRACKET)

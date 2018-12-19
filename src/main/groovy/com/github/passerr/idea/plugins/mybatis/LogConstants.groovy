@@ -44,6 +44,10 @@ interface LogConstants {
      */
     String EMPTY = ""
     /**
+     * null值
+     */
+    String NULL = "null"
+    /**
      * 空格
      */
     String SPACE = " "
