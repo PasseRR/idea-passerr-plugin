@@ -30,7 +30,7 @@ class TextFormatView extends JRootPane {
     /**
      * cache instance by project
      */
-    def private static INSTANCES = [:]
+    private static Map<Project, TextFormatView> INSTANCES = new HashMap<>()
 
     private TextFormatView(Project project) {
         this.project = project
@@ -148,15 +148,15 @@ class TextFormatView extends JRootPane {
      * @param project idea 项目
      * @return {@link TextFormatView}
      */
-    def static getInstance(Project project) {
-        if (!INSTANCES.get(project)) {
+    static TextFormatView getInstance(Project project) {
+        if (!INSTANCES.containsKey(project)) {
             synchronized (TextFormatView.class) {
-                if (!INSTANCES.get(project)) {
-                    INSTANCES.put(project, new TextFormatView(project))
+                if (!INSTANCES.containsKey(project)) {
+                    INSTANCES.putIfAbsent(project, new TextFormatView(project))
                 }
             }
         }
 
-        INSTANCES.get(project) as TextFormatView
+        return INSTANCES.get(project)
     }
 }

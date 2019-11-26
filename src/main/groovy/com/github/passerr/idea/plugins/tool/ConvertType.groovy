@@ -31,11 +31,6 @@ enum ConvertType {
      * 自动格式化json
      */
     JSON(SyntaxConstants.SYNTAX_STYLE_JSON){
-        /**
-         * json错误信息正则匹配
-         */
-        private static final Pattern ERROR_PATTERN = Pattern.compile("line (\\w+) column")
-
         @Override
         void handle(RSyntaxTextArea textArea) {
             try {
@@ -92,6 +87,11 @@ enum ConvertType {
     }
 
     String style
+
+    /**
+     * json错误信息正则匹配
+     */
+    private static final ERROR_PATTERN = Pattern.compile("line (\\w+) column")
 
     ConvertType(String style) {
         this.style = style
