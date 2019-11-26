@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.mybatis
 
-import com.github.passerr.idea.plugins.tool.log.SqlFormatter
+
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys

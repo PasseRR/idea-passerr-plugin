@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.tool.log
+package com.github.passerr.idea.plugins.mybatis
 /*
  * Original class is here:
  * https://github.com/hibernate/hibernate-orm/blob/a30635f14ae272fd63a653f9a9e1a9aeb390fad4/hibernate-core/src/main
