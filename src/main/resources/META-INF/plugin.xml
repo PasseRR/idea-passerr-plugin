@@ -13,6 +13,13 @@
 
     <change-notes>
         <![CDATA[
+          <p>1.1.0:
+          <ul>
+            <li>differential input/output textarea</li>
+            <li>replace radio with combobox</li>
+            <li>add some en/decode utils</li>
+            <li>add some en/decryption utils</li>
+          </ul>
           <p>1.0.3:
           <ul>
             <li>Fixed mybatis null value bug</li>
