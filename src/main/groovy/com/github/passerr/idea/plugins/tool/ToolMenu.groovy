@@ -1,7 +1,7 @@
 package com.github.passerr.idea.plugins.tool
 
+import org.apache.commons.codec.digest.DigestUtils
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-
 /**
  * 菜单
  * @Copyright (c)tellyes tech. inc. co.,ltd
@@ -19,10 +19,38 @@ enum ToolMenu {
     /**
      * sub menu
      */
-    BASE64_ENCRYPTION("base64加密", ConvertType.TEXT) {
+    URL_DECODE("url解码", ConvertType.TEXT){
         @Override
-        void handle(RSyntaxTextArea textArea) {
-            textArea.setText(textArea.getText().decodeBase64())
+        void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
+            output.setText(URLDecoder.decode(input.getText(), "UTF-8"))
+        }
+    },
+    URL_ENCODE("url编码", ConvertType.TEXT){
+        @Override
+        void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
+            output.setText(URLEncoder.encode(input.getText(), "UTF-8"))
+        }
+    },
+    MD5_ENCRYPTION("md5加密", ConvertType.TEXT){
+        @Override
+        void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
+            output.setText(DigestUtils.md5Hex(input.getText()))
+        }
+    },
+    BASE64_DECRYPTION("base64解密", ConvertType.TEXT){
+        @Override
+        void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
+            try {
+                output.setText(new String(input.getText().decodeBase64()))
+            } catch (Exception ignore) {
+
+            }
+        }
+    },
+    BASE64_ENCRYPTION("base64加密", ConvertType.TEXT){
+        @Override
+        void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
+            output.setText(input.getText().bytes.encodeBase64().toString())
         }
     }
 
@@ -42,10 +70,11 @@ enum ToolMenu {
 
     /**
      * 默认文本域操作
-     * @param textArea
+     * @param input 输入文本域
+     * @param output 输出文本域
      */
-    void handle(RSyntaxTextArea textArea) {
+    void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
         // 默认对应类型格式化
-        this.type.handle(textArea)
+        this.type.handle(input, output)
     }
 }

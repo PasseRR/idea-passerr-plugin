@@ -23,13 +23,17 @@ import java.awt.event.KeyEvent
 class TextFormatView extends JRootPane {
     Project project
     /**
-     * 转换类型
+     * 菜单
      */
     ToolMenu menu
     /**
-     * 文本域
+     * 输入文本域
      */
-    RSyntaxTextArea textArea = new RSyntaxTextArea()
+    RSyntaxTextArea inputTextArea = new RSyntaxTextArea()
+    /**
+     * 输出文本域
+     */
+    RSyntaxTextArea outputTextArea = new RSyntaxTextArea()
     /**
      * cache instance by project
      */
@@ -37,19 +41,29 @@ class TextFormatView extends JRootPane {
 
     private TextFormatView(Project project) {
         this.project = project
+        super.getContentPane().setLayout(new VerticalLayout(VerticalLayout.CENTER, 2, 2))
+        // 初始化输入文本域
+        this.doInitInputTextArea()
         // 初始化菜单
         this.doInitMenu()
-        // 初始化文本域
-        this.doInitTextArea()
+        // 初始输出化文本域
+        this.doInitOutputTextArea()
+        // 设置高亮主题
+        InputStream inputStream = this.getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/idea.xml")
+        try {
+            Theme theme = Theme.load(inputStream)
+            theme.apply(this.inputTextArea)
+            theme.apply(this.outputTextArea)
+        } catch (IOException ignore) {
+        }
     }
 
     /**
-     * 文本域初始化
+     * 输入文本域初始化
      */
-    private void doInitTextArea() {
-        this.textArea.with {
-            setCodeFoldingEnabled(true)
-            setAutoIndentEnabled(true)
+    private void doInitInputTextArea() {
+        this.inputTextArea.with {
+            setRows(20)
             // 使用快捷键ctrl+enter格式化json
             getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK), "format")
             getActionMap().put("format", new AbstractAction() {
@@ -59,22 +73,33 @@ class TextFormatView extends JRootPane {
                 }
             })
         }
+        super.getContentPane().add(new RTextScrollPane(this.inputTextArea))
+    }
 
-        // 设置高亮主题
-        InputStream inputStream = this.getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/idea.xml")
-        try {
-            Theme theme = Theme.load(inputStream)
-            theme.apply(this.textArea)
-        } catch (IOException ignore) {
+    /**
+     * 输出文本域初始化
+     */
+    private void doInitOutputTextArea() {
+        this.outputTextArea.with {
+            setRows(32)
+            setCodeFoldingEnabled(true)
+            setAutoIndentEnabled(true)
         }
-        super.getContentPane().add(new RTextScrollPane(this.textArea))
+        super.getContentPane().add(new RTextScrollPane(this.outputTextArea))
     }
 
     /**
      * 菜单初始化
      */
     private void doInitMenu() {
-        JComboBox<ToolMenu> subMenu = new JComboBox<>([ToolMenu.BASE64_ENCRYPTION] as ToolMenu[])
+        JComboBox<ToolMenu> subMenu = new JComboBox<>(
+            [
+                ToolMenu.URL_DECODE,
+                ToolMenu.URL_ENCODE,
+                ToolMenu.MD5_ENCRYPTION,
+                ToolMenu.BASE64_DECRYPTION,
+                ToolMenu.BASE64_ENCRYPTION
+            ] as ToolMenu[])
         subMenu.addItemListener(new ItemListener() {
             @Override
             void itemStateChanged(ItemEvent e) {
@@ -118,12 +143,12 @@ class TextFormatView extends JRootPane {
                 doFormat()
             }
         })
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT))
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER))
         panel.add(mainMenu)
         panel.add(subMenu)
         panel.add(format)
 
-        super.getContentPane().add(panel, BorderLayout.NORTH)
+        super.getContentPane().add(panel)
     }
 
     /**
@@ -131,13 +156,11 @@ class TextFormatView extends JRootPane {
      * @param convertType 转换类型
      */
     private void switchMenu(ToolMenu menu) {
-        println menu
         this.menu = menu
-        if (this.textArea) {
-            this.textArea.setText("")
-            this.textArea.setToolTipSupplier(null)
-            this.textArea.removeAllLineHighlights()
-            menu.type && this.textArea.setSyntaxEditingStyle(menu.type.style)
+        if (this.inputTextArea) {
+            this.inputTextArea.setToolTipSupplier(null)
+            this.inputTextArea.removeAllLineHighlights()
+            menu.type && this.outputTextArea.setSyntaxEditingStyle(menu.type.style)
         }
     }
 
@@ -146,13 +169,13 @@ class TextFormatView extends JRootPane {
      */
     private void doFormat() {
         // 文本框为空 不进行格式化
-        if (StringUtils.isEmpty(this.textArea.getText())) {
+        if (StringUtils.isEmpty(this.inputTextArea.getText())) {
             return
         }
         try {
-            this.textArea.setToolTipSupplier(null)
-            this.textArea.removeAllLineHighlights()
-            this.menu.handle(this.textArea)
+            this.inputTextArea.setToolTipSupplier(null)
+            this.inputTextArea.removeAllLineHighlights()
+            this.menu.handle(this.inputTextArea, this.outputTextArea)
         } finally {
             this.getContentPane().repaint()
         }

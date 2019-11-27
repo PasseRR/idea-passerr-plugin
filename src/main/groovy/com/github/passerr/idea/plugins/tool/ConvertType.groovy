@@ -32,17 +32,15 @@ enum ConvertType {
      */
     JSON(SyntaxConstants.SYNTAX_STYLE_JSON){
         @Override
-        void handle(RSyntaxTextArea textArea) {
+        void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
             try {
-                textArea.setToolTipSupplier(null)
-                textArea.removeAllLineHighlights()
                 JsonParser jsonParser = new JsonParser()
                 // 可以同时解析数组或者Object
-                JsonElement element = jsonParser.parse(textArea.getText())
+                JsonElement element = jsonParser.parse(input.getText())
                 Gson gson = new GsonBuilder().setPrettyPrinting().create()
-                textArea.setText(gson.toJson(element))
+                output.setText(gson.toJson(element))
                 // 格式化成功后定位到第一行
-                textArea.setCaretPosition(0)
+                output.setCaretPosition(0)
             } catch (JsonSyntaxException ex) {
                 String msg = ex.getMessage()
                 def matcher = ERROR_PATTERN.matcher(msg)
@@ -50,14 +48,14 @@ enum ConvertType {
                     // 行索引从0开始
                     int lineIndex = (matcher.group(1) as int) - 1
                     // 设置错误行背景色
-                    textArea.addLineHighlight(lineIndex, Color.RED)
+                    input.addLineHighlight(lineIndex, Color.RED)
                     // 设置提示信息
-                    textArea.setToolTipSupplier({ RTextArea rt, MouseEvent me ->
-                        def offset = textArea.getLineOfOffset(textArea.viewToModel(me.getPoint()))
+                    input.setToolTipSupplier({ RTextArea rt, MouseEvent me ->
+                        def offset = input.getLineOfOffset(input.viewToModel(me.getPoint()))
                         offset == lineIndex ? msg : null
                     } as ToolTipSupplier)
                     // 定位到失败行
-                    textArea.setCaretPosition(lineIndex)
+                    input.setCaretPosition(lineIndex)
                 } else {
                     new NotificationThread(new Notification("Json Format", "Json Format", msg, ERROR)).start()
                 }
@@ -69,19 +67,21 @@ enum ConvertType {
      */
     SQL(SyntaxConstants.SYNTAX_STYLE_SQL){
         @Override
-        void handle(RSyntaxTextArea textArea) {
-            def sql = LogParser.toSql(textArea.getText())
+        void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
+            def sql = LogParser.toSql(input.getText())
             if (StringUtils.isEmpty(sql)) {
                 // 设置错误行背景色
                 // 默认设置第一行
-                textArea.addLineHighlight(0, Color.RED)
+                input.addLineHighlight(0, Color.RED)
                 // 设置提示信息
-                textArea.setToolTipSupplier({ RTextArea rt, MouseEvent me ->
-                    def offset = textArea.getLineOfOffset(textArea.viewToModel(me.getPoint()))
+                input.setToolTipSupplier({ RTextArea rt, MouseEvent me ->
+                    def offset = input.getLineOfOffset(input.viewToModel(me.getPoint()))
                     offset == 0 ? "the log you input which without \"Preparing:\" or \"Parameters:\"" : null
                 } as ToolTipSupplier)
             } else {
-                textArea.setText(SqlFormatter.format(sql))
+                output.setText(SqlFormatter.format(sql))
+                // 格式化成功后定位到第一行
+                output.setCaretPosition(0)
             }
         }
     },
@@ -103,9 +103,10 @@ enum ConvertType {
 
     /**
      * 对文本进行格式化
-     * @param textArea {@link RSyntaxTextArea}
+     * @param input 输入文本域
+     * @param output 输出文本域
      */
-    void handle(RSyntaxTextArea textArea) {
+    void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
         // 默认不做任何处理
     }
 }
