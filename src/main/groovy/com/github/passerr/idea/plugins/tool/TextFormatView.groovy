@@ -9,7 +9,10 @@ import org.fife.ui.rtextarea.RTextScrollPane
 import javax.swing.*
 import java.awt.*
 import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import java.awt.event.InputEvent
+import java.awt.event.ItemEvent
+import java.awt.event.ItemListener
 import java.awt.event.KeyEvent
 
 /**
@@ -22,11 +25,11 @@ class TextFormatView extends JRootPane {
     /**
      * 转换类型
      */
-    ConvertType convertType
+    ToolMenu menu
     /**
      * 文本域
      */
-    RSyntaxTextArea textArea
+    RSyntaxTextArea textArea = new RSyntaxTextArea()
     /**
      * cache instance by project
      */
@@ -34,15 +37,16 @@ class TextFormatView extends JRootPane {
 
     private TextFormatView(Project project) {
         this.project = project
-        this.doInitTextArea()
+        // 初始化菜单
         this.doInitMenu()
+        // 初始化文本域
+        this.doInitTextArea()
     }
 
     /**
      * 文本域初始化
      */
     private void doInitTextArea() {
-        this.textArea = new RSyntaxTextArea()
         this.textArea.with {
             setCodeFoldingEnabled(true)
             setAutoIndentEnabled(true)
@@ -70,59 +74,70 @@ class TextFormatView extends JRootPane {
      * 菜单初始化
      */
     private void doInitMenu() {
-        // json转换
-        JRadioButton json = new JRadioButton()
-        json.with {
-            setAction(new AbstractAction() {
-                {
-                    this.putValue(NAME, "Json格式化")
+        JComboBox<ToolMenu> subMenu = new JComboBox<>([ToolMenu.BASE64_ENCRYPTION] as ToolMenu[])
+        subMenu.addItemListener(new ItemListener() {
+            @Override
+            void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    switchMenu(e.getItem() as ToolMenu)
                 }
+            }
+        })
+        subMenu.setVisible(false)
 
-                @Override
-                void actionPerformed(ActionEvent e) {
-                    TextFormatView.this.switchConvertType(ConvertType.JSON)
+        JComboBox<ToolMenu> mainMenu = new JComboBox<>([ToolMenu.JSON, ToolMenu.SQL, ToolMenu.ENCODE] as ToolMenu[])
+        mainMenu.addItemListener(new ItemListener() {
+            @Override
+            void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    ToolMenu toolMenu = e.getItem() as ToolMenu
+                    switch (toolMenu) {
+                        case ToolMenu.ENCODE:
+                            subMenu.setVisible(true)
+                            subMenu.setSelectedIndex(0)
+                            switchMenu(subMenu.getSelectedItem())
+                            break
+                        default:
+                            subMenu.setVisible(false)
+                            // 菜单切换
+                            switchMenu(toolMenu)
+                            break
+                    }
                 }
-            })
-            setSelected(true)
-            // 默认选中json格式化
-            this.switchConvertType(ConvertType.JSON)
-        }
+            }
+        })
+        // 默认选中第一个
+        mainMenu.setSelectedItem(0)
+        this.switchMenu(mainMenu.getSelectedItem())
 
-        // mybatis日志转sql
-        JRadioButton sql = new JRadioButton()
-        sql.with {
-            setAction(new AbstractAction() {
-                {
-                    this.putValue(NAME, "Mybatis日志转Sql")
-                }
+        // 转换按钮
+        JButton format = new JButton("转换")
+        format.addActionListener(new ActionListener() {
+            @Override
+            void actionPerformed(ActionEvent e) {
+                doFormat()
+            }
+        })
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT))
+        panel.add(mainMenu)
+        panel.add(subMenu)
+        panel.add(format)
 
-                @Override
-                void actionPerformed(ActionEvent e) {
-                    TextFormatView.this.switchConvertType(ConvertType.SQL)
-                }
-            })
-        }
-
-        // 按钮组
-        ButtonGroup buttonGroup = new ButtonGroup()
-        buttonGroup.add(json)
-        buttonGroup.add(sql)
-        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT))
-        radioPanel.add(json)
-        radioPanel.add(sql)
-
-        super.getContentPane().add(radioPanel, BorderLayout.NORTH)
+        super.getContentPane().add(panel, BorderLayout.NORTH)
     }
 
     /**
      * 菜单切换操作
      * @param convertType 转换类型
      */
-    private void switchConvertType(ConvertType convertType) {
-        this.convertType = convertType
+    private void switchMenu(ToolMenu menu) {
+        println menu
+        this.menu = menu
         if (this.textArea) {
             this.textArea.setText("")
-            this.textArea.setSyntaxEditingStyle(convertType.style)
+            this.textArea.setToolTipSupplier(null)
+            this.textArea.removeAllLineHighlights()
+            menu.type && this.textArea.setSyntaxEditingStyle(menu.type.style)
         }
     }
 
@@ -135,9 +150,9 @@ class TextFormatView extends JRootPane {
             return
         }
         try {
-            textArea.setToolTipSupplier(null)
-            textArea.removeAllLineHighlights()
-            this.convertType.handle(textArea)
+            this.textArea.setToolTipSupplier(null)
+            this.textArea.removeAllLineHighlights()
+            this.menu.handle(this.textArea)
         } finally {
             this.getContentPane().repaint()
         }

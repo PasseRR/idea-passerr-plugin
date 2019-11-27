@@ -84,7 +84,11 @@ enum ConvertType {
                 textArea.setText(SqlFormatter.format(sql))
             }
         }
-    }
+    },
+    /**
+     * 文本
+     */
+    TEXT(SyntaxConstants.SYNTAX_STYLE_NONE)
 
     String style
 
@@ -101,5 +105,7 @@ enum ConvertType {
      * 对文本进行格式化
      * @param textArea {@link RSyntaxTextArea}
      */
-    abstract void handle(RSyntaxTextArea textArea)
+    void handle(RSyntaxTextArea textArea) {
+        // 默认不做任何处理
+    }
 }
