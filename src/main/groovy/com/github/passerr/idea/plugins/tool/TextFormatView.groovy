@@ -29,11 +29,11 @@ class TextFormatView extends JRootPane {
     /**
      * 输入文本域
      */
-    RSyntaxTextArea inputTextArea = new RSyntaxTextArea()
+    RSyntaxTextArea inputTextArea = new RSyntaxTextArea(20, 0)
     /**
      * 输出文本域
      */
-    RSyntaxTextArea outputTextArea = new RSyntaxTextArea()
+    RSyntaxTextArea outputTextArea = new RSyntaxTextArea(35, 0)
     /**
      * cache instance by project
      */
@@ -41,7 +41,7 @@ class TextFormatView extends JRootPane {
 
     private TextFormatView(Project project) {
         this.project = project
-        super.getContentPane().setLayout(new VerticalLayout(VerticalLayout.CENTER, 2, 2))
+        super.getContentPane().setLayout(new BoxLayout(super.getContentPane(), BoxLayout.Y_AXIS))
         // 初始化输入文本域
         this.doInitInputTextArea()
         // 初始化菜单
@@ -49,12 +49,15 @@ class TextFormatView extends JRootPane {
         // 初始输出化文本域
         this.doInitOutputTextArea()
         // 设置高亮主题
-        InputStream inputStream = this.getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/idea.xml")
+        InputStream inputStream
         try {
+            inputStream = this.getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/idea.xml")
             Theme theme = Theme.load(inputStream)
             theme.apply(this.inputTextArea)
             theme.apply(this.outputTextArea)
         } catch (IOException ignore) {
+        } finally {
+            inputStream && inputStream.close()
         }
     }
 
@@ -63,7 +66,6 @@ class TextFormatView extends JRootPane {
      */
     private void doInitInputTextArea() {
         this.inputTextArea.with {
-            setRows(20)
             // 使用快捷键ctrl+enter格式化json
             getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK), "format")
             getActionMap().put("format", new AbstractAction() {
@@ -81,7 +83,6 @@ class TextFormatView extends JRootPane {
      */
     private void doInitOutputTextArea() {
         this.outputTextArea.with {
-            setRows(32)
             setCodeFoldingEnabled(true)
             setAutoIndentEnabled(true)
         }
