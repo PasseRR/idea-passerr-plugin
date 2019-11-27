@@ -29,11 +29,11 @@ class TextFormatView extends JRootPane {
     /**
      * 输入文本域
      */
-    RSyntaxTextArea inputTextArea = new RSyntaxTextArea(20, 0)
+    RSyntaxTextArea inputTextArea = new RSyntaxTextArea(19, 0)
     /**
      * 输出文本域
      */
-    RSyntaxTextArea outputTextArea = new RSyntaxTextArea(35, 0)
+    RSyntaxTextArea outputTextArea = new RSyntaxTextArea(34, 0)
     /**
      * cache instance by project
      */
@@ -93,25 +93,41 @@ class TextFormatView extends JRootPane {
      * 菜单初始化
      */
     private void doInitMenu() {
-        JComboBox<ToolMenu> subMenu = new JComboBox<>(
-            [
-                ToolMenu.URL_DECODE,
-                ToolMenu.URL_ENCODE,
-                ToolMenu.MD5_ENCRYPTION,
-                ToolMenu.BASE64_DECRYPTION,
-                ToolMenu.BASE64_ENCRYPTION
-            ] as ToolMenu[])
-        subMenu.addItemListener(new ItemListener() {
+        def subMenuItemListener = new ItemListener() {
             @Override
             void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     switchMenu(e.getItem() as ToolMenu)
                 }
             }
-        })
-        subMenu.setVisible(false)
+        }
+        // 编/解码
+        JComboBox<ToolMenu> encodeMenu = new JComboBox<>(
+            [
+                ToolMenu.URL_ENCODE,
+                ToolMenu.URL_DECODE
+            ] as ToolMenu[])
+        encodeMenu.addItemListener(subMenuItemListener)
+        encodeMenu.setVisible(false)
 
-        JComboBox<ToolMenu> mainMenu = new JComboBox<>([ToolMenu.JSON, ToolMenu.SQL, ToolMenu.ENCODE] as ToolMenu[])
+        // 加/解密
+        JComboBox<ToolMenu> encryptMenu = new JComboBox<>(
+            [
+                ToolMenu.MD5_ENCRYPTION,
+                ToolMenu.BASE64_ENCRYPTION,
+                ToolMenu.BASE64_DECRYPTION
+            ] as ToolMenu[])
+        encryptMenu.addItemListener(subMenuItemListener)
+        encryptMenu.setVisible(false)
+
+        // 主菜单
+        JComboBox<ToolMenu> mainMenu = new JComboBox<>(
+            [
+                ToolMenu.JSON,
+                ToolMenu.SQL,
+                ToolMenu.ENCODE,
+                ToolMenu.ENCRYPT
+            ] as ToolMenu[])
         mainMenu.addItemListener(new ItemListener() {
             @Override
             void itemStateChanged(ItemEvent e) {
@@ -119,12 +135,20 @@ class TextFormatView extends JRootPane {
                     ToolMenu toolMenu = e.getItem() as ToolMenu
                     switch (toolMenu) {
                         case ToolMenu.ENCODE:
-                            subMenu.setVisible(true)
-                            subMenu.setSelectedIndex(0)
-                            switchMenu(subMenu.getSelectedItem())
+                            encryptMenu.setVisible(false)
+                            encodeMenu.setVisible(true)
+                            encodeMenu.setSelectedIndex(0)
+                            switchMenu(encodeMenu.getSelectedItem())
+                            break
+                        case ToolMenu.ENCRYPT:
+                            encodeMenu.setVisible(false)
+                            encryptMenu.setVisible(true)
+                            encryptMenu.setSelectedIndex(0)
+                            switchMenu(encryptMenu.getSelectedItem())
                             break
                         default:
-                            subMenu.setVisible(false)
+                            encodeMenu.setVisible(false)
+                            encryptMenu.setVisible(false)
                             // 菜单切换
                             switchMenu(toolMenu)
                             break
@@ -146,7 +170,8 @@ class TextFormatView extends JRootPane {
         })
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER))
         panel.add(mainMenu)
-        panel.add(subMenu)
+        panel.add(encodeMenu)
+        panel.add(encryptMenu)
         panel.add(format)
 
         super.getContentPane().add(panel)

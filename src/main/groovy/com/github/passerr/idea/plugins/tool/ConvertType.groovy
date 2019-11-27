@@ -56,9 +56,8 @@ enum ConvertType {
                     } as ToolTipSupplier)
                     // 定位到失败行
                     input.setCaretPosition(lineIndex)
-                } else {
-                    new NotificationThread(new Notification("Json Format", "Json Format", msg, ERROR)).start()
                 }
+                new NotificationThread(new Notification("Json Format", "Json Format", msg, ERROR)).start()
             }
         }
     },

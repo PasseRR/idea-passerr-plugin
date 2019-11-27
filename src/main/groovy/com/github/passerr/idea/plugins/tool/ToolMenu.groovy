@@ -2,6 +2,7 @@ package com.github.passerr.idea.plugins.tool
 
 import org.apache.commons.codec.digest.DigestUtils
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+
 /**
  * 菜单
  * @Copyright (c)tellyes tech. inc. co.,ltd
@@ -14,7 +15,8 @@ enum ToolMenu {
      */
     JSON("Json格式化", ConvertType.JSON),
     SQL("Mybatis日志转Sql", ConvertType.SQL),
-    ENCODE("编码", null),
+    ENCODE("编/解码", null),
+    ENCRYPT("加/解密", null),
 
     /**
      * sub menu
