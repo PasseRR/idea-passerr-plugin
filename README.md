@@ -9,7 +9,7 @@
 点开可以进行json格式化、mybatis日志格式化为可执行sql、url编码解码、base64加解密、md5加密   
 转换在输入文本域中快捷键为`Ctrl + Enter`
 * Json格式化  
-![Json]https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/json.gif)
+![Json](https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/json.gif)
 
 * Mybatis日志格式化  
 ![Mybatis](https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/log.gif)
