@@ -102,32 +102,30 @@ class TextFormatView extends JRootPane {
             }
         }
         // 编/解码
-        JComboBox<ToolMenu> encodeMenu = new JComboBox<>(
-            [
-                ToolMenu.URL_ENCODE,
-                ToolMenu.URL_DECODE
-            ] as ToolMenu[])
+        JComboBox<ToolMenu> encodeMenu = new JComboBox<>([
+            ToolMenu.URL_ENCODE,
+            ToolMenu.URL_DECODE
+        ] as ToolMenu[])
         encodeMenu.addItemListener(subMenuItemListener)
         encodeMenu.setVisible(false)
 
         // 加/解密
-        JComboBox<ToolMenu> encryptMenu = new JComboBox<>(
-            [
-                ToolMenu.MD5_ENCRYPTION,
-                ToolMenu.BASE64_ENCRYPTION,
-                ToolMenu.BASE64_DECRYPTION
-            ] as ToolMenu[])
+        JComboBox<ToolMenu> encryptMenu = new JComboBox<>([
+            ToolMenu.MD5_ENCRYPTION,
+            ToolMenu.BASE64_ENCRYPTION,
+            ToolMenu.BASE64_DECRYPTION
+        ] as ToolMenu[])
         encryptMenu.addItemListener(subMenuItemListener)
         encryptMenu.setVisible(false)
 
         // 主菜单
-        JComboBox<ToolMenu> mainMenu = new JComboBox<>(
-            [
-                ToolMenu.JSON,
-                ToolMenu.SQL,
-                ToolMenu.ENCODE,
-                ToolMenu.ENCRYPT
-            ] as ToolMenu[])
+        JComboBox<ToolMenu> mainMenu = new JComboBox<>([
+            ToolMenu.JSON,
+            ToolMenu.SQL,
+            ToolMenu.ENCODE,
+            ToolMenu.ENCRYPT
+        ] as ToolMenu[])
+
         mainMenu.addItemListener(new ItemListener() {
             @Override
             void itemStateChanged(ItemEvent e) {
@@ -138,13 +136,13 @@ class TextFormatView extends JRootPane {
                             encryptMenu.setVisible(false)
                             encodeMenu.setVisible(true)
                             encodeMenu.setSelectedIndex(0)
-                            switchMenu(encodeMenu.getSelectedItem())
+                            switchMenu(encodeMenu.getSelectedItem() as ToolMenu)
                             break
                         case ToolMenu.ENCRYPT:
                             encodeMenu.setVisible(false)
                             encryptMenu.setVisible(true)
                             encryptMenu.setSelectedIndex(0)
-                            switchMenu(encryptMenu.getSelectedItem())
+                            switchMenu(encryptMenu.getSelectedItem() as ToolMenu)
                             break
                         default:
                             encodeMenu.setVisible(false)
@@ -158,7 +156,7 @@ class TextFormatView extends JRootPane {
         })
         // 默认选中第一个
         mainMenu.setSelectedItem(0)
-        this.switchMenu(mainMenu.getSelectedItem())
+        this.switchMenu(mainMenu.getSelectedItem() as ToolMenu)
 
         // 转换按钮
         JButton format = new JButton("转换")
