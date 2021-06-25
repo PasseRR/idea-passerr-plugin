@@ -1,7 +1,7 @@
 # idea-passerr-plugin
 ## 1.命名切换
 在CamelCase, camelCase, snake_case and SNAKE_CASE之间 默认快捷键`Alt + Shift + U`  
-![命名](https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/camel.gif)
+![命名](./images/camel.gif)
 
 ## 2.格式化窗口
 右侧的ToolWindow有一个叫PTools的窗口   
@@ -9,15 +9,15 @@
 点开可以进行json格式化、mybatis日志格式化为可执行sql、url编码解码、base64加解密、md5加密   
 转换在输入文本域中快捷键为`Ctrl + Enter`
 * Json格式化  
-![Json](https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/json.gif)
+![Json](./images/json.gif)
 
 * Mybatis日志格式化  
-![Mybatis](https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/log.gif)
+![Mybatis](./images/log.gif)
 
 * 编码解码/加密解密
-![Encode](https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/encode.gif)
+![Encode](./images/encode.gif)
 
 ## 3.Console栏直接复制mybatis日志为可执行的sql
-![log](https://gitee.com/PasseRR/idea-passerr-plugin/raw/images/log_copy.gif)
+![log](./images/log_copy.gif)
 
 注：复制的mybatis日志必须包含`Preparing:`及`Parameters:`
