@@ -48,6 +48,7 @@
     <idea-version since-build="140.0"/>
 
     <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <application-components/>
 
@@ -67,6 +68,12 @@
                 text="Copy As Executable Sql"
                 description="Convert log to executable sql">
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
+        </action>
+
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyControllerPathAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyControllerPathAction"
+                text="Copy Controller Path">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
         </action>
     </actions>
 
