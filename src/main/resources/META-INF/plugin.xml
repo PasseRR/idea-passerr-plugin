@@ -55,7 +55,7 @@
     <project-components/>
 
     <actions>
-        <action id="ToggleCamelCase"
+        <action id="com.github.passerr.idea.plugins.camel.ToggleCamelCase"
                 class="com.github.passerr.idea.plugins.camel.ToggleCamelCase"
                 text="Toggle Camel Case"
                 description="Switches between CamelCase, camelCase, snake_case and SNAKE_CASE">
@@ -63,17 +63,23 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
         </action>
 
-        <action id="MybatisLog2Sql"
+        <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
                 class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
                 text="Copy As Executable Sql"
                 description="Convert log to executable sql">
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
         </action>
 
-        <action id="com.github.passerr.idea.plugins.spring.web.action.CopyControllerPathAction"
-                class="com.github.passerr.idea.plugins.spring.web.action.CopyControllerPathAction"
-                text="Copy Controller Path">
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
+                text="Copy Method Rest Path">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
+        </action>
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
+                text="Copy Method Api Doc">
+            <add-to-group group-id="EditorPopupMenu" anchor="after"
+                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"/>
         </action>
     </actions>
 

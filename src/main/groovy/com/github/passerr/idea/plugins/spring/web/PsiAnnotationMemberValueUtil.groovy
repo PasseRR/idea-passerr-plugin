@@ -15,6 +15,10 @@ import com.intellij.psi.PsiReferenceExpression
  * @author xiehai
  */
 class PsiAnnotationMemberValueUtil {
+    private PsiAnnotationMemberValueUtil() {
+
+    }
+
     /**
      * 获取注解属性
      * @param annotation 注解
@@ -35,7 +39,7 @@ class PsiAnnotationMemberValueUtil {
         }
 
         if (v instanceof PsiArrayInitializerMemberValue) {
-            return v.getInitializers().collect { it -> value(it) }
+            return v.getInitializers().collect { it -> value(it) } as Object[]
         }
 
         if (v instanceof PsiExpression) {
@@ -60,5 +64,19 @@ class PsiAnnotationMemberValueUtil {
         }
 
         return value.text
+    }
+
+    static Object getArrayFirstValue(PsiAnnotation annotation, String attribute) {
+        Object value = value(annotation, attribute)
+        if (value.getClass().isArray()) {
+            Object[] array = value as Object[]
+            if (array.length > 0) {
+                return array[0]
+            }
+
+            return null
+        }
+
+        return value
     }
 }
