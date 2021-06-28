@@ -22,6 +22,10 @@ class PsiAnnotationMemberValueUtil {
      * @return 属性值
      */
     static Object value(PsiAnnotation annotation, String attribute) {
+        if (Objects.isNull(annotation)) {
+            return null
+        }
+
         return value(annotation.findAttributeValue(attribute))
     }
 

@@ -26,11 +26,7 @@ class CopyControllerPathAction extends BaseControllerCopyAction {
         PsiMethod data = CommonDataKeys.PSI_ELEMENT.getData(dataContext) as PsiMethod
         PsiClass clazz = data.getContainingClass()
         PsiAnnotation classAnnotation = AnnotationUtil.findAnnotation(clazz, MappingAnnotation.REQUEST_MAPPING.name)
-        String prefix = ""
-        if (classAnnotation) {
-            // RequestMapping的value
-            prefix = PsiAnnotationMemberValueUtil.value(classAnnotation, "value") ?: ""
-        }
+        String prefix = PsiAnnotationMemberValueUtil.value(classAnnotation, "value") ?: ""
         // 肯定存在一个注解满足条件
         PsiAnnotation methodAnnotation = AnnotationUtil.findAnnotations(data, MappingAnnotation.values().collect { it -> it.name })[0]
         String suffix = PsiAnnotationMemberValueUtil.value(methodAnnotation, "value") ?: ""
