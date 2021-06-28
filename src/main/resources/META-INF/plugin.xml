@@ -70,8 +70,8 @@
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
         </action>
 
-        <action id="com.github.passerr.idea.plugins.spring.web.CopyControllerPathAction"
-                class="com.github.passerr.idea.plugins.spring.web.CopyControllerPathAction"
+        <action id="com.github.passerr.idea.plugins.spring.web.action.CopyControllerPathAction"
+                class="com.github.passerr.idea.plugins.spring.web.action.CopyControllerPathAction"
                 text="Copy Controller Path">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
         </action>

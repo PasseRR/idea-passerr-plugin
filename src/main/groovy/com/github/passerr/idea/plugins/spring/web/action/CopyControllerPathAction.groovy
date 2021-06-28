@@ -1,7 +1,8 @@
-package com.github.passerr.idea.plugins.spring.web
+package com.github.passerr.idea.plugins.spring.web.action
 
+import com.github.passerr.idea.plugins.spring.web.MappingAnnotation
+import com.github.passerr.idea.plugins.spring.web.PsiAnnotationMemberValueUtil
 import com.intellij.codeInsight.AnnotationUtil
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
@@ -17,7 +18,7 @@ import com.intellij.util.ui.TextTransferable
  * @Copyright (c) wisewe co.,ltd
  * @author xiehai
  */
-class CopyControllerPathAction extends AnAction {
+class CopyControllerPathAction extends BaseControllerCopyAction {
     @Override
     void actionPerformed(AnActionEvent e) {
         DataContext dataContext = e.getDataContext()
@@ -35,21 +36,5 @@ class CopyControllerPathAction extends AnAction {
         String suffix = PsiAnnotationMemberValueUtil.value(methodAnnotation, "value") ?: ""
 
         CopyPasteManager.getInstance().setContents(new TextTransferable(prefix + suffix))
-    }
-
-    @Override
-    void update(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext()
-        def data = CommonDataKeys.PSI_ELEMENT.getData(dataContext)
-        if (data instanceof PsiMethod) {
-            e.getPresentation()
-                .setEnabled(
-                    AnnotationUtil.findAnnotations(data, MappingAnnotation.values().collect { it -> it.name }).length > 0
-                )
-        } else {
-            // 方法上未找到注解
-            e.getPresentation().setEnabled(false)
-        }
-
     }
 }

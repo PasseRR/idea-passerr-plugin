@@ -1,10 +1,12 @@
 package com.github.passerr.idea.plugins.spring.web
 
-import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiAnnotationMemberValue
+import com.intellij.psi.PsiArrayInitializerMemberValue
 import com.intellij.psi.PsiExpression
-import com.intellij.psi.impl.JavaConstantExpressionEvaluator
+import com.intellij.psi.PsiField
+import com.intellij.psi.PsiLiteralExpression
+import com.intellij.psi.PsiReferenceExpression
 
 /**
  * {@link com.intellij.psi.PsiAnnotationMemberValue}工具
@@ -13,17 +15,46 @@ import com.intellij.psi.impl.JavaConstantExpressionEvaluator
  * @author xiehai
  */
 class PsiAnnotationMemberValueUtil {
+    /**
+     * 获取注解属性
+     * @param annotation 注解
+     * @param attribute 属性名
+     * @return 属性值
+     */
     static Object value(PsiAnnotation annotation, String attribute) {
-        def v = annotation.findAttributeValue(attribute)
-
-        return v ? value(v) : null
+        return value(annotation.findAttributeValue(attribute))
     }
 
-    static Object value(PsiAnnotationMemberValue value) {
-        if (value instanceof PsiExpression) {
-            return JavaConstantExpressionEvaluator.computeConstantExpression(value, false)
+    static Object value(PsiAnnotationMemberValue v) {
+        if (Objects.isNull(v)) {
+            return null
         }
 
-        return JavaPsiFacade.getInstance(value.getProject()).getConstantEvaluationHelper().computeConstantExpression(value)
+        if (v instanceof PsiArrayInitializerMemberValue) {
+            return v.getInitializers().collect { it -> value(it) }
+        }
+
+        if (v instanceof PsiExpression) {
+            return value(v)
+        }
+
+        return v.text
+    }
+
+    static Object value(PsiExpression value) {
+        if (value instanceof PsiLiteralExpression) {
+            return value.value
+        }
+
+        if (value instanceof PsiReferenceExpression) {
+            def resolve = value.resolve()
+            if (resolve instanceof PsiField) {
+                return resolve.computeConstantValue() ?: resolve.text
+            }
+
+            return value(resolve)
+        }
+
+        return value.text
     }
 }
