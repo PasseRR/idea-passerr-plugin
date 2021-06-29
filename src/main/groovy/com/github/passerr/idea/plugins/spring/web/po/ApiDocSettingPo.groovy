@@ -3,7 +3,6 @@ package com.github.passerr.idea.plugins.spring.web.po
 import com.github.passerr.idea.plugins.spring.web.WebCopyConstants
 import com.intellij.util.xmlb.annotations.AbstractCollection
 import com.intellij.util.xmlb.annotations.Tag
-
 /**
  * api文档设置持久化po
  * @date 2021/06/29 15:31
@@ -14,16 +13,16 @@ class ApiDocSettingPo {
     @Tag("template")
     String template = WebCopyConstants.DEFAULT_TEMPLATE
     @Tag("all-ignore-types")
-    @AbstractCollection(elementTag = "type")
+    @AbstractCollection
     List<String> allIgnoreTypes = WebCopyConstants.ALL_IGNORE_TYPES
     @Tag("query-param-ignore-types")
-    @AbstractCollection(elementTag = "type")
+    @AbstractCollection
     List<String> queryParamIgnoreTypes = WebCopyConstants.QUERY_PARAM_IGNORE_TYPES
     @Tag("query-param-ignore-annotations")
-    @AbstractCollection(elementTag = "annotation")
+    @AbstractCollection
     List<String> queryParamIgnoreAnnotations = WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS
     @Tag("aliases")
-    @AbstractCollection
+    @AbstractCollection(elementTypes = ApiDocAliasPairPo.class)
     List<ApiDocAliasPairPo> aliases = WebCopyConstants.DEFAULT_ALIAS_MAPPINGS.collect { key, value ->
         new ApiDocAliasPairPo(type: key, alias: value)
     }

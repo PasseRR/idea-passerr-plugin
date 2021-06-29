@@ -1,8 +1,4 @@
 package com.github.passerr.idea.plugins.spring.web.po
-
-
-import com.intellij.util.xmlb.annotations.Property
-
 /**
  * 别名对po
  * @date 2021/06/29 15:37
@@ -10,9 +6,7 @@ import com.intellij.util.xmlb.annotations.Property
  * @author xiehai
  */
 class ApiDocAliasPairPo {
-    @Property
     String type
-    @Property
     String alias
 
     static ApiDocAliasPairPo deepCopy(ApiDocAliasPairPo source) {

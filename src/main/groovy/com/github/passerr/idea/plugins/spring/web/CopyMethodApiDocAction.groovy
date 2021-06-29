@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web
 
+
 import com.intellij.codeInsight.AnnotationUtil
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.psi.PsiAnnotation
