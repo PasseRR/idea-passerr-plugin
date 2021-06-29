@@ -19,8 +19,8 @@ class CopyMethodPathAction extends BaseWebCopyAction {
             .setContents(
                 new TextTransferable(
                     url(
-                        classAnnotation(e),
-                        methodAnnotation(e)
+                        classAnnotation(method),
+                        methodAnnotation(method)
                     )
                 )
             )
