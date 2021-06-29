@@ -86,7 +86,7 @@ class CopyMethodApiDocAction extends BaseWebCopyAction {
                     return new Var(
                         name: PsiAnnotationMemberValueUtil.value(annotation, "value") ?: it.getText(),
                         type: type,
-                        alias: ApiDocSettings.getInstance().alias(type),
+                        alias: ApiDocStateComponent.getInstance().alias(type),
                         desc: comments.getOrDefault(it.getText(), it.getText())
                     )
                 }

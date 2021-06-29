@@ -10,14 +10,14 @@ class WebCopyConstants {
     /**
      * 均不支持的类型
      */
-    protected static final Set<String> ALL_IGNORE_TYPES = [
+    public static final List<String> ALL_IGNORE_TYPES = [
         "java.lang.Object",
         "java.util.Map"
     ]
     /**
      * 查询参数忽略类型
      */
-    protected static final Set<String> QUERY_PARAM_IGNORE_TYPES = [
+    public static final List<String> QUERY_PARAM_IGNORE_TYPES = [
         "org.springframework.ui.Model",
         "javax.servlet.http.HttpServletRequest",
         "javax.servlet.http.HttpServletResponse",
@@ -31,18 +31,18 @@ class WebCopyConstants {
     /**
      * 路径参数注解
      */
-    protected static final String PATH_VARIABLE_ANNOTATION = "org.springframework.web.bind.annotation.PathVariable"
+    public static final String PATH_VARIABLE_ANNOTATION = "org.springframework.web.bind.annotation.PathVariable"
     /**
      * 查询参数注解
      */
-    protected static final Set<String> QUERY_PARAM_ANNOTATIONS = [
+    public static final List<String> QUERY_PARAM_ANNOTATIONS = [
         "org.springframework.web.bind.annotation.RequestParam",
         "org.springframework.web.bind.annotation.RequestAttribute"
     ]
     /**
      * 查询参数忽略注解
      */
-    protected static final Set<String> QUERY_PARAM_IGNORE_ANNOTATIONS = [
+    public static final List<String> QUERY_PARAM_IGNORE_ANNOTATIONS = [
         "org.springframework.web.bind.annotation.CookieValue",
         "org.springframework.web.bind.annotation.RequestHeader",
         "org.springframework.web.bind.annotation.ResponseBody",
@@ -56,27 +56,27 @@ class WebCopyConstants {
     /**
      * 默认数据类型别名
      */
-    protected static final String DEFAULT_ALIAS = "object"
+    public static final String DEFAULT_ALIAS = "object"
     /**
      * 布尔类型
      */
-    protected static final String BOOLEAN_ALIAS = "boolean"
+    public static final String BOOLEAN_ALIAS = "boolean"
     /**
      * 整型
      */
-    protected static final String INT_ALIAS = "int"
+    public static final String INT_ALIAS = "int"
     /**
      * 浮点型
      */
-    protected static final String FLOAT_ALIAS = "float"
+    public static final String FLOAT_ALIAS = "float"
     /**
      * 字符串
      */
-    protected static final String STRING_ALIAS = "string"
+    public static final String STRING_ALIAS = "string"
     /**
      * 所有类型别名
      */
-    protected static final List<String> TYPE_ALIASES = [
+    public static final List<String> TYPE_ALIASES = [
         BOOLEAN_ALIAS,
         INT_ALIAS,
         FLOAT_ALIAS,
@@ -86,7 +86,7 @@ class WebCopyConstants {
     /**
      * 默认类型映射
      */
-    protected static final Map<String, String> DEFAULT_ALIAS_MAPPINGS = [:]
+    public static final Map<String, String> DEFAULT_ALIAS_MAPPINGS = [:]
     static {
         ["boolean", "java.lang.Boolean"].each { it -> DEFAULT_ALIAS_MAPPINGS.put(it, BOOLEAN_ALIAS) }
 
@@ -114,6 +114,12 @@ class WebCopyConstants {
             "java.util.LocalDateTime"
         ].each { it -> DEFAULT_ALIAS_MAPPINGS.put(it, STRING_ALIAS) }
     }
+
+    /**
+     * 默认文档模版
+     */
+    public static final String DEFAULT_TEMPLATE = """Hello
+    World"""
 
     private WebCopyConstants() {
 
