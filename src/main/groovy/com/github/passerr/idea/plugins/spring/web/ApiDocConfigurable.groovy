@@ -50,12 +50,10 @@ class ApiDocConfigurable implements Configurable {
         tabbedPanel.addChangeListener(new ChangeListener() {
             @Override
             void stateChanged(ChangeEvent e) {
-                ApiDocConfigurable.this.with {
-                    if (isModified()) {
-                        apply()
-                    }
-                    panels.find { p -> p.first == ((JBTabs) e.getSource()).getSelectedInfo().getText() }.second.repaint()
+                if (isModified()) {
+                    doApply()
                 }
+                panels.find { p -> p.first == ((JBTabs) e.getSource()).getSelectedInfo().getText() }.second.repaint()
             }
         })
 
@@ -73,6 +71,10 @@ class ApiDocConfigurable implements Configurable {
 
     @Override
     void apply() throws ConfigurationException {
+        this.doApply()
+    }
+
+    protected doApply() {
         this.source.update(this.copy)
     }
 

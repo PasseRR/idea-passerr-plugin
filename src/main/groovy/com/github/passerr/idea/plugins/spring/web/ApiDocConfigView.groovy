@@ -18,7 +18,11 @@ import java.awt.*
 class ApiDocConfigView {
     private static JPanel queryParamPanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new BorderLayout())
-        PanelWithButtons top = new IdeaPanelWithButtons() {
+        PanelWithButtons top = new PanelWithButtons() {
+            {
+                initPanel()
+            }
+
             @Override
             protected String getLabelText() {
                 "忽略类型"
@@ -49,7 +53,11 @@ class ApiDocConfigView {
                     .createPanel()
             }
         }
-        PanelWithButtons bottom = new IdeaPanelWithButtons() {
+        PanelWithButtons bottom = new PanelWithButtons() {
+            {
+                initPanel()
+            }
+
             @Override
             protected String getLabelText() {
                 "忽略注解"
@@ -90,12 +98,5 @@ class ApiDocConfigView {
             Pair.<String, JPanel> pair("Api模版", new JPanel()),
             Pair.<String, JPanel> pair("查询参数", queryParamPanel(setting))
         ]
-    }
-
-    abstract class IdeaPanelWithButtons extends PanelWithButtons {
-        IdeaPanelWithButtons() {
-            super()
-            super.initPanel()
-        }
     }
 }
