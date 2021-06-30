@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <idea-plugin>
     <id>com.github.passerr.idea.plugins</id>
     <name>PasseRR Idea Plugins</name>
@@ -55,39 +56,36 @@
     <project-components/>
 
     <actions>
-        <action id="com.github.passerr.idea.plugins.camel.ToggleCamelCase"
-                class="com.github.passerr.idea.plugins.camel.ToggleCamelCase"
-                text="Toggle Camel Case"
-                description="Switches between CamelCase, camelCase, snake_case and SNAKE_CASE">
-            <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
-        </action>
+        <!--        <action id="com.github.passerr.idea.plugins.camel.ToggleCamelCase"-->
+        <!--                class="com.github.passerr.idea.plugins.camel.ToggleCamelCase"-->
+        <!--                text="Toggle Camel Case"-->
+        <!--                description="Switches between CamelCase, camelCase, snake_case and SNAKE_CASE">-->
+        <!--            <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>-->
+        <!--            <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>-->
+        <!--        </action>-->
 
-        <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
-                class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
-                text="Copy As Executable Sql"
-                description="Convert log to executable sql">
-            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
-        </action>
+        <!--        <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"-->
+        <!--                class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"-->
+        <!--                text="Copy As Executable Sql"-->
+        <!--                description="Convert log to executable sql">-->
+        <!--            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>-->
+        <!--        </action>-->
 
         <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 text="Copy Method Rest Path">
             <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
         </action>
-        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
-                class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
-                text="Copy Method Api Doc">
-            <add-to-group group-id="EditorPopupMenu" anchor="after"
-                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"/>
-        </action>
+<!--        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"-->
+<!--                class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"-->
+<!--                text="Copy Method Api Doc">-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="after"-->
+<!--                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"/>-->
+<!--        </action>-->
     </actions>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="PTools" anchor="right" icon="/icon/tool.jpg"
-                    factoryClass="com.github.passerr.idea.plugins.tool.TextHandlerToolWindow"/>
-
-        <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>
-        <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>
-    </extensions>
+<!--    <extensions defaultExtensionNs="com.intellij">-->
+<!--        <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>-->
+<!--        <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>-->
+<!--    </extensions>-->
 </idea-plugin>
