@@ -11,20 +11,28 @@ import com.intellij.util.xmlb.annotations.Tag
  */
 class ApiDocSettingPo {
     @Tag("template")
-    String template = WebCopyConstants.DEFAULT_TEMPLATE
+    String template
     @Tag("all-ignore-types")
     @AbstractCollection
-    List<String> allIgnoreTypes = WebCopyConstants.ALL_IGNORE_TYPES
+    List<String> allIgnoreTypes
     @Tag("query-param-ignore-types")
     @AbstractCollection
-    List<String> queryParamIgnoreTypes = WebCopyConstants.QUERY_PARAM_IGNORE_TYPES
+    List<String> queryParamIgnoreTypes
     @Tag("query-param-ignore-annotations")
     @AbstractCollection
-    List<String> queryParamIgnoreAnnotations = WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS
+    List<String> queryParamIgnoreAnnotations
     @Tag("aliases")
     @AbstractCollection(elementTypes = ApiDocAliasPairPo.class)
-    List<ApiDocAliasPairPo> aliases = WebCopyConstants.DEFAULT_ALIAS_MAPPINGS.collect { key, value ->
-        new ApiDocAliasPairPo(type: key, alias: value)
+    List<ApiDocAliasPairPo> aliases
+
+    ApiDocSettingPo(){
+        this.template = WebCopyConstants.DEFAULT_TEMPLATE
+        this.allIgnoreTypes  = WebCopyConstants.ALL_IGNORE_TYPES
+        this.queryParamIgnoreTypes  = WebCopyConstants.QUERY_PARAM_IGNORE_TYPES
+        this.queryParamIgnoreAnnotations  = WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS
+        this.aliases = WebCopyConstants.DEFAULT_ALIAS_MAPPINGS.collect { key, value ->
+            new ApiDocAliasPairPo(type: key, alias: value)
+        }
     }
 
     static ApiDocSettingPo deepCopy(ApiDocSettingPo source) {
