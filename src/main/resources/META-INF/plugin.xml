@@ -74,7 +74,7 @@
         <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 text="Copy Method Rest Path">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Paste"/>
         </action>
 <!--        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"-->
 <!--                class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"-->
@@ -84,8 +84,8 @@
 <!--        </action>-->
     </actions>
 
-<!--    <extensions defaultExtensionNs="com.intellij">-->
-<!--        <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>-->
-<!--        <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>-->
-<!--    </extensions>-->
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>
+        <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>
+    </extensions>
 </idea-plugin>

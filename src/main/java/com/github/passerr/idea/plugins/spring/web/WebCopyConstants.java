@@ -45,13 +45,13 @@ public abstract class WebCopyConstants {
     /**
      * 查询参数忽略注解
      */
-    public static final List<String> QUERY_PARAM_IGNORE_ANNOTATIONS = Arrays.asList(
+    public static final List<String> QUERY_PARAM_IGNORE_ANNOTATIONS = new ArrayList<>(Arrays.asList(
         "org.springframework.web.bind.annotation.CookieValue",
         "org.springframework.web.bind.annotation.RequestHeader",
         "org.springframework.web.bind.annotation.ResponseBody",
         "org.springframework.web.bind.annotation.SessionAttribute",
         "org.springframework.web.bind.annotation.SessionAttributes"
-    );
+    ));
 
     static {
         QUERY_PARAM_IGNORE_ANNOTATIONS.add(PATH_VARIABLE_ANNOTATION);

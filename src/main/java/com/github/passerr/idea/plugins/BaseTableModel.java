@@ -5,10 +5,12 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
+ * {@link javax.swing.table.TableModel}双向绑定
  * @author xiehai
  * @date 2021/06/30 18:50
  * @Copyright(c) tellyes tech. inc. co.,ltd
@@ -18,7 +20,7 @@ public class BaseTableModel<T> extends AbstractTableModel implements ItemRemovab
     final List<T> data;
     final List<String> headers;
 
-    BaseTableModel(List<String> headers, List<T> data) {
+    public BaseTableModel(List<String> headers, List<T> data) {
         this.headers = headers;
         this.data = data;
     }
@@ -43,25 +45,19 @@ public class BaseTableModel<T> extends AbstractTableModel implements ItemRemovab
 
     @Override
     public int getColumnCount() {
-        return this.columns().isEmpty() ? 1 : this.columns().size();
+        return this.columns().size();
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Object value = this.data.get(rowIndex);
-        if (this.columns().isEmpty()) {
-            return value;
-        }
-
-        // TODO
-        return null;
+        return this.columns().get(columnIndex).apply(this.data.get(rowIndex));
     }
 
     /**
      * 列属性
      * @return 列
      */
-    List<String> columns() {
-        return new ArrayList<>();
+    List<Function<Object, Object>> columns() {
+        return Collections.singletonList(it -> it);
     }
 }
