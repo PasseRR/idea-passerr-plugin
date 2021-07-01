@@ -64,12 +64,12 @@
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
         </action>
 
-        <!--        <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"-->
-        <!--                class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"-->
-        <!--                text="Copy As Executable Sql"-->
-        <!--                description="Convert log to executable sql">-->
-        <!--            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>-->
-        <!--        </action>-->
+        <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
+                class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
+                text="Copy As Executable Sql"
+                description="Convert log to executable sql">
+            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
+        </action>
 
         <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"

@@ -18,12 +18,12 @@ public class NotificationThread extends Thread {
     Notification notification;
     int sleepTime;
 
-    NotificationThread(Notification notification) {
+    public NotificationThread(Notification notification) {
         // 默认4秒关闭弹窗
         this(notification, 4);
     }
 
-    NotificationThread(Notification notification, int sleepTime) {
+    public NotificationThread(Notification notification, int sleepTime) {
         assert sleepTime > 0;
         this.notification = notification;
         // 默认4秒关闭弹窗
