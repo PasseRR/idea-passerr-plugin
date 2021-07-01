@@ -4,16 +4,35 @@ import com.github.passerr.idea.plugins.BaseTableModel;
 import com.github.passerr.idea.plugins.IdeaJbTable;
 import com.github.passerr.idea.plugins.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
+import com.google.common.io.CharStreams;
+import com.intellij.codeInsight.template.TemplateContextType;
+import com.intellij.codeInsight.template.impl.TemplateEditorUtil;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.EditorFactory;
+import com.intellij.openapi.editor.EditorSettings;
+import com.intellij.openapi.editor.event.DocumentAdapter;
+import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.util.Pair;
+import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.PanelWithButtons;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
+import com.intellij.util.ui.UIUtil;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * api文档配置视图
@@ -27,12 +46,73 @@ public abstract class ApiDocConfigViews {
      * @param setting {@link ApiDocSettingPo}
      * @return {@link List}
      */
-    public static java.util.List<Pair<String, JPanel>> panels(ApiDocSettingPo setting) {
+    public static List<Pair<String, JPanel>> panels(ApiDocSettingPo setting) {
         return
             Arrays.asList(
-                Pair.pair("Api模版", new JPanel()),
+                Pair.pair("Api模版", apiTemplatePanel(setting)),
                 Pair.pair("查询参数", queryParamPanel(setting))
             );
+    }
+
+    /**
+     * api模版视图
+     * @param setting {@link ApiDocSettingPo}
+     * @return {@link JPanel}
+     */
+    private static JPanel apiTemplatePanel(ApiDocSettingPo setting) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        EditorFactory editorFactory = EditorFactory.getInstance();
+        Document document = editorFactory.createDocument(setting.getTemplate());
+        document.addDocumentListener(new DocumentAdapter() {
+            @Override
+            public void documentChanged(DocumentEvent e) {
+                setting.setTemplate(e.getDocument().getText());
+            }
+        });
+        Editor editor = editorFactory.createEditor(document);
+        TemplateEditorUtil.setHighlighter(editor, (TemplateContextType) null);
+        EditorSettings editorSettings = editor.getSettings();
+        editorSettings.setVirtualSpace(false);
+        editorSettings.setLineMarkerAreaShown(false);
+        editorSettings.setIndentGuidesShown(true);
+        editorSettings.setLineNumbersShown(true);
+        editorSettings.setFoldingOutlineShown(false);
+        editorSettings.setAdditionalColumnsCount(3);
+        editorSettings.setAdditionalLinesCount(3);
+        editorSettings.setCaretRowShown(false);
+
+        JEditorPane desc = new JEditorPane(UIUtil.HTML_MIME, "");
+        desc.setEditable(false);
+        desc.addHyperlinkListener(new BrowserHyperlinkListener());
+        try (InputStream resourceAsStream = ApiDocConfigViews.class.getResourceAsStream("/api-doc-desc.html")) {
+            desc.setText(CharStreams.toString(new InputStreamReader(resourceAsStream, StandardCharsets.UTF_8)));
+        } catch (IOException ignore) {
+        }
+        desc.setCaretPosition(0);
+
+        panel.add(
+            editor.getComponent(),
+            new GridBagConstraints(
+                0, 0, 1, 1, 1, 1,
+                GridBagConstraints.NORTH,
+                GridBagConstraints.BOTH,
+                JBUI.emptyInsets(), 0, 0
+            )
+        );
+
+        panel.add(
+            desc,
+            new GridBagConstraints(
+                0, 1, 1, 1, 1, 1,
+                GridBagConstraints.NORTH,
+                GridBagConstraints.BOTH,
+                JBUI.emptyInsets(), 0, 0
+            )
+        );
+
+        // 编辑模块
+        // 描述模块
+        return panel;
     }
 
     /**
@@ -42,17 +122,7 @@ public abstract class ApiDocConfigViews {
      */
     private static JPanel queryParamPanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
-        PanelWithButtons top = new IdeaPanelWithButtons() {
-            @Override
-            protected String getLabelText() {
-                return "忽略类型";
-            }
-
-            @Override
-            protected JButton[] createButtons() {
-                return new JButton[0];
-            }
-
+        PanelWithButtons top = new IdeaPanelWithButtons("忽略类型") {
             @Override
             protected JComponent createMainComponent() {
                 BaseTableModel<String> model = new BaseTableModel<>(
@@ -71,17 +141,7 @@ public abstract class ApiDocConfigViews {
                         .createPanel();
             }
         };
-        PanelWithButtons bottom = new IdeaPanelWithButtons() {
-            @Override
-            protected String getLabelText() {
-                return "忽略注解";
-            }
-
-            @Override
-            protected JButton[] createButtons() {
-                return new JButton[0];
-            }
-
+        PanelWithButtons bottom = new IdeaPanelWithButtons("忽略注解") {
             @Override
             protected JComponent createMainComponent() {
                 BaseTableModel<String> model = new BaseTableModel<>(

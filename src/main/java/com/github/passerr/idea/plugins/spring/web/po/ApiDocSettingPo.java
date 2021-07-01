@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 配置持久化po
  * @author xiehai
  * @date 2021/06/30 19:30
  * @Copyright(c) tellyes tech. inc. co.,ltd

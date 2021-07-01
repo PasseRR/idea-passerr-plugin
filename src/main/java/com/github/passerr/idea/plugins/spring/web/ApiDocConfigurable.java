@@ -12,6 +12,7 @@ import com.intellij.ui.tabs.TabInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Generated;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import java.util.List;
@@ -56,6 +57,10 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
             if (Objects.isNull(selectedInfo)) {
                 return;
             }
+            // 切换tab自动保存
+            if (this.isModified()) {
+                this.apply();
+            }
             String tab = selectedInfo.getText();
             panels.stream()
                 .filter(it -> Objects.equals(it.getFirst(), tab))
@@ -83,6 +88,7 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
         }
     }
 
+    @Generated({})
     @Override
     public void disposeUIResources() {
         if (this.disposable != null) {
