@@ -22,7 +22,7 @@ public class ApiDocAliasPairPo {
     String type;
     String alias;
 
-    public static ApiDocAliasPairPo deepCopy(ApiDocAliasPairPo source) {
-        return new ApiDocAliasPairPo(source.type, source.alias);
+    public ApiDocAliasPairPo deepCopy() {
+        return new ApiDocAliasPairPo(this.type, this.alias);
     }
 }

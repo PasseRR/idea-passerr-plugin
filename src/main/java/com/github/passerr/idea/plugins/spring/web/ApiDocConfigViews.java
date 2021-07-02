@@ -3,19 +3,29 @@ package com.github.passerr.idea.plugins.spring.web;
 import com.github.passerr.idea.plugins.BaseTableModel;
 import com.github.passerr.idea.plugins.IdeaJbTable;
 import com.github.passerr.idea.plugins.IdeaPanelWithButtons;
+import com.github.passerr.idea.plugins.spring.web.highlight.FileTemplateTokenType;
+import com.github.passerr.idea.plugins.spring.web.highlight.TemplateHighlighter;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.google.common.io.CharStreams;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.codeInsight.template.impl.TemplateEditorUtil;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.util.LayerDescriptor;
+import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
+import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.PanelWithButtons;
+import com.intellij.ui.ScrollPaneFactory;
+import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
@@ -61,16 +71,17 @@ public abstract class ApiDocConfigViews {
      */
     private static JPanel apiTemplatePanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
+
+        // 编辑模块
         EditorFactory editorFactory = EditorFactory.getInstance();
         Document document = editorFactory.createDocument(setting.getTemplate());
         document.addDocumentListener(new DocumentAdapter() {
             @Override
             public void documentChanged(DocumentEvent e) {
-                setting.setTemplate(e.getDocument().getText());
+                setting.setStringTemplate(e.getDocument().getText());
             }
         });
         Editor editor = editorFactory.createEditor(document);
-        TemplateEditorUtil.setHighlighter(editor, (TemplateContextType) null);
         EditorSettings editorSettings = editor.getSettings();
         editorSettings.setVirtualSpace(false);
         editorSettings.setLineMarkerAreaShown(false);
@@ -80,7 +91,36 @@ public abstract class ApiDocConfigViews {
         editorSettings.setAdditionalColumnsCount(3);
         editorSettings.setAdditionalLinesCount(3);
         editorSettings.setCaretRowShown(false);
+        SyntaxHighlighter ohl = SyntaxHighlighterFactory.getSyntaxHighlighter(FileTypes.PLAIN_TEXT, null, null);
+        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        LayeredLexerEditorHighlighter highlighter =
+            new LayeredLexerEditorHighlighter(new TemplateHighlighter(), scheme);
+        highlighter.registerLayer(FileTemplateTokenType.TEXT, new LayerDescriptor(ohl, ""));
+        ((EditorEx) editor).setHighlighter(highlighter);
+        JPanel templatePanel = new JPanel(new GridBagLayout());
+        templatePanel.add(
+            SeparatorFactory.createSeparator("模版:", null),
+            new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+        templatePanel.add(
+            editor.getComponent(),
+            new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                JBUI.insetsTop(2), 0, 0
+            )
+        );
+        panel.add(
+            templatePanel,
+            new GridBagConstraints(
+                0, 0, 1, 1, 1, 1,
+                GridBagConstraints.NORTH,
+                GridBagConstraints.BOTH,
+                JBUI.emptyInsets(), 0, 0
+            )
+        );
 
+        // 描述模块
         JEditorPane desc = new JEditorPane(UIUtil.HTML_MIME, "");
         desc.setEditable(false);
         desc.addHyperlinkListener(new BrowserHyperlinkListener());
@@ -90,18 +130,21 @@ public abstract class ApiDocConfigViews {
         }
         desc.setCaretPosition(0);
 
-        panel.add(
-            editor.getComponent(),
-            new GridBagConstraints(
-                0, 0, 1, 1, 1, 1,
-                GridBagConstraints.NORTH,
-                GridBagConstraints.BOTH,
-                JBUI.emptyInsets(), 0, 0
+        JPanel descriptionPanel = new JPanel(new GridBagLayout());
+        descriptionPanel.add(
+            SeparatorFactory.createSeparator("描述:", null),
+            new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                JBUI.insetsBottom(2), 0, 0
             )
         );
-
+        descriptionPanel.add(
+            ScrollPaneFactory.createScrollPane(desc),
+            new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                JBUI.insetsTop(2), 0, 0
+            )
+        );
         panel.add(
-            desc,
+            descriptionPanel,
             new GridBagConstraints(
                 0, 1, 1, 1, 1, 1,
                 GridBagConstraints.NORTH,
@@ -110,8 +153,6 @@ public abstract class ApiDocConfigViews {
             )
         );
 
-        // 编辑模块
-        // 描述模块
         return panel;
     }
 

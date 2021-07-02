@@ -32,7 +32,7 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
     ApiDocConfigurable() {
         this.source = ApiDocStateComponent.getInstance().getState();
         assert this.source != null;
-        this.copy = ApiDocSettingPo.deepCopy(this.source);
+        this.copy = this.source.deepCopy();
     }
 
     @Override
@@ -65,7 +65,10 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
             panels.stream()
                 .filter(it -> Objects.equals(it.getFirst(), tab))
                 .findFirst()
-                .ifPresent(it -> it.getSecond().repaint());
+                .ifPresent(it -> {
+                    it.getSecond().validate();
+                    it.getSecond().repaint();
+                });
         });
 
         return tabbedPanel.getComponent();
@@ -78,14 +81,12 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
 
     @Override
     public void apply() {
-        this.source.update(this.copy);
+        this.source.shallowCopy(this.copy);
     }
 
     @Override
     public void reset() {
-        if (this.isModified()) {
-            this.copy = ApiDocSettingPo.deepCopy(this.source);
-        }
+        this.copy.shallowCopy(this.source);
     }
 
     @Generated({})
