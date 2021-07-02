@@ -5,6 +5,7 @@ import com.github.passerr.idea.plugins.IdeaJbTable;
 import com.github.passerr.idea.plugins.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.spring.web.highlight.FileTemplateTokenType;
 import com.github.passerr.idea.plugins.spring.web.highlight.TemplateHighlighter;
+import com.github.passerr.idea.plugins.spring.web.po.ApiDocAliasPairPo;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.google.common.io.CharStreams;
 import com.intellij.openapi.editor.Document;
@@ -43,6 +44,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * api文档配置视图
@@ -60,7 +62,10 @@ public abstract class ApiDocConfigViews {
         return
             Arrays.asList(
                 Pair.pair("Api模版", apiTemplatePanel(setting)),
-                Pair.pair("查询参数", queryParamPanel(setting))
+                Pair.pair("查询参数", queryParamPanel(setting)),
+                Pair.pair("报文参数", bodyParamPanel(setting)),
+                Pair.pair("别名定义", aliasPanel(setting)),
+                Pair.pair("序列化配置", serialPanel(setting))
             );
     }
 
@@ -71,7 +76,6 @@ public abstract class ApiDocConfigViews {
      */
     private static JPanel apiTemplatePanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
-
         // 编辑模块
         EditorFactory editorFactory = EditorFactory.getInstance();
         Document document = editorFactory.createDocument(setting.getTemplate());
@@ -112,10 +116,7 @@ public abstract class ApiDocConfigViews {
         );
         panel.add(
             templatePanel,
-            new GridBagConstraints(
-                0, 0, 1, 1, 1, 1,
-                GridBagConstraints.NORTH,
-                GridBagConstraints.BOTH,
+            new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.emptyInsets(), 0, 0
             )
         );
@@ -145,10 +146,7 @@ public abstract class ApiDocConfigViews {
         );
         panel.add(
             descriptionPanel,
-            new GridBagConstraints(
-                0, 1, 1, 1, 1, 1,
-                GridBagConstraints.NORTH,
-                GridBagConstraints.BOTH,
+            new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.emptyInsets(), 0, 0
             )
         );
@@ -221,5 +219,99 @@ public abstract class ApiDocConfigViews {
         );
 
         return panel;
+    }
+
+    /**
+     * 报文参数忽略类型设置
+     * @param setting {@link ApiDocSettingPo}
+     * @return {@link JPanel}
+     */
+    private static JPanel bodyParamPanel(ApiDocSettingPo setting) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        PanelWithButtons top = new IdeaPanelWithButtons("忽略类型") {
+            @Override
+            protected JComponent createMainComponent() {
+                BaseTableModel<String> model = new BaseTableModel<>(
+                    Collections.singletonList("类型"), setting.getBodyIgnoreTypes());
+                JBTable table = new IdeaJbTable(model);
+
+                return
+                    ToolbarDecorator.createDecorator(table)
+                        .setAddAction(it -> {})
+                        .setAddActionName("新增")
+                        .setEditAction(it -> {})
+                        .setEditActionName("编辑")
+                        .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
+                        .setRemoveActionName("删除")
+                        .disableUpDownActions()
+                        .createPanel();
+            }
+        };
+        panel.add(
+            top,
+            new GridBagConstraints(
+                0, 0, 1, 1, 1, 1,
+                GridBagConstraints.NORTH,
+                GridBagConstraints.BOTH,
+                JBUI.emptyInsets(), 0, 0
+            )
+        );
+
+        return panel;
+    }
+
+    /**
+     * 报文参数忽略类型设置
+     * @param setting {@link ApiDocSettingPo}
+     * @return {@link JPanel}
+     */
+    private static JPanel aliasPanel(ApiDocSettingPo setting) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        PanelWithButtons top = new IdeaPanelWithButtons("") {
+            @Override
+            protected JComponent createMainComponent() {
+                BaseTableModel<ApiDocAliasPairPo> model = new BaseTableModel<ApiDocAliasPairPo>(
+                    Arrays.asList("类型", "别名"), setting.getAliases()) {
+                    @Override
+                    protected List<Function<ApiDocAliasPairPo, Object>> columns() {
+                        return Arrays.asList(ApiDocAliasPairPo::getType, ApiDocAliasPairPo::getAlias);
+                    }
+                };
+                JBTable table = new IdeaJbTable(model);
+
+                return
+                    ToolbarDecorator.createDecorator(table)
+                        .setAddAction(it -> {})
+                        .setAddActionName("新增")
+                        .setEditAction(it -> {})
+                        .setEditActionName("编辑")
+                        .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
+                        .setRemoveActionName("删除")
+                        .disableUpDownActions()
+                        .createPanel();
+            }
+
+
+        };
+        panel.add(
+            top,
+            new GridBagConstraints(
+                0, 0, 1, 1, 1, 1,
+                GridBagConstraints.NORTH,
+                GridBagConstraints.BOTH,
+                JBUI.emptyInsets(), 0, 0
+            )
+        );
+
+        return panel;
+    }
+
+    /**
+     * json序列化设置
+     * @param setting {@link ApiDocSettingPo}
+     * @return {@link JPanel}
+     */
+    private static JPanel serialPanel(ApiDocSettingPo setting) {
+        return new JPanel();
     }
 }

@@ -7,9 +7,7 @@
     </vendor>
 
     <description><![CDATA[
-      <p>
-        Switch easily between CamelCase, camelCase, snake_case and SNAKE_CASE. See Edit menu or use SHIFT + ALT + U.
-      </p>
+      变量命名切换、mybatis日志转可执行sql、常用的工具格式化、spring controller全路径复制、spring controller转api文档
       ]]></description>
 
     <change-notes>

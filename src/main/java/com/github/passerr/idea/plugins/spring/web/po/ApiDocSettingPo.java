@@ -26,22 +26,22 @@ import java.util.stream.Collectors;
 public class ApiDocSettingPo {
     @OptionTag(tag = "template", nameAttribute = "", converter = StringBuilderConverter.class)
     StringBuilder template;
-    @Tag("all-ignore-types")
-    @AbstractCollection
-    List<String> allIgnoreTypes;
     @Tag("query-param-ignore-types")
     @AbstractCollection
     List<String> queryParamIgnoreTypes;
     @Tag("query-param-ignore-annotations")
     @AbstractCollection
     List<String> queryParamIgnoreAnnotations;
+    @Tag("body-ignore-types")
+    @AbstractCollection
+    List<String> bodyIgnoreTypes;
     @Tag("aliases")
     @AbstractCollection(elementTypes = ApiDocAliasPairPo.class)
     List<ApiDocAliasPairPo> aliases;
 
     public ApiDocSettingPo() {
         this.template = new StringBuilder(WebCopyConstants.DEFAULT_TEMPLATE);
-        this.allIgnoreTypes = new ArrayList<>(WebCopyConstants.ALL_IGNORE_TYPES);
+        this.bodyIgnoreTypes = new ArrayList<>(WebCopyConstants.ALL_IGNORE_TYPES);
         this.queryParamIgnoreTypes = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_TYPES);
         this.queryParamIgnoreAnnotations = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS);
         this.aliases = WebCopyConstants.DEFAULT_ALIAS_MAPPINGS.entrySet()
@@ -54,7 +54,7 @@ public class ApiDocSettingPo {
         return
             new ApiDocSettingPo(
                 new StringBuilder(this.template),
-                new ArrayList<>(this.allIgnoreTypes),
+                new ArrayList<>(this.bodyIgnoreTypes),
                 new ArrayList<>(this.queryParamIgnoreTypes),
                 new ArrayList<>(this.queryParamIgnoreAnnotations),
                 this.aliases.stream().map(ApiDocAliasPairPo::deepCopy).collect(Collectors.toList())
@@ -64,8 +64,8 @@ public class ApiDocSettingPo {
     public void shallowCopy(ApiDocSettingPo source) {
         this.template.setLength(0);
         this.template.append(source.template);
-        this.allIgnoreTypes.clear();
-        this.allIgnoreTypes.addAll(source.getAllIgnoreTypes());
+        this.bodyIgnoreTypes.clear();
+        this.bodyIgnoreTypes.addAll(source.getBodyIgnoreTypes());
         this.queryParamIgnoreTypes.clear();
         this.queryParamIgnoreTypes.addAll(source.getQueryParamIgnoreTypes());
         this.queryParamIgnoreAnnotations.clear();
@@ -85,7 +85,7 @@ public class ApiDocSettingPo {
         if (o == null || getClass() != o.getClass()) { return false; }
         ApiDocSettingPo that = (ApiDocSettingPo) o;
         return Objects.equals(template.toString(), that.template.toString()) &&
-            Objects.equals(allIgnoreTypes, that.allIgnoreTypes) &&
+            Objects.equals(bodyIgnoreTypes, that.bodyIgnoreTypes) &&
             Objects.equals(queryParamIgnoreTypes, that.queryParamIgnoreTypes) &&
             Objects.equals(queryParamIgnoreAnnotations, that.queryParamIgnoreAnnotations) &&
             Objects.equals(aliases, that.aliases);
@@ -93,6 +93,6 @@ public class ApiDocSettingPo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(template, allIgnoreTypes, queryParamIgnoreTypes, queryParamIgnoreAnnotations, aliases);
+        return Objects.hash(template, bodyIgnoreTypes, queryParamIgnoreTypes, queryParamIgnoreAnnotations, aliases);
     }
 }

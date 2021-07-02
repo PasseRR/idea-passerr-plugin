@@ -57,7 +57,7 @@ public class BaseTableModel<T> extends AbstractTableModel implements ItemRemovab
      * 列属性
      * @return 列
      */
-    List<Function<Object, Object>> columns() {
+    protected List<Function<T, Object>> columns() {
         return Collections.singletonList(it -> it);
     }
 }
