@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web;
 
-import com.github.passerr.idea.plugins.spring.web.po.ApiDocAliasPairPo;
+import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
@@ -40,12 +40,13 @@ public class ApiDocStateComponent implements PersistentStateComponent<ApiDocSett
      */
     String alias(String type) {
         return
-            this.apiDocSettingPo.getAliases()
+            this.apiDocSettingPo.getObjects()
                 .stream()
                 .filter(it -> Objects.equals(it.getType(), type))
-                .map(ApiDocAliasPairPo::getAlias)
+                .map(ApiDocObjectSerialPo::getAlias)
                 .findFirst()
-                .orElse(WebCopyConstants.DEFAULT_ALIAS);
+                // 默认设置为字符串
+                .orElseGet(AliasType.STRING::getType);
     }
 
     static ApiDocStateComponent getInstance() {

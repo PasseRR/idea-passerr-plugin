@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web.po;
 
+import com.github.passerr.idea.plugins.spring.web.ResourceUtil;
 import com.github.passerr.idea.plugins.spring.web.WebCopyConstants;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.OptionTag;
@@ -35,19 +36,16 @@ public class ApiDocSettingPo {
     @Tag("body-ignore-types")
     @AbstractCollection
     List<String> bodyIgnoreTypes;
-    @Tag("aliases")
-    @AbstractCollection(elementTypes = ApiDocAliasPairPo.class)
-    List<ApiDocAliasPairPo> aliases;
+    @Tag("objects")
+    @AbstractCollection(elementTypes = ApiDocObjectSerialPo.class)
+    List<ApiDocObjectSerialPo> objects;
 
     public ApiDocSettingPo() {
-        this.template = new StringBuilder(WebCopyConstants.DEFAULT_TEMPLATE);
+        this.template = new StringBuilder(ResourceUtil.readAsString("/api-doc-template.vm"));
         this.bodyIgnoreTypes = new ArrayList<>(WebCopyConstants.ALL_IGNORE_TYPES);
         this.queryParamIgnoreTypes = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_TYPES);
         this.queryParamIgnoreAnnotations = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS);
-        this.aliases = WebCopyConstants.DEFAULT_ALIAS_MAPPINGS.entrySet()
-            .stream()
-            .map(it -> new ApiDocAliasPairPo(it.getKey(), it.getValue()))
-            .collect(Collectors.toList());
+        this.objects = ApiDocObjectSerialPo.defaultObjects();
     }
 
     public ApiDocSettingPo deepCopy() {
@@ -57,7 +55,7 @@ public class ApiDocSettingPo {
                 new ArrayList<>(this.bodyIgnoreTypes),
                 new ArrayList<>(this.queryParamIgnoreTypes),
                 new ArrayList<>(this.queryParamIgnoreAnnotations),
-                this.aliases.stream().map(ApiDocAliasPairPo::deepCopy).collect(Collectors.toList())
+                this.objects.stream().map(ApiDocObjectSerialPo::deepCopy).collect(Collectors.toList())
             );
     }
 
@@ -70,8 +68,8 @@ public class ApiDocSettingPo {
         this.queryParamIgnoreTypes.addAll(source.getQueryParamIgnoreTypes());
         this.queryParamIgnoreAnnotations.clear();
         this.queryParamIgnoreAnnotations.addAll(source.getQueryParamIgnoreAnnotations());
-        this.aliases.clear();
-        this.aliases.addAll(source.getAliases());
+        this.objects.clear();
+        this.objects.addAll(source.getObjects());
     }
 
     public void setStringTemplate(String template) {
@@ -88,11 +86,11 @@ public class ApiDocSettingPo {
             Objects.equals(bodyIgnoreTypes, that.bodyIgnoreTypes) &&
             Objects.equals(queryParamIgnoreTypes, that.queryParamIgnoreTypes) &&
             Objects.equals(queryParamIgnoreAnnotations, that.queryParamIgnoreAnnotations) &&
-            Objects.equals(aliases, that.aliases);
+            Objects.equals(objects, that.objects);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(template, bodyIgnoreTypes, queryParamIgnoreTypes, queryParamIgnoreAnnotations, aliases);
+        return Objects.hash(template, bodyIgnoreTypes, queryParamIgnoreTypes, queryParamIgnoreAnnotations, objects);
     }
 }

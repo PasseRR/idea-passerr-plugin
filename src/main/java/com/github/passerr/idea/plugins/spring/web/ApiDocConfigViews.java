@@ -5,9 +5,8 @@ import com.github.passerr.idea.plugins.IdeaJbTable;
 import com.github.passerr.idea.plugins.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.spring.web.highlight.FileTemplateTokenType;
 import com.github.passerr.idea.plugins.spring.web.highlight.TemplateHighlighter;
-import com.github.passerr.idea.plugins.spring.web.po.ApiDocAliasPairPo;
+import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
-import com.google.common.io.CharStreams;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
@@ -37,10 +36,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -64,7 +59,6 @@ public abstract class ApiDocConfigViews {
                 Pair.pair("Api模版", apiTemplatePanel(setting)),
                 Pair.pair("查询参数", queryParamPanel(setting)),
                 Pair.pair("报文参数", bodyParamPanel(setting)),
-                Pair.pair("别名定义", aliasPanel(setting)),
                 Pair.pair("序列化配置", serialPanel(setting))
             );
     }
@@ -125,10 +119,7 @@ public abstract class ApiDocConfigViews {
         JEditorPane desc = new JEditorPane(UIUtil.HTML_MIME, "");
         desc.setEditable(false);
         desc.addHyperlinkListener(new BrowserHyperlinkListener());
-        try (InputStream resourceAsStream = ApiDocConfigViews.class.getResourceAsStream("/api-doc-desc.html")) {
-            desc.setText(CharStreams.toString(new InputStreamReader(resourceAsStream, StandardCharsets.UTF_8)));
-        } catch (IOException ignore) {
-        }
+        desc.setText(ResourceUtil.readAsString("/api-doc-desc.html"));
         desc.setCaretPosition(0);
 
         JPanel descriptionPanel = new JPanel(new GridBagLayout());
@@ -161,7 +152,7 @@ public abstract class ApiDocConfigViews {
      */
     private static JPanel queryParamPanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
-        PanelWithButtons top = new IdeaPanelWithButtons("忽略类型") {
+        PanelWithButtons top = new IdeaPanelWithButtons("忽略类型:") {
             @Override
             protected JComponent createMainComponent() {
                 BaseTableModel<String> model = new BaseTableModel<>(
@@ -180,7 +171,7 @@ public abstract class ApiDocConfigViews {
                         .createPanel();
             }
         };
-        PanelWithButtons bottom = new IdeaPanelWithButtons("忽略注解") {
+        PanelWithButtons bottom = new IdeaPanelWithButtons("忽略注解:") {
             @Override
             protected JComponent createMainComponent() {
                 BaseTableModel<String> model = new BaseTableModel<>(
@@ -228,7 +219,7 @@ public abstract class ApiDocConfigViews {
      */
     private static JPanel bodyParamPanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
-        PanelWithButtons top = new IdeaPanelWithButtons("忽略类型") {
+        PanelWithButtons top = new IdeaPanelWithButtons("忽略类型:") {
             @Override
             protected JComponent createMainComponent() {
                 BaseTableModel<String> model = new BaseTableModel<>(
@@ -261,20 +252,25 @@ public abstract class ApiDocConfigViews {
     }
 
     /**
-     * 报文参数忽略类型设置
+     * 序列化配置
      * @param setting {@link ApiDocSettingPo}
      * @return {@link JPanel}
      */
-    private static JPanel aliasPanel(ApiDocSettingPo setting) {
+    private static JPanel serialPanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
         PanelWithButtons top = new IdeaPanelWithButtons("") {
             @Override
             protected JComponent createMainComponent() {
-                BaseTableModel<ApiDocAliasPairPo> model = new BaseTableModel<ApiDocAliasPairPo>(
-                    Arrays.asList("类型", "别名"), setting.getAliases()) {
+                BaseTableModel<ApiDocObjectSerialPo> model = new BaseTableModel<ApiDocObjectSerialPo>(
+                    Arrays.asList("类型", "别名", "序列化默认值"), setting.getObjects()) {
                     @Override
-                    protected List<Function<ApiDocAliasPairPo, Object>> columns() {
-                        return Arrays.asList(ApiDocAliasPairPo::getType, ApiDocAliasPairPo::getAlias);
+                    protected List<Function<ApiDocObjectSerialPo, Object>> columns() {
+                        return
+                            Arrays.asList(
+                                ApiDocObjectSerialPo::getType,
+                                ApiDocObjectSerialPo::getAlias,
+                                ApiDocObjectSerialPo::getValue
+                            );
                     }
                 };
                 JBTable table = new IdeaJbTable(model);
@@ -304,14 +300,5 @@ public abstract class ApiDocConfigViews {
         );
 
         return panel;
-    }
-
-    /**
-     * json序列化设置
-     * @param setting {@link ApiDocSettingPo}
-     * @return {@link JPanel}
-     */
-    private static JPanel serialPanel(ApiDocSettingPo setting) {
-        return new JPanel();
     }
 }
