@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 对象序列化
@@ -103,5 +104,12 @@ public class ApiDocObjectSerialPo {
 
 
         return objects;
+    }
+
+    public boolean isOk() {
+        return
+            Objects.nonNull(this.type) && !this.type.isEmpty()
+                && Objects.nonNull(this.alias) && !this.alias.isEmpty()
+                && Objects.nonNull(this.value) && !this.value.isEmpty();
     }
 }

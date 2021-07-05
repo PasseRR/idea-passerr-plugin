@@ -32,6 +32,7 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -40,9 +41,11 @@ import javax.swing.JTextField;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ItemEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -163,12 +166,61 @@ public abstract class ApiDocConfigViews {
                 BaseTableModel<String> model = new BaseTableModel<>(
                     Collections.singletonList("类型"), setting.getQueryParamIgnoreTypes());
                 JBTable table = new IdeaJbTable(model);
+                // 弹出层构建器
+                BiFunction<StringBuilder, Runnable, JComponent> function = (s, r) -> {
+                    JPanel p = new JPanel(new GridBagLayout());
+                    GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        JBUI.insets(0, 0, 5, 10), 0, 0
+                    );
+                    JLabel typeLabel = new JLabel("类型");
+                    p.add(typeLabel, gb);
+                    JTextField textField = new JTextField(s.toString());
+                    textField.getDocument()
+                        .addDocumentListener(
+                            new com.intellij.ui.DocumentAdapter() {
+                                @Override
+                                protected void textChanged(javax.swing.event.DocumentEvent e) {
+                                    s.setLength(0);
+                                    s.append(textField.getText());
+                                    r.run();
+                                }
+                            });
+                    Dimension oldPreferredSize = textField.getPreferredSize();
+                    textField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
+                    gb.gridx = 1;
+                    gb.gridwidth = GridBagConstraints.REMAINDER;
+                    gb.weightx = 1;
+                    p.add(textField, gb);
+                    r.run();
 
+                    return p;
+                };
                 return
                     ToolbarDecorator.createDecorator(table)
-                        .setAddAction(it -> {})
+                        .setAddAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("新增忽略类型")
+                                .value(new StringBuilder())
+                                .okAction(t -> setting.getQueryParamIgnoreTypes().add(t.toString()))
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setAddActionName("新增")
-                        .setEditAction(it -> {})
+                        .setEditAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("编辑忽略类型")
+                                .value(new StringBuilder(model.getRow(table.getSelectedRow())))
+                                .okAction(t ->
+                                    setting.getQueryParamIgnoreTypes().set(table.getSelectedRow(), t.toString())
+                                )
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setEditActionName("编辑")
                         .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
                         .setRemoveActionName("删除")
@@ -182,12 +234,61 @@ public abstract class ApiDocConfigViews {
                 BaseTableModel<String> model = new BaseTableModel<>(
                     Collections.singletonList("注解"), setting.getQueryParamIgnoreAnnotations());
                 JBTable table = new IdeaJbTable(model);
+                // 弹出层构建器
+                BiFunction<StringBuilder, Runnable, JComponent> function = (s, r) -> {
+                    JPanel p = new JPanel(new GridBagLayout());
+                    GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        JBUI.insets(0, 0, 5, 10), 0, 0
+                    );
+                    JLabel typeLabel = new JLabel("注解");
+                    p.add(typeLabel, gb);
+                    JTextField textField = new JTextField(s.toString());
+                    textField.getDocument()
+                        .addDocumentListener(
+                            new com.intellij.ui.DocumentAdapter() {
+                                @Override
+                                protected void textChanged(javax.swing.event.DocumentEvent e) {
+                                    s.setLength(0);
+                                    s.append(textField.getText());
+                                    r.run();
+                                }
+                            });
+                    Dimension oldPreferredSize = textField.getPreferredSize();
+                    textField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
+                    gb.gridx = 1;
+                    gb.gridwidth = GridBagConstraints.REMAINDER;
+                    gb.weightx = 1;
+                    p.add(textField, gb);
+                    r.run();
 
+                    return p;
+                };
                 return
                     ToolbarDecorator.createDecorator(table)
-                        .setAddAction(it -> {})
+                        .setAddAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("新增忽略注解")
+                                .value(new StringBuilder())
+                                .okAction(t -> setting.getQueryParamIgnoreAnnotations().add(t.toString()))
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setAddActionName("新增")
-                        .setEditAction(it -> {})
+                        .setEditAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("编辑忽略注解")
+                                .value(new StringBuilder(model.getRow(table.getSelectedRow())))
+                                .okAction(t ->
+                                    setting.getQueryParamIgnoreAnnotations().set(table.getSelectedRow(), t.toString())
+                                )
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setEditActionName("编辑")
                         .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
                         .setRemoveActionName("删除")
@@ -326,12 +427,106 @@ public abstract class ApiDocConfigViews {
                     }
                 };
                 JBTable table = new IdeaJbTable(model);
+                // 弹出层构建器
+                BiFunction<ApiDocObjectSerialPo, Runnable, JComponent> function = (s, r) -> {
+                    JPanel p = new JPanel(new GridBagLayout());
+                    GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        JBUI.insets(0, 0, 5, 10), 0, 0
+                    );
+                    JLabel typeLabel = new JLabel("类型");
+                    p.add(typeLabel, gb);
+                    JTextField textField = new JTextField();
+                    Optional.ofNullable(s.getType()).ifPresent(textField::setText);
+                    textField.getDocument()
+                        .addDocumentListener(
+                            new com.intellij.ui.DocumentAdapter() {
+                                @Override
+                                protected void textChanged(javax.swing.event.DocumentEvent e) {
+                                    s.setType(textField.getText());
+                                    r.run();
+                                }
+                            });
+                    Dimension oldPreferredSize = textField.getPreferredSize();
+                    textField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
+                    gb.gridx = 1;
+                    gb.gridwidth = GridBagConstraints.REMAINDER;
+                    gb.weightx = 1;
+                    p.add(textField, gb);
+
+                    JLabel aliasLabel = new JLabel("别名");
+                    gb.gridy++;
+                    gb.gridx = 0;
+                    gb.gridwidth = 1;
+                    gb.weightx = 0;
+                    p.add(aliasLabel, gb);
+                    JComboBox<String> aliasCombobox = new JComboBox<>(
+                        Arrays.stream(AliasType.values())
+                            .map(AliasType::getType)
+                            .toArray(String[]::new)
+                    );
+                    aliasCombobox.addItemListener(e -> {
+                        if (e.getStateChange() == ItemEvent.SELECTED) {
+                            s.setAlias((String) e.getItem());
+                        }
+                    });
+                    Optional.ofNullable(s.getAlias()).ifPresent(aliasCombobox::setSelectedItem);
+                    gb.gridx = 1;
+                    gb.fill = GridBagConstraints.NONE;
+                    gb.gridwidth = GridBagConstraints.REMAINDER;
+                    gb.weightx = 0;
+                    p.add(aliasCombobox, gb);
+
+                    JLabel valueLabel = new JLabel("序列化默认值");
+                    gb.gridy++;
+                    gb.gridx = 0;
+                    gb.gridwidth = 1;
+                    gb.weightx = 0;
+                    p.add(valueLabel, gb);
+                    JTextField valueField = new JTextField();
+                    Optional.ofNullable(s.getValue()).ifPresent(valueField::setText);
+                    valueField.getDocument()
+                        .addDocumentListener(
+                            new com.intellij.ui.DocumentAdapter() {
+                                @Override
+                                protected void textChanged(javax.swing.event.DocumentEvent e) {
+                                    s.setValue(valueField.getText());
+                                    r.run();
+                                }
+                            });
+                    valueField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
+                    gb.gridx = 1;
+                    gb.gridwidth = GridBagConstraints.REMAINDER;
+                    gb.weightx = 1;
+                    p.add(valueField, gb);
+                    r.run();
+
+                    return p;
+                };
 
                 return
                     ToolbarDecorator.createDecorator(table)
-                        .setAddAction(it -> {})
+                        .setAddAction(it ->
+                            new IdeaDialog<ApiDocObjectSerialPo>(panel)
+                                .title("新增序列化")
+                                .value(new ApiDocObjectSerialPo())
+                                .okAction(setting.getObjects()::add)
+                                .changePredicate(ApiDocObjectSerialPo::isOk)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setAddActionName("新增")
-                        .setEditAction(it -> {})
+                        .setEditAction(it ->
+                            new IdeaDialog<ApiDocObjectSerialPo>(panel)
+                                .title("编辑序列化")
+                                .value(model.getRow(table.getSelectedRow()))
+                                .okAction(t -> setting.getObjects().set(table.getSelectedRow(), t))
+                                .changePredicate(ApiDocObjectSerialPo::isOk)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setEditActionName("编辑")
                         .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
                         .setRemoveActionName("删除")
