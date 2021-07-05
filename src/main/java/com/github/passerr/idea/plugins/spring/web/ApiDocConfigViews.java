@@ -391,10 +391,88 @@ public abstract class ApiDocConfigViews {
                         .createPanel();
             }
         };
+        PanelWithButtons bottom = new IdeaPanelWithButtons("忽略注解(字段上的注解):") {
+            @Override
+            protected JComponent createMainComponent() {
+                BaseTableModel<String> model = new BaseTableModel<>(
+                    Collections.singletonList("注解"), setting.getBodyIgnoreAnnotations());
+                JBTable table = new IdeaJbTable(model);
+                // 弹出层构建器
+                BiFunction<StringBuilder, Runnable, JComponent> function = (s, r) -> {
+                    JPanel p = new JPanel(new GridBagLayout());
+                    GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        JBUI.insets(0, 0, 5, 10), 0, 0
+                    );
+                    JLabel typeLabel = new JLabel("注解");
+                    p.add(typeLabel, gb);
+                    JTextField textField = new JTextField(s.toString());
+                    textField.getDocument()
+                        .addDocumentListener(
+                            new com.intellij.ui.DocumentAdapter() {
+                                @Override
+                                protected void textChanged(javax.swing.event.DocumentEvent e) {
+                                    s.setLength(0);
+                                    s.append(textField.getText());
+                                    r.run();
+                                }
+                            });
+                    Dimension oldPreferredSize = textField.getPreferredSize();
+                    textField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
+                    gb.gridx = 1;
+                    gb.gridwidth = GridBagConstraints.REMAINDER;
+                    gb.weightx = 1;
+                    p.add(textField, gb);
+                    r.run();
+
+                    return p;
+                };
+                return
+                    ToolbarDecorator.createDecorator(table)
+                        .setAddAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("新增忽略注解")
+                                .value(new StringBuilder())
+                                .okAction(t -> setting.getBodyIgnoreAnnotations().add(t.toString()))
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
+                        .setAddActionName("新增")
+                        .setEditAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("编辑忽略注解")
+                                .value(new StringBuilder(model.getRow(table.getSelectedRow())))
+                                .okAction(t ->
+                                    setting.getBodyIgnoreAnnotations().set(table.getSelectedRow(), t.toString())
+                                )
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
+                        .setEditActionName("编辑")
+                        .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
+                        .setRemoveActionName("删除")
+                        .disableUpDownActions()
+                        .createPanel();
+            }
+        };
         panel.add(
             top,
             new GridBagConstraints(
                 0, 0, 1, 1, 1, 1,
+                GridBagConstraints.NORTH,
+                GridBagConstraints.BOTH,
+                JBUI.emptyInsets(), 0, 0
+            )
+        );
+
+        panel.add(
+            bottom,
+            new GridBagConstraints(
+                0, 1, 1, 1, 1, 1,
                 GridBagConstraints.NORTH,
                 GridBagConstraints.BOTH,
                 JBUI.emptyInsets(), 0, 0

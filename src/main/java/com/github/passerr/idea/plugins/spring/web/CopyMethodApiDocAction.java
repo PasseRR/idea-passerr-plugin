@@ -5,6 +5,7 @@ import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
@@ -169,29 +170,25 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                     // 对象类型
                     if (UNKNOWN_ALIAS.equals(alias)) {
                         PsiClass clazz = PsiTypesUtil.getPsiClass(it.getType());
+                        // 未知类型
                         if (Objects.isNull(clazz)) {
                             return Stream.empty();
                         }
 
                         return
                             Arrays.stream(clazz.getAllFields())
-                                .filter(f -> {
-                                    PsiModifierList modifierList = f.getModifierList();
-                                    if (Objects.isNull(modifierList)) {
-                                        return true;
-                                    }
-
-                                    return !modifierList.hasExplicitModifier(PsiModifier.STATIC)
-                                        && !modifierList.hasExplicitModifier(PsiModifier.TRANSIENT);
-                                })
+                                .filter(CopyMethodApiDocAction::isValidFiled)
+                                // 查询参数只遍历一层 且忽略掉这层的未知类型
                                 .filter(f -> !UNKNOWN_ALIAS.equals(state.alias(f.getType().getCanonicalText())))
                                 .map(f ->
                                     new Var(
                                         f.getName(),
                                         f.getType().getCanonicalText(),
                                         state.alias(f.getType().getCanonicalText()),
-                                        // TODO 获得字段注释
-                                        comments.getOrDefault(it.getText(), it.getText())
+                                        // TODO 获取字段注释
+                                        Optional.ofNullable(f.getDocComment())
+                                            .map(PsiDocComment::getText)
+                                            .orElse(f.getName())
                                     )
                                 );
                     } else {
@@ -238,6 +235,21 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                 && !clazz.isInterface()
                 && !excludeTypes.contains(clazz.getQualifiedName())
                 && AnnotationUtil.findAnnotations(parameter, excludeAnnotations).length == 0;
+    }
+
+    /**
+     * 是否是合法字段
+     * @param field {@link PsiField}
+     * @return 非static、transient字段
+     */
+    private static boolean isValidFiled(PsiField field) {
+        PsiModifierList modifierList = field.getModifierList();
+        if (Objects.isNull(modifierList)) {
+            return true;
+        }
+
+        return !modifierList.hasExplicitModifier(PsiModifier.STATIC)
+            && !modifierList.hasExplicitModifier(PsiModifier.TRANSIENT);
     }
 
     /**

@@ -37,15 +37,19 @@ public class ApiDocSettingPo {
     @Tag("body-ignore-types")
     @AbstractCollection
     List<String> bodyIgnoreTypes;
+    @Tag("body-ignore-annotations")
+    @AbstractCollection
+    List<String> bodyIgnoreAnnotations;
     @Tag("objects")
     @AbstractCollection(elementTypes = ApiDocObjectSerialPo.class)
     List<ApiDocObjectSerialPo> objects;
 
     public ApiDocSettingPo() {
         this.template = new StringBuilder(ResourceUtil.readAsString("/api-doc-template.vm"));
-        this.bodyIgnoreTypes = new ArrayList<>(WebCopyConstants.ALL_IGNORE_TYPES);
         this.queryParamIgnoreTypes = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_TYPES);
         this.queryParamIgnoreAnnotations = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS);
+        this.bodyIgnoreTypes = new ArrayList<>(WebCopyConstants.ALL_IGNORE_TYPES);
+        this.bodyIgnoreAnnotations = new ArrayList<>();
         this.objects = ApiDocObjectSerialPo.defaultObjects();
     }
 
@@ -53,9 +57,10 @@ public class ApiDocSettingPo {
         return
             new ApiDocSettingPo(
                 new StringBuilder(this.template),
-                new ArrayList<>(this.bodyIgnoreTypes),
                 new ArrayList<>(this.queryParamIgnoreTypes),
                 new ArrayList<>(this.queryParamIgnoreAnnotations),
+                new ArrayList<>(this.bodyIgnoreTypes),
+                new ArrayList<>(this.bodyIgnoreAnnotations),
                 this.objects.stream().map(ApiDocObjectSerialPo::deepCopy).collect(Collectors.toList())
             );
     }
