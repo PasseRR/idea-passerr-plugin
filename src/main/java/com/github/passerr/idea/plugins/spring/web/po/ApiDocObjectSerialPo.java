@@ -41,12 +41,6 @@ public class ApiDocObjectSerialPo {
      */
     String value;
 
-    public ApiDocObjectSerialPo(ApiDocObjectSerialPo that) {
-        this.type = that.type;
-        this.alias = that.alias;
-        this.value = that.value;
-    }
-
     public ApiDocObjectSerialPo deepCopy() {
         return new ApiDocObjectSerialPo(this.type, this.alias, this.value);
     }

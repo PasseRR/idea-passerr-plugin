@@ -71,6 +71,8 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
                 });
         });
 
+        tabbedPanel.setSelectedIndex(0);
+
         return tabbedPanel.getComponent();
     }
 

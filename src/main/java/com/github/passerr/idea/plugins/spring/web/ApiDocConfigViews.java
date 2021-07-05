@@ -1,6 +1,7 @@
 package com.github.passerr.idea.plugins.spring.web;
 
 import com.github.passerr.idea.plugins.BaseTableModel;
+import com.github.passerr.idea.plugins.IdeaDialog;
 import com.github.passerr.idea.plugins.IdeaJbTable;
 import com.github.passerr.idea.plugins.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.spring.web.highlight.FileTemplateTokenType;
@@ -33,12 +34,16 @@ import com.intellij.util.ui.UIUtil;
 
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -225,12 +230,59 @@ public abstract class ApiDocConfigViews {
                 BaseTableModel<String> model = new BaseTableModel<>(
                     Collections.singletonList("类型"), setting.getBodyIgnoreTypes());
                 JBTable table = new IdeaJbTable(model);
+                // 弹出层构建器
+                BiFunction<StringBuilder, Runnable, JComponent> function = (s, r) -> {
+                    JPanel p = new JPanel(new GridBagLayout());
+                    GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
+                        JBUI.insets(0, 0, 5, 10), 0, 0
+                    );
+                    JLabel typeLabel = new JLabel("类型");
+                    p.add(typeLabel, gb);
+                    JTextField textField = new JTextField(s.toString());
+                    textField.getDocument()
+                        .addDocumentListener(
+                            new com.intellij.ui.DocumentAdapter() {
+                                @Override
+                                protected void textChanged(javax.swing.event.DocumentEvent e) {
+                                    s.setLength(0);
+                                    s.append(textField.getText());
+                                    r.run();
+                                }
+                            });
+                    Dimension oldPreferredSize = textField.getPreferredSize();
+                    textField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
+                    gb.gridx = 1;
+                    gb.gridwidth = GridBagConstraints.REMAINDER;
+                    gb.weightx = 1;
+                    p.add(textField, gb);
+                    r.run();
 
+                    return p;
+                };
                 return
                     ToolbarDecorator.createDecorator(table)
-                        .setAddAction(it -> {})
+                        .setAddAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("新增忽略类型")
+                                .value(new StringBuilder())
+                                .okAction(t -> setting.getBodyIgnoreTypes().add(t.toString()))
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setAddActionName("新增")
-                        .setEditAction(it -> {})
+                        .setEditAction(it ->
+                            new IdeaDialog<StringBuilder>(panel)
+                                .title("编辑忽略类型")
+                                .value(new StringBuilder(model.getRow(table.getSelectedRow())))
+                                .okAction(t -> setting.getBodyIgnoreTypes().set(table.getSelectedRow(), t.toString()))
+                                .changePredicate(t -> t.length() > 0)
+                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .doInit()
+                                .showAndGet()
+                        )
                         .setEditActionName("编辑")
                         .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
                         .setRemoveActionName("删除")

@@ -53,6 +53,10 @@ public class BaseTableModel<T> extends AbstractTableModel implements ItemRemovab
         return this.columns().get(columnIndex).apply(this.data.get(rowIndex));
     }
 
+    public T getRow(int rowIndex) {
+        return this.data.get(rowIndex);
+    }
+
     /**
      * 列属性
      * @return 列
