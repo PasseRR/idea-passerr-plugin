@@ -38,6 +38,10 @@ public abstract class WebCopyConstants {
      */
     public static final String QUERY_PARAM_ANNOTATION = "org.springframework.web.bind.annotation.RequestParam";
     /**
+     * 报文体参数注解
+     */
+    public static final String BODY_ANNOTATION = "org.springframework.web.bind.annotation.RequestBody";
+    /**
      * 查询参数忽略注解
      */
     public static final List<String> QUERY_PARAM_IGNORE_ANNOTATIONS = new ArrayList<>(Arrays.asList(

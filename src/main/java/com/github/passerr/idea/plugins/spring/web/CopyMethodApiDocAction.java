@@ -1,13 +1,20 @@
 package com.github.passerr.idea.plugins.spring.web;
 
+import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiParameter;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocToken;
+import com.intellij.psi.util.PsiTypesUtil;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +22,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.github.passerr.idea.plugins.spring.web.AliasType.UNKNOWN_ALIAS;
 
 /**
  * web方法接口文档复制动作
@@ -28,11 +38,15 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
         PsiMethod method = method(e);
         PsiAnnotation classAnnotation = classAnnotation(method);
         PsiAnnotation methodAnnotation = methodAnnotation(method);
+        ApiDocSettingPo state = ApiDocStateComponent.getInstance().getState();
         String url = url(classAnnotation, methodAnnotation);
         String httpMethod = getMethod(classAnnotation, methodAnnotation);
-        List<Var> pathVariables = pathVariables(method);
+        // 方法参数注释缓存
+        Map<String, String> comments = comments(method);
         // 路径参数列表
+        List<Var> pathVariables = pathVariables(comments, method, state);
         // 查询参数列表
+        List<Var> queryVariables = queryParams(comments, method, state);
         // body
         // 请求示例
         // 应答示例
@@ -63,11 +77,11 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
     }
 
     /**
-     * 获取接口路径参数
+     * 获得方法注释
      * @param method {@link PsiMethod}
-     * @return 路径参数列表
+     * @return {@link Map}
      */
-    private static List<Var> pathVariables(PsiMethod method) {
+    private static Map<String, String> comments(PsiMethod method) {
         Map<String, String> comments = new HashMap<>(4);
         Optional.ofNullable(method.getDocComment())
             .map(PsiDocComment::getTags)
@@ -91,20 +105,33 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                     )
             );
 
+        return comments;
+    }
+
+    /**
+     * 获取接口路径参数
+     * @param comments 方法注释
+     * @param method   {@link PsiMethod}
+     * @return 路径参数列表
+     */
+    private static List<Var> pathVariables(Map<String, String> comments, PsiMethod method, ApiDocSettingPo state) {
         return
             Arrays.stream(method.getParameterList().getParameters())
+                .filter(CopyMethodApiDocAction::isValidParamType)
                 .map(it -> {
                     PsiAnnotation annotation = AnnotationUtil.findAnnotation(
                         it, WebCopyConstants.PATH_VARIABLE_ANNOTATION);
-                    if (Objects.nonNull(annotation)) {
-                        String type = it.getType().getCanonicalText();
+                    String type = it.getType().getCanonicalText();
+                    String alias = state.alias(type);
+                    // 必须要@PathVariable注解存在且是有效别名
+                    if (Objects.nonNull(annotation) && !UNKNOWN_ALIAS.equals(alias)) {
                         return
                             new Var(
                                 Optional.ofNullable(PsiAnnotationMemberValueUtil.value(annotation, "value"))
                                     .map(String::valueOf)
                                     .orElseGet(it::getText),
                                 type,
-                                ApiDocStateComponent.getInstance().alias(type),
+                                alias,
                                 comments.getOrDefault(it.getText(), it.getText())
                             );
                     }
@@ -115,8 +142,102 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                 .collect(Collectors.toList());
     }
 
-    private static List<Var> queryParams(PsiMethod method) {
-        return null;
+    /**
+     * 查询参数注解
+     * @param comments 方法注释
+     * @param method   {@link PsiMethod}
+     * @param state    配置状态
+     * @return {@link List}
+     */
+    private static List<Var> queryParams(Map<String, String> comments, PsiMethod method, ApiDocSettingPo state) {
+        return
+            Arrays.stream(method.getParameterList().getParameters())
+                .filter(it ->
+                    // 排除接口类型参数、忽略类型、带忽略类型注解的参数
+                    isValidParamType(
+                        it,
+                        state.getQueryParamIgnoreTypes(),
+                        state.getQueryParamIgnoreAnnotations()
+                    )
+                )
+                .flatMap(it -> {
+                    // 查询参数注解
+                    PsiAnnotation annotation = AnnotationUtil.findAnnotation(
+                        it, WebCopyConstants.QUERY_PARAM_ANNOTATION);
+                    String type = it.getType().getCanonicalText();
+                    String alias = state.alias(type);
+                    // 对象类型
+                    if (UNKNOWN_ALIAS.equals(alias)) {
+                        PsiClass clazz = PsiTypesUtil.getPsiClass(it.getType());
+                        if (Objects.isNull(clazz)) {
+                            return Stream.empty();
+                        }
+
+                        return
+                            Arrays.stream(clazz.getAllFields())
+                                .filter(f -> {
+                                    PsiModifierList modifierList = f.getModifierList();
+                                    if (Objects.isNull(modifierList)) {
+                                        return true;
+                                    }
+
+                                    return !modifierList.hasExplicitModifier(PsiModifier.STATIC)
+                                        && !modifierList.hasExplicitModifier(PsiModifier.TRANSIENT);
+                                })
+                                .filter(f -> !UNKNOWN_ALIAS.equals(state.alias(f.getType().getCanonicalText())))
+                                .map(f ->
+                                    new Var(
+                                        f.getName(),
+                                        f.getType().getCanonicalText(),
+                                        state.alias(f.getType().getCanonicalText()),
+                                        // TODO 获得字段注释
+                                        comments.getOrDefault(it.getText(), it.getText())
+                                    )
+                                );
+                    } else {
+                        // 基础类型
+                        return
+                            Stream.of(
+                                new Var(
+                                    Optional.ofNullable(PsiAnnotationMemberValueUtil.value(annotation, "value"))
+                                        .map(String::valueOf)
+                                        .orElseGet(it::getText),
+                                    type,
+                                    alias,
+                                    comments.getOrDefault(it.getText(), it.getText())
+                                )
+                            );
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 是否是合法的参数类型
+     * 非接口类型且满足排除类型
+     * @param parameter {@link PsiParameter}
+     * @return true/false
+     */
+    private static boolean isValidParamType(PsiParameter parameter) {
+        return isValidParamType(parameter, new ArrayList<>(), new ArrayList<>());
+    }
+
+    /**
+     * 是否是合法的参数类型
+     * @param parameter          {@link PsiParameter}
+     * @param excludeTypes       排除类型
+     * @param excludeAnnotations 排除注解
+     * @return true/false
+     */
+    private static boolean isValidParamType(PsiParameter parameter, List<String> excludeTypes,
+                                            List<String> excludeAnnotations) {
+        PsiClass clazz = PsiTypesUtil.getPsiClass(parameter.getType());
+
+        return
+            Objects.nonNull(clazz)
+                && !clazz.isInterface()
+                && !excludeTypes.contains(clazz.getQualifiedName())
+                && AnnotationUtil.findAnnotations(parameter, excludeAnnotations).length == 0;
     }
 
     /**
@@ -140,5 +261,6 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
          * 参数描述
          */
         String desc;
+
     }
 }

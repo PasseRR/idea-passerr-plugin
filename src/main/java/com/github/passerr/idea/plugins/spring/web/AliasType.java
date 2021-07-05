@@ -62,5 +62,10 @@ public enum AliasType {
 
     String type;
 
+    /**
+     * 位置别名类型
+     */
+    public static final String UNKNOWN_ALIAS = "object";
+
     public abstract Object deserialize(String value);
 }

@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web.po;
 
+import com.github.passerr.idea.plugins.spring.web.AliasType;
 import com.github.passerr.idea.plugins.spring.web.ResourceUtil;
 import com.github.passerr.idea.plugins.spring.web.WebCopyConstants;
 import com.intellij.util.xmlb.annotations.AbstractCollection;
@@ -75,6 +76,22 @@ public class ApiDocSettingPo {
     public void setStringTemplate(String template) {
         this.template.setLength(0);
         this.template.append(template);
+    }
+
+    /**
+     * 别名获取
+     * @param type 类型全称
+     * @return 别名
+     */
+    public String alias(String type) {
+        return
+            this.getObjects()
+                .stream()
+                .filter(it -> Objects.equals(it.getType(), type))
+                .map(ApiDocObjectSerialPo::getAlias)
+                .findFirst()
+                // 未知别名类型
+                .orElse(AliasType.UNKNOWN_ALIAS);
     }
 
     @Override
