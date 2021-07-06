@@ -99,7 +99,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                             Arrays.stream(it.getDataElements())
                                 .filter(e -> e instanceof PsiDocToken)
                                 .map(PsiDocToken.class::cast)
-                                .filter(e -> "DOC_COMMENT_DATA".equals(e.getTokenType().toString()))
+                                .filter(CopyMethodApiDocAction::isDocCommentData)
                                 .map(e -> e.getText().trim())
                                 .collect(Collectors.joining(""))
                         )
@@ -185,10 +185,17 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                                         f.getName(),
                                         f.getType().getCanonicalText(),
                                         state.alias(f.getType().getCanonicalText()),
-                                        // TODO 获取字段注释
                                         Optional.ofNullable(f.getDocComment())
-                                            .map(PsiDocComment::getText)
-                                            .orElse(f.getName())
+                                            .map(PsiDocComment::getDescriptionElements)
+                                            .map(els ->
+                                                Arrays.stream(els)
+                                                    .filter(e -> e instanceof PsiDocToken)
+                                                    .map(PsiDocToken.class::cast)
+                                                    .filter(CopyMethodApiDocAction::isDocCommentData)
+                                                    .map(e -> e.getText().trim())
+                                                    .collect(Collectors.joining(""))
+                                            )
+                                            .orElseGet(f::getName)
                                     )
                                 );
                     } else {
@@ -253,6 +260,15 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
     }
 
     /**
+     * 是否是注释文本部分
+     * @param token {@link PsiDocToken}
+     * @return true/false
+     */
+    private static boolean isDocCommentData(PsiDocToken token) {
+        return "DOC_COMMENT_DATA".equals(token.getTokenType().toString());
+    }
+
+    /**
      * 参数实体
      */
     @AllArgsConstructor
@@ -273,6 +289,5 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
          * 参数描述
          */
         String desc;
-
     }
 }

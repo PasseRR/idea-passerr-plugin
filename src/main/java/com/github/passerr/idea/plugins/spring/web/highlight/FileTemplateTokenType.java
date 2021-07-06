@@ -10,6 +10,7 @@ import com.intellij.psi.tree.IElementType;
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
 public interface FileTemplateTokenType {
+    IElementType ESCAPE = new IElementType("ESCAPE", Language.ANY);
     IElementType TEXT = new IElementType("TEXT", Language.ANY);
     IElementType MACRO = new IElementType("MACRO", Language.ANY);
     IElementType DIRECTIVE = new IElementType("DIRECTIVE", Language.ANY);

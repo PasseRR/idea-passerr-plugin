@@ -22,7 +22,7 @@ repositories {
 
 intellij {
     // 不修改plugin.xml的idea-version
-    updateSinceUntilBuild false
+    updateSinceUntilBuild true
     //IntelliJ IDEA 2016.3 dependency; for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
     version '162.1628.40'
 }

@@ -68,12 +68,14 @@ public class ApiDocSettingPo {
     public void shallowCopy(ApiDocSettingPo source) {
         this.template.setLength(0);
         this.template.append(source.template);
-        this.bodyIgnoreTypes.clear();
-        this.bodyIgnoreTypes.addAll(source.getBodyIgnoreTypes());
         this.queryParamIgnoreTypes.clear();
         this.queryParamIgnoreTypes.addAll(source.getQueryParamIgnoreTypes());
         this.queryParamIgnoreAnnotations.clear();
         this.queryParamIgnoreAnnotations.addAll(source.getQueryParamIgnoreAnnotations());
+        this.bodyIgnoreTypes.clear();
+        this.bodyIgnoreTypes.addAll(source.getBodyIgnoreTypes());
+        this.bodyIgnoreAnnotations.clear();
+        this.bodyIgnoreAnnotations.addAll(source.getBodyIgnoreAnnotations());
         this.objects.clear();
         this.objects.addAll(source.getObjects());
     }
@@ -104,15 +106,21 @@ public class ApiDocSettingPo {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
         ApiDocSettingPo that = (ApiDocSettingPo) o;
-        return Objects.equals(template.toString(), that.template.toString()) &&
-            Objects.equals(bodyIgnoreTypes, that.bodyIgnoreTypes) &&
-            Objects.equals(queryParamIgnoreTypes, that.queryParamIgnoreTypes) &&
-            Objects.equals(queryParamIgnoreAnnotations, that.queryParamIgnoreAnnotations) &&
-            Objects.equals(objects, that.objects);
+        return
+            Objects.equals(template.toString(), that.template.toString()) &&
+                Objects.equals(bodyIgnoreTypes, that.bodyIgnoreTypes) &&
+                Objects.equals(queryParamIgnoreTypes, that.queryParamIgnoreTypes) &&
+                Objects.equals(queryParamIgnoreAnnotations, that.queryParamIgnoreAnnotations) &&
+                Objects.equals(this.bodyIgnoreAnnotations, that.bodyIgnoreAnnotations) &&
+                Objects.equals(objects, that.objects);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(template, bodyIgnoreTypes, queryParamIgnoreTypes, queryParamIgnoreAnnotations, objects);
+        return
+            Objects.hash(
+                template, queryParamIgnoreTypes, queryParamIgnoreAnnotations,
+                bodyIgnoreTypes, bodyIgnoreAnnotations, objects
+            );
     }
 }

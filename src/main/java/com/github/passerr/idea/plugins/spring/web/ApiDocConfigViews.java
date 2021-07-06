@@ -19,7 +19,9 @@ import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.LayerDescriptor;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
+import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
 import com.intellij.openapi.util.Pair;
@@ -97,12 +99,8 @@ public abstract class ApiDocConfigViews {
         editorSettings.setAdditionalColumnsCount(3);
         editorSettings.setAdditionalLinesCount(3);
         editorSettings.setCaretRowShown(false);
-        SyntaxHighlighter ohl = SyntaxHighlighterFactory.getSyntaxHighlighter(FileTypes.PLAIN_TEXT, null, null);
-        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-        LayeredLexerEditorHighlighter highlighter =
-            new LayeredLexerEditorHighlighter(new TemplateHighlighter(), scheme);
-        highlighter.registerLayer(FileTemplateTokenType.TEXT, new LayerDescriptor(ohl, ""));
-        ((EditorEx) editor).setHighlighter(highlighter);
+        ((EditorEx) editor).setHighlighter(createVelocityHighlight());
+
         JPanel templatePanel = new JPanel(new GridBagLayout());
         templatePanel.add(
             SeparatorFactory.createSeparator("模版:", null),
@@ -625,5 +623,17 @@ public abstract class ApiDocConfigViews {
         );
 
         return panel;
+    }
+
+    private static EditorHighlighter createVelocityHighlight() {
+        SyntaxHighlighter ohl =
+            Optional.ofNullable(SyntaxHighlighterFactory.getSyntaxHighlighter(FileTypes.PLAIN_TEXT, null, null))
+                .orElseGet(PlainSyntaxHighlighter::new);
+        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
+        LayeredLexerEditorHighlighter highlighter =
+            new LayeredLexerEditorHighlighter(new TemplateHighlighter(), scheme);
+        highlighter.registerLayer(FileTemplateTokenType.TEXT, new LayerDescriptor(ohl, ""));
+
+        return highlighter;
     }
 }
