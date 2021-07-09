@@ -46,9 +46,6 @@
 
     <idea-version since-build="140.0"/>
 
-    <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.java</depends>
-
     <application-components/>
 
     <project-components/>

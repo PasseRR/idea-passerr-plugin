@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web;
 
+import blue.endless.jankson.JsonElement;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -36,19 +37,20 @@ import static com.github.passerr.idea.plugins.spring.web.AliasType.UNKNOWN_ALIAS
 public class CopyMethodApiDocAction extends BaseWebCopyAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
-        PsiMethod method = method(e);
-        PsiAnnotation classAnnotation = classAnnotation(method);
-        PsiAnnotation methodAnnotation = methodAnnotation(method);
+        PsiMethod method = BaseWebCopyAction.method(e);
+        PsiAnnotation classAnnotation = BaseWebCopyAction.classAnnotation(method);
+        PsiAnnotation methodAnnotation = BaseWebCopyAction.methodAnnotation(method);
         ApiDocSettingPo state = ApiDocStateComponent.getInstance().getState();
-        String url = url(classAnnotation, methodAnnotation);
+        String url = BaseWebCopyAction.url(classAnnotation, methodAnnotation);
         String httpMethod = getMethod(classAnnotation, methodAnnotation);
         // 方法参数注释缓存
         Map<String, String> comments = comments(method);
         // 路径参数列表
-        List<Var> pathVariables = pathVariables(comments, method, state);
+        List<Var> pathVariables = pathVariables(method, comments, state);
         // 查询参数列表
-        List<Var> queryVariables = queryParams(comments, method, state);
+        List<Var> queryVariables = queryParams(method, comments, state);
         // body
+        body(method, comments, state);
         // 请求示例
         // 应答示例
     }
@@ -111,11 +113,12 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
 
     /**
      * 获取接口路径参数
-     * @param comments 方法注释
      * @param method   {@link PsiMethod}
+     * @param comments 方法注释
+     * @param state    配置状态
      * @return 路径参数列表
      */
-    private static List<Var> pathVariables(Map<String, String> comments, PsiMethod method, ApiDocSettingPo state) {
+    private static List<Var> pathVariables(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
         return
             Arrays.stream(method.getParameterList().getParameters())
                 .filter(CopyMethodApiDocAction::isValidParamType)
@@ -145,12 +148,12 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
 
     /**
      * 查询参数注解
-     * @param comments 方法注释
      * @param method   {@link PsiMethod}
+     * @param comments 方法注释
      * @param state    配置状态
      * @return {@link List}
      */
-    private static List<Var> queryParams(Map<String, String> comments, PsiMethod method, ApiDocSettingPo state) {
+    private static List<Var> queryParams(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
         return
             Arrays.stream(method.getParameterList().getParameters())
                 .filter(it ->
@@ -217,13 +220,46 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
     }
 
     /**
+     * 获得方法的报文参数
+     * @param method   {@link PsiMethod}
+     * @param comments 方法注释
+     * @param state    配置状态
+     * @return
+     */
+    private static JsonElement body(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
+        PsiParameter body =
+            Arrays.stream(method.getParameterList().getParameters())
+                // 排除body参数类型为排除类型 即无法序列化的类型 如Object、Map等
+                .filter(it -> isValidParamType(it, state.getBodyIgnoreTypes()))
+                // 方法参数中有@RequestBody注解的参数且只会取第一个
+                .filter(it -> AnnotationUtil.findAnnotation(it, WebCopyConstants.BODY_ANNOTATION) != null)
+                .findFirst()
+                .orElse(null);
+        if (Objects.isNull(body)) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * 是否是合法的参数类型
      * 非接口类型且满足排除类型
      * @param parameter {@link PsiParameter}
      * @return true/false
      */
     private static boolean isValidParamType(PsiParameter parameter) {
-        return isValidParamType(parameter, new ArrayList<>(), new ArrayList<>());
+        return isValidParamType(parameter, new ArrayList<>());
+    }
+
+    /**
+     * 是否是合法参数类型
+     * @param parameter    {@link PsiParameter}
+     * @param excludeTypes 排除类型
+     * @return true/false
+     */
+    private static boolean isValidParamType(PsiParameter parameter, List<String> excludeTypes) {
+        return isValidParamType(parameter, excludeTypes, new ArrayList<>());
     }
 
     /**
