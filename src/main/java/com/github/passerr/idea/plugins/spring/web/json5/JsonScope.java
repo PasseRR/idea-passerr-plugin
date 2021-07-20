@@ -1,7 +1,5 @@
 package com.github.passerr.idea.plugins.spring.web.json5;
 
-import java.io.StringWriter;
-
 /**
  * com.google.gson.stream.JsonScope
  * @author xiehai
@@ -48,18 +46,4 @@ interface JsonScope {
      * A document with at an array or object.
      */
     int NONEMPTY_DOCUMENT = 7;
-
-    public static void main(String[] args) throws Exception {
-        StringWriter stringWriter = new StringWriter();
-        Json5Writer writer = Json5Writer.json5(stringWriter);
-        writer.setIndent("  ");
-        writer.comment("这是注释")
-            .beginObject()
-            .name("key")
-            .value(1L)
-            .endObject();
-        System.out.println(stringWriter);
-
-//        Json5Writer json5Writer = Json51);
-    }
 }

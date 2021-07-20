@@ -19,7 +19,7 @@ public interface VelocityUtil {
      * @param map      变量
      * @return 替换后文本
      */
-    static String format(String template, Map<Object, ?> map) {
+    static String format(String template, Map<?, ?> map) {
         VelocityContext context = new VelocityContext(map);
         StringWriter writer = new StringWriter();
         Velocity.evaluate(context, writer, "eval", template);
