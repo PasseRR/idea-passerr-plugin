@@ -37,6 +37,6 @@ public class TemplateHighlighter extends SyntaxHighlighterBase {
             return pack(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
         }
 
-        return EMPTY;
+        return TextAttributesKey.EMPTY_ARRAY;
     }
 }

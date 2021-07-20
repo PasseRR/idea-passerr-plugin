@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <idea-plugin>
     <id>com.github.passerr.idea.plugins</id>
-    <name>PasseRR Idea Plugins</name>
+    <name>PasseRR Idea Tools</name>
     <vendor email="xie__hai@sina.com" url="https://github.com/PasseRR/idea-passerr-plugin">
         PasseRR
     </vendor>

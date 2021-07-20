@@ -24,6 +24,7 @@ import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.PanelWithButtons;
@@ -536,7 +537,7 @@ public abstract class ApiDocConfigViews {
                     gb.gridwidth = 1;
                     gb.weightx = 0;
                     p.add(aliasLabel, gb);
-                    JComboBox<String> aliasCombobox = new JComboBox<>(
+                    JComboBox<String> aliasCombobox = new ComboBox<>(
                         Arrays.stream(AliasType.values())
                             .map(AliasType::getType)
                             .toArray(String[]::new)

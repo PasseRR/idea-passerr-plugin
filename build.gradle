@@ -25,13 +25,16 @@ repositories {
 }
 
 intellij {
-    //IntelliJ IDEA 2016.3 dependency; for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
-    version = '162.1628.40'
+    updateSinceUntilBuild = false
+    version = '2020.1'
+    plugins = ['java']
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
+
+buildSearchableOptions.enabled = false
 
 dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
