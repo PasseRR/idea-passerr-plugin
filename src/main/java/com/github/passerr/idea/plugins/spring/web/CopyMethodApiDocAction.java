@@ -1,6 +1,5 @@
 package com.github.passerr.idea.plugins.spring.web;
 
-import blue.endless.jankson.JsonElement;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -226,7 +225,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
      * @param state    配置状态
      * @return
      */
-    private static JsonElement body(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
+    private static Object body(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
         PsiParameter body =
             Arrays.stream(method.getParameterList().getParameters())
                 // 排除body参数类型为排除类型 即无法序列化的类型 如Object、Map等

@@ -53,6 +53,7 @@ import java.awt.event.ItemEvent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -130,6 +131,7 @@ public abstract class ApiDocConfigViews {
         // 描述模块
         JEditorPane desc = new JEditorPane(UIUtil.HTML_MIME, "");
         desc.setEditable(false);
+        desc.setEditorKit(UIUtil.getHTMLEditorKit());
         desc.addHyperlinkListener(new BrowserHyperlinkListener());
         desc.setText(ResourceUtil.readAsString("/api-doc-desc.html"));
         desc.setCaretPosition(0);
@@ -510,7 +512,8 @@ public abstract class ApiDocConfigViews {
                 };
                 JBTable table = new IdeaJbTable(model);
                 // 弹出层构建器
-                BiFunction<ApiDocObjectSerialPo, Runnable, JComponent> function = (s, r) -> {
+                Function<IdeaDialog<ApiDocObjectSerialPo>, JComponent> function = dialog -> {
+                    ApiDocObjectSerialPo s = dialog.getValue();
                     JPanel p = new JPanel(new GridBagLayout());
                     GridBagConstraints gb = new GridBagConstraints(0, 0, 1, 1, 0, 0,
                         GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
@@ -526,7 +529,7 @@ public abstract class ApiDocConfigViews {
                                 @Override
                                 protected void textChanged(javax.swing.event.DocumentEvent e) {
                                     s.setType(textField.getText());
-                                    r.run();
+                                    dialog.onChange();
                                 }
                             });
                     Dimension oldPreferredSize = textField.getPreferredSize();
@@ -551,8 +554,15 @@ public abstract class ApiDocConfigViews {
                         if (e.getStateChange() == ItemEvent.SELECTED) {
                             s.setAlias((String) e.getItem());
                         }
+                        dialog.onChange();
                     });
-                    Optional.ofNullable(s.getAlias()).ifPresent(aliasCombobox::setSelectedItem);
+
+                    if (Objects.isNull(s.getAlias())) {
+                        // 新增的时候默认选中第一个
+                        s.setAlias(aliasCombobox.getItemAt(0));
+                    }
+                    aliasCombobox.setSelectedItem(s.getAlias());
+
                     gb.gridx = 1;
                     gb.fill = GridBagConstraints.NONE;
                     gb.gridwidth = GridBagConstraints.REMAINDER;
@@ -573,7 +583,7 @@ public abstract class ApiDocConfigViews {
                                 @Override
                                 protected void textChanged(javax.swing.event.DocumentEvent e) {
                                     s.setValue(valueField.getText());
-                                    r.run();
+                                    dialog.onChange();
                                 }
                             });
                     valueField.setPreferredSize(new Dimension(300, oldPreferredSize.height));
@@ -581,7 +591,7 @@ public abstract class ApiDocConfigViews {
                     gb.gridwidth = GridBagConstraints.REMAINDER;
                     gb.weightx = 1;
                     p.add(valueField, gb);
-                    r.run();
+                    dialog.onChange();
 
                     return p;
                 };
@@ -594,7 +604,7 @@ public abstract class ApiDocConfigViews {
                                 .value(new ApiDocObjectSerialPo())
                                 .okAction(setting.getObjects()::add)
                                 .changePredicate(ApiDocObjectSerialPo::isOk)
-                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .componentFunction(function)
                                 .doInit()
                                 .showAndGet()
                         )
@@ -605,7 +615,7 @@ public abstract class ApiDocConfigViews {
                                 .value(model.getRow(table.getSelectedRow()))
                                 .okAction(t -> setting.getObjects().set(table.getSelectedRow(), t))
                                 .changePredicate(ApiDocObjectSerialPo::isOk)
-                                .componentFunction(t -> function.apply(t.getValue(), t::onChange))
+                                .componentFunction(function)
                                 .doInit()
                                 .showAndGet()
                         )
