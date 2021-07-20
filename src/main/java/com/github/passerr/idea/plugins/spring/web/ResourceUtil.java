@@ -2,7 +2,6 @@ package com.github.passerr.idea.plugins.spring.web;
 
 import com.google.common.io.CharStreams;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -21,8 +20,9 @@ public interface ResourceUtil {
      */
     static String readAsString(String path) {
         try (InputStream resourceAsStream = ResourceUtil.class.getResourceAsStream(path)) {
+            assert resourceAsStream != null;
             return CharStreams.toString(new InputStreamReader(resourceAsStream, StandardCharsets.UTF_8));
-        } catch (IOException ignore) {
+        } catch (Exception ignore) {
             return "";
         }
     }

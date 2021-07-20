@@ -1,22 +1,23 @@
 package com.github.passerr.idea.plugins.spring.web;
 
+import com.github.passerr.idea.plugins.spring.web.json5.Json5Util;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiModifier;
-import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocToken;
 import com.intellij.psi.util.PsiTypesUtil;
+import com.intellij.util.ui.TextTransferable;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,23 +36,48 @@ import static com.github.passerr.idea.plugins.spring.web.AliasType.UNKNOWN_ALIAS
  */
 public class CopyMethodApiDocAction extends BaseWebCopyAction {
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
         PsiMethod method = BaseWebCopyAction.method(e);
         PsiAnnotation classAnnotation = BaseWebCopyAction.classAnnotation(method);
         PsiAnnotation methodAnnotation = BaseWebCopyAction.methodAnnotation(method);
-        ApiDocSettingPo state = ApiDocStateComponent.getInstance().getState();
-        String url = BaseWebCopyAction.url(classAnnotation, methodAnnotation);
-        String httpMethod = getMethod(classAnnotation, methodAnnotation);
         // 方法参数注释缓存
         Map<String, String> comments = comments(method);
+
+        Map<String, Object> map = new HashMap<>(4);
+        ApiDocSettingPo state = ApiDocStateComponent.getInstance().getState();
+        if (Objects.isNull(state)) {
+            return;
+        }
+
+        String url = BaseWebCopyAction.url(classAnnotation, methodAnnotation);
+        map.put("url", url);
+
+        String httpMethod = getMethod(classAnnotation, methodAnnotation);
+        map.put("method", httpMethod);
+
         // 路径参数列表
         List<Var> pathVariables = pathVariables(method, comments, state);
+        map.put("hasPathVariables", !pathVariables.isEmpty());
+        map.put("pathVariables", pathVariables);
+
         // 查询参数列表
-        List<Var> queryVariables = queryParams(method, comments, state);
+        List<Var> queryParams = queryParams(method, comments, state);
+        map.put("hasQueryParams", !queryParams.isEmpty());
+        map.put("queryParams", queryParams);
         // body
-        body(method, comments, state);
-        // 请求示例
+        String body = body(method, comments, state);
+        // body示例
+        map.put("hasBody", Objects.nonNull(body));
+        map.put("body", body);
+
         // 应答示例
+        String response = response(method, state);
+        map.put("hasResponse", Objects.nonNull(response));
+        map.put("response", response);
+
+        // 模版替换 发送api文档至剪贴板
+        CopyPasteManager.getInstance()
+            .setContents(new TextTransferable(VelocityUtil.format(state.getTemplate(), map)));
     }
 
     /**
@@ -100,7 +126,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                             Arrays.stream(it.getDataElements())
                                 .filter(e -> e instanceof PsiDocToken)
                                 .map(PsiDocToken.class::cast)
-                                .filter(CopyMethodApiDocAction::isDocCommentData)
+                                .filter(PsiUtil::isDocCommentData)
                                 .map(e -> e.getText().trim())
                                 .collect(Collectors.joining(""))
                         )
@@ -120,7 +146,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
     private static List<Var> pathVariables(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
         return
             Arrays.stream(method.getParameterList().getParameters())
-                .filter(CopyMethodApiDocAction::isValidParamType)
+                .filter(PsiUtil::isValidParamType)
                 .map(it -> {
                     PsiAnnotation annotation = AnnotationUtil.findAnnotation(
                         it, WebCopyConstants.PATH_VARIABLE_ANNOTATION);
@@ -157,7 +183,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
             Arrays.stream(method.getParameterList().getParameters())
                 .filter(it ->
                     // 排除接口类型参数、忽略类型、带忽略类型注解的参数
-                    isValidParamType(
+                    PsiUtil.isValidParamType(
                         it,
                         state.getQueryParamIgnoreTypes(),
                         state.getQueryParamIgnoreAnnotations()
@@ -179,7 +205,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
 
                         return
                             Arrays.stream(clazz.getAllFields())
-                                .filter(CopyMethodApiDocAction::isValidFiled)
+                                .filter(PsiUtil::isValidFiled)
                                 // 查询参数只遍历一层 且忽略掉这层的未知类型
                                 .filter(f -> !UNKNOWN_ALIAS.equals(state.alias(f.getType().getCanonicalText())))
                                 .map(f ->
@@ -193,7 +219,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                                                 Arrays.stream(els)
                                                     .filter(e -> e instanceof PsiDocToken)
                                                     .map(PsiDocToken.class::cast)
-                                                    .filter(CopyMethodApiDocAction::isDocCommentData)
+                                                    .filter(PsiUtil::isDocCommentData)
                                                     .map(e -> e.getText().trim())
                                                     .collect(Collectors.joining(""))
                                             )
@@ -223,84 +249,44 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
      * @param method   {@link PsiMethod}
      * @param comments 方法注释
      * @param state    配置状态
-     * @return
+     * @return json5
      */
-    private static Object body(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
-        PsiParameter body =
+    private static String body(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
+        PsiParameter parameter =
             Arrays.stream(method.getParameterList().getParameters())
                 // 排除body参数类型为排除类型 即无法序列化的类型 如Object、Map等
-                .filter(it -> isValidParamType(it, state.getBodyIgnoreTypes()))
+                .filter(it -> PsiUtil.isValidParamType(it, state.getBodyIgnoreTypes()))
                 // 方法参数中有@RequestBody注解的参数且只会取第一个
                 .filter(it -> AnnotationUtil.findAnnotation(it, WebCopyConstants.BODY_ANNOTATION) != null)
                 .findFirst()
                 .orElse(null);
-        if (Objects.isNull(body)) {
+        if (Objects.isNull(parameter)) {
             return null;
         }
 
-        return null;
-    }
-
-    /**
-     * 是否是合法的参数类型
-     * 非接口类型且满足排除类型
-     * @param parameter {@link PsiParameter}
-     * @return true/false
-     */
-    private static boolean isValidParamType(PsiParameter parameter) {
-        return isValidParamType(parameter, new ArrayList<>());
-    }
-
-    /**
-     * 是否是合法参数类型
-     * @param parameter    {@link PsiParameter}
-     * @param excludeTypes 排除类型
-     * @return true/false
-     */
-    private static boolean isValidParamType(PsiParameter parameter, List<String> excludeTypes) {
-        return isValidParamType(parameter, excludeTypes, new ArrayList<>());
-    }
-
-    /**
-     * 是否是合法的参数类型
-     * @param parameter          {@link PsiParameter}
-     * @param excludeTypes       排除类型
-     * @param excludeAnnotations 排除注解
-     * @return true/false
-     */
-    private static boolean isValidParamType(PsiParameter parameter, List<String> excludeTypes,
-                                            List<String> excludeAnnotations) {
-        PsiClass clazz = PsiTypesUtil.getPsiClass(parameter.getType());
-
         return
-            Objects.nonNull(clazz)
-                && !clazz.isInterface()
-                && !excludeTypes.contains(clazz.getQualifiedName())
-                && AnnotationUtil.findAnnotations(parameter, excludeAnnotations).length == 0;
+            Json5Util.toJson5(
+                parameter.getType(),
+                comments.get(parameter.getName()),
+                Collections.unmodifiableList(state.getBodyIgnoreTypes()),
+                Collections.unmodifiableList(state.getObjects())
+            );
     }
 
     /**
-     * 是否是合法字段
-     * @param field {@link PsiField}
-     * @return 非static、transient字段
+     * 获得方法应答参数
+     * @param method {@link PsiMethod}
+     * @param state  配置状态
+     * @return json5
      */
-    private static boolean isValidFiled(PsiField field) {
-        PsiModifierList modifierList = field.getModifierList();
-        if (Objects.isNull(modifierList)) {
-            return true;
-        }
-
-        return !modifierList.hasExplicitModifier(PsiModifier.STATIC)
-            && !modifierList.hasExplicitModifier(PsiModifier.TRANSIENT);
-    }
-
-    /**
-     * 是否是注释文本部分
-     * @param token {@link PsiDocToken}
-     * @return true/false
-     */
-    private static boolean isDocCommentData(PsiDocToken token) {
-        return "DOC_COMMENT_DATA".equals(token.getTokenType().toString());
+    private static String response(PsiMethod method, ApiDocSettingPo state) {
+        return
+            Json5Util.toJson5(
+                method.getReturnType(),
+                PsiUtil.returnComment(method),
+                Collections.unmodifiableList(state.getBodyIgnoreTypes()),
+                Collections.unmodifiableList(state.getObjects())
+            );
     }
 
     /**

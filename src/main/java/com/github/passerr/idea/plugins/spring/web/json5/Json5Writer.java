@@ -127,7 +127,7 @@ import static com.github.passerr.idea.plugins.spring.web.json5.JsonScope.NONEMPT
  * Instances of this class are not thread safe. Calls that would result in a
  * malformed JSON string will fail with an {@link IllegalStateException}.
  */
-public final class Json5Writer implements Closeable, Flushable {
+final class Json5Writer implements Closeable, Flushable {
     /**
      * From RFC 7159, "All Unicode characters may be placed within the
      * quotation marks except for the characters that must be escaped:

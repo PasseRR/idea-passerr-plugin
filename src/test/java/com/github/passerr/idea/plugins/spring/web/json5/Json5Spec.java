@@ -1,6 +1,5 @@
-package com.github.passerr.idea.plugins.json5;
+package com.github.passerr.idea.plugins.spring.web.json5;
 
-import com.github.passerr.idea.plugins.spring.web.json5.Json5Writer;
 import org.junit.Test;
 
 import java.io.IOException;

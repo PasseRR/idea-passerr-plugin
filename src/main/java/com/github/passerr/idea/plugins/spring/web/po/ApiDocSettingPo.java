@@ -3,9 +3,9 @@ package com.github.passerr.idea.plugins.spring.web.po;
 import com.github.passerr.idea.plugins.spring.web.AliasType;
 import com.github.passerr.idea.plugins.spring.web.ResourceUtil;
 import com.github.passerr.idea.plugins.spring.web.WebCopyConstants;
-import com.intellij.util.xmlb.annotations.AbstractCollection;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Tag;
+import com.intellij.util.xmlb.annotations.XCollection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,19 +29,19 @@ public class ApiDocSettingPo {
     @OptionTag(tag = "template", nameAttribute = "", converter = StringBuilderConverter.class)
     StringBuilder template;
     @Tag("query-param-ignore-types")
-    @AbstractCollection
+    @XCollection
     List<String> queryParamIgnoreTypes;
     @Tag("query-param-ignore-annotations")
-    @AbstractCollection
+    @XCollection
     List<String> queryParamIgnoreAnnotations;
     @Tag("body-ignore-types")
-    @AbstractCollection
+    @XCollection
     List<String> bodyIgnoreTypes;
     @Tag("body-ignore-annotations")
-    @AbstractCollection
+    @XCollection
     List<String> bodyIgnoreAnnotations;
     @Tag("objects")
-    @AbstractCollection(elementTypes = ApiDocObjectSerialPo.class)
+    @XCollection(elementTypes = ApiDocObjectSerialPo.class)
     List<ApiDocObjectSerialPo> objects;
 
     public ApiDocSettingPo() {
