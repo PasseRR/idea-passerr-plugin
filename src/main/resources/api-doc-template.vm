@@ -1,1 +1,42 @@
-## 默认api模版
+## 默认api模版 markdown模版
+## 这是一行模版注释
+## ##[[这个中间可以是任何内容 不会被转义]]##
+
+**请求路径**
+`$method $url`
+
+#if ($hasQueryParams)
+**查询参数**
+
+|参数名|类型|说明|
+|:---|:---|:---|---|
+    #foreach($p in $queryParams)
+    |$p.name|$p.alias|$p.desc|
+    #end
+#end
+
+#if ($hasPathVariables)
+**路径参数**
+
+|参数名|类型|说明|
+|:---|:---|:---|---|
+    #foreach($p in $pathVariables)
+    |$p.name|$p.alias|$p.desc|
+    #end
+#end
+
+#if ($hasBody)
+**请求示例**
+
+```json5
+    $body
+```
+#end
+
+#if ($hasResponse)
+**应答示例**
+
+```json5
+    $response
+```
+#end
