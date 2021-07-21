@@ -18,12 +18,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * psi类型工具
+ * web psi类型工具
  * @author xiehai
  * @date 2021/07/20 14:27
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
-public interface PsiUtil {
+public interface SpringWebPsiUtil {
     /**
      * 是否是合法的参数类型
      * 非接口类型且满足排除类型
@@ -103,12 +103,10 @@ public interface PsiUtil {
                 .findFirst()
                 .map(it ->
                     Arrays.stream(it.getDataElements())
-                        .filter(e -> e instanceof PsiDocToken)
-                        .map(PsiDocToken.class::cast)
-                        .filter(PsiUtil::isDocCommentData)
                         .map(e -> e.getText().trim())
                         .collect(Collectors.joining(""))
                 )
+                .filter(it -> !it.isEmpty())
                 .orElse(null);
     }
 }

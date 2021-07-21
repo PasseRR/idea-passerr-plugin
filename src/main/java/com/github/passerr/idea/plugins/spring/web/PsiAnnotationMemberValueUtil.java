@@ -8,6 +8,7 @@ import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiLiteralExpression;
 import com.intellij.psi.PsiReferenceExpression;
+import com.intellij.psi.impl.compiled.ClsEnumConstantImpl;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -80,12 +81,29 @@ class PsiAnnotationMemberValueUtil {
         if (Objects.nonNull(value) && value.getClass().isArray()) {
             Object[] array = (Object[]) value;
             if (array.length > 0) {
-                return array[0];
+                return format(array[0]);
             }
 
             return null;
         }
 
-        return value;
+        return format(value);
+    }
+
+    static Object format(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value instanceof String || value.getClass().isPrimitive()) {
+            return value;
+        }
+
+        if (value instanceof ClsEnumConstantImpl) {
+            return ((ClsEnumConstantImpl) value).getName();
+        }
+
+        // 注解类型忽略
+        return null;
     }
 }

@@ -3,6 +3,9 @@ package com.github.passerr.idea.plugins.spring.web.po;
 import com.github.passerr.idea.plugins.spring.web.AliasType;
 import com.github.passerr.idea.plugins.spring.web.ResourceUtil;
 import com.github.passerr.idea.plugins.spring.web.WebCopyConstants;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import com.intellij.util.xmlb.annotations.Tag;
 import com.intellij.util.xmlb.annotations.XCollection;
@@ -99,6 +102,15 @@ public class ApiDocSettingPo {
                 .findFirst()
                 // 未知别名类型
                 .orElse(AliasType.UNKNOWN_ALIAS);
+    }
+
+    public String alias(PsiType psiType) {
+        PsiClass psiClass = PsiTypesUtil.getPsiClass(psiType);
+        if (Objects.isNull(psiClass)) {
+            return AliasType.UNKNOWN_ALIAS;
+        }
+
+        return this.alias(psiClass.getQualifiedName());
     }
 
     @Override

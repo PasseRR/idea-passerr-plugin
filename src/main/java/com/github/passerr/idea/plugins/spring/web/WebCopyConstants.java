@@ -2,6 +2,7 @@ package com.github.passerr.idea.plugins.spring.web;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public abstract class WebCopyConstants {
     /**
      * 不支持的类型
      */
-    public static final List<String> ALL_IGNORE_TYPES = Arrays.asList("java.lang.Object", "java.util.Map");
+    public static final List<String> ALL_IGNORE_TYPES = Collections.singletonList("java.util.Map");
     /**
      * 查询参数忽略类型
      */
@@ -47,7 +48,7 @@ public abstract class WebCopyConstants {
     public static final List<String> QUERY_PARAM_IGNORE_ANNOTATIONS = new ArrayList<>(Arrays.asList(
         "org.springframework.web.bind.annotation.CookieValue",
         "org.springframework.web.bind.annotation.RequestHeader",
-        "org.springframework.web.bind.annotation.ResponseBody",
+        "org.springframework.web.bind.annotation.RequestBody",
         "org.springframework.web.bind.annotation.RequestAttribute",
         "org.springframework.web.bind.annotation.SessionAttribute",
         "org.springframework.web.bind.annotation.SessionAttributes"

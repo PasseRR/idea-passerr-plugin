@@ -466,6 +466,18 @@ final class Json5Writer implements Closeable, Flushable {
         return this;
     }
 
+    public Json5Writer value(Object value) throws IOException {
+        if (value == null) {
+            return this.nullValue();
+        } else if (value instanceof Number) {
+            return this.value((Number) value);
+        } else if (value instanceof Boolean) {
+            return this.value((Boolean) value);
+        } else {
+            return this.value(String.valueOf(value));
+        }
+    }
+
     /**
      * Encodes {@code null}.
      * @return this writer.

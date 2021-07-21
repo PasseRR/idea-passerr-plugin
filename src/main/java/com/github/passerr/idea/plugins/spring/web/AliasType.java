@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Arrays;
+
 /**
  * 别名类型
  * @author xiehai
@@ -68,4 +70,13 @@ public enum AliasType {
     public static final String UNKNOWN_ALIAS = "object";
 
     public abstract Object deserialize(String value);
+
+    public static Object value(String alias, String value) {
+        return
+            Arrays.stream(values())
+                .filter(it -> it.type.equals(alias))
+                .map(it -> it.deserialize(value))
+                .findFirst()
+                .orElse(null);
+    }
 }
