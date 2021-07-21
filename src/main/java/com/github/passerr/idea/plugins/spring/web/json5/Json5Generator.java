@@ -3,6 +3,7 @@ package com.github.passerr.idea.plugins.spring.web.json5;
 import com.github.passerr.idea.plugins.spring.web.AliasType;
 import com.github.passerr.idea.plugins.spring.web.SpringWebPsiUtil;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
+import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiArrayType;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
 public class Json5Generator {
+    // 忽略注解
     private final Set<String> ignores;
     private final Map<String, ApiDocObjectSerialPo> serials;
     private static final Logger LOG = Logger.getInstance(Json5Generator.class);
@@ -95,10 +97,8 @@ public class Json5Generator {
     };
 
     Json5Generator(List<String> originIgnores, List<ApiDocObjectSerialPo> originSerials) {
-        HashSet<String> set = new HashSet<>(originIgnores);
         // object不能在校验范围
-        set.remove(CommonClassNames.JAVA_LANG_OBJECT);
-        this.ignores = Collections.unmodifiableSet(set);
+        this.ignores = Collections.unmodifiableSet(new HashSet<>(originIgnores));
         Map<String, ApiDocObjectSerialPo> collect = originSerials.stream()
             .collect(Collectors.toMap(ApiDocObjectSerialPo::getType, it -> it, (o, n) -> n));
         // 保证存在原型类型
@@ -124,19 +124,14 @@ public class Json5Generator {
             }
             return false;
         }
-        if (!(psiType instanceof PsiClassType)) {
-            // 非class类型
-            return false;
-        }
+
         PsiClass resolve = ((PsiClassType) psiType).resolve();
         if (Objects.isNull(resolve)) {
-            return true;
+            return false;
         }
-        String className = resolve.getQualifiedName();
-        return
-            // 自定义忽略类型及void类型忽略
-            this.ignores.contains(className)
-                || CommonClassNames.JAVA_LANG_VOID.equals(className);
+
+        // java.lang.Void类型忽略
+        return CommonClassNames.JAVA_LANG_VOID.equals(resolve.getQualifiedName());
     }
 
     String toJson5(PsiType psiType, String rootComment) {
@@ -149,8 +144,8 @@ public class Json5Generator {
         writer.setIndent("  ");
 
         // 根注释
-        if (Objects.nonNull(rootComment)) {
-            COMMENT.accept(writer, rootComment);
+        if (Objects.nonNull(rootComment) && !rootComment.trim().isEmpty()) {
+            COMMENT.accept(writer, rootComment.trim());
         }
 
         this.toJson5(writer, psiType);
@@ -209,38 +204,44 @@ public class Json5Generator {
 
             // 集合类型
             if (InheritanceUtil.isInheritor(type, Collection.class.getName())) {
-                // 必须存在泛型参数
+                BEGIN_ARRAY.accept(writer);
+                // 若存在泛型参数
                 if (referenceType.getParameterCount() > 0) {
-                    BEGIN_ARRAY.accept(writer);
                     this.toJson5(writer, referenceType.getParameters()[0]);
                     this.toJson5(writer, referenceType.getParameters()[0]);
-                    END_ARRAY.accept(writer);
-                    return;
                 }
+                END_ARRAY.accept(writer);
                 return;
             }
 
             BEGIN_OBJECT.accept(writer);
-            Arrays.stream(psiClass.getAllFields())
-                .filter(SpringWebPsiUtil::isValidFiled)
-                .sorted(Comparator.comparing(PsiField::getName))
-                .forEach(it -> {
-                    // 字段注释
-                    Optional.ofNullable(it.getDocComment())
-                        .map(PsiDocComment::getDescriptionElements)
-                        .map(els ->
-                            Arrays.stream(els)
-                                .filter(e -> e instanceof PsiDocToken)
-                                .map(PsiDocToken.class::cast)
-                                .filter(SpringWebPsiUtil::isDocCommentData)
-                                .map(e -> e.getText().trim())
-                                .collect(Collectors.joining(""))
-                        )
-                        .filter(comment -> !comment.isEmpty())
-                        .ifPresent(comment -> COMMENT.accept(writer, comment));
-                    NAME.accept(writer, it.getName());
-                    this.toJson5(writer, it.getType());
-                });
+            // 接口类型、枚举类型不序列化
+            if (!psiClass.isInterface() && !psiClass.isEnum()) {
+                Arrays.stream(psiClass.getAllFields())
+                    // 非static、transient字段
+                    .filter(SpringWebPsiUtil::isValidFiled)
+                    // 非注解标记字段
+                    .filter(it -> AnnotationUtil.findAnnotations(it, this.ignores).length == 0)
+                    .sorted(Comparator.comparing(PsiField::getName))
+                    .forEach(it -> {
+                        // 字段注释
+                        Optional.ofNullable(it.getDocComment())
+                            .map(PsiDocComment::getDescriptionElements)
+                            .map(els ->
+                                Arrays.stream(els)
+                                    .filter(e -> e instanceof PsiDocToken)
+                                    .map(PsiDocToken.class::cast)
+                                    .filter(SpringWebPsiUtil::isDocCommentData)
+                                    .map(e -> e.getText().trim())
+                                    .collect(Collectors.joining(""))
+                            )
+                            .filter(comment -> !comment.isEmpty())
+                            .ifPresent(comment -> COMMENT.accept(writer, comment));
+                        NAME.accept(writer, it.getName());
+                        // TODO 处理泛型和递归调用问题
+                        this.toJson5(writer, it.getType());
+                    });
+            }
             END_OBJECT.accept(writer);
         }
     }

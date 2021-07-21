@@ -268,8 +268,6 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
     private static String body(PsiMethod method, Map<String, String> comments, ApiDocSettingPo state) {
         PsiParameter parameter =
             Arrays.stream(method.getParameterList().getParameters())
-                // 排除body参数类型为排除类型 即无法序列化的类型 如Object、Map等
-                .filter(it -> SpringWebPsiUtil.isValidParamType(it, state.getBodyIgnoreTypes()))
                 // 方法参数中有@RequestBody注解的参数且只会取第一个
                 .filter(it -> AnnotationUtil.findAnnotation(it, WebCopyConstants.BODY_ANNOTATION) != null)
                 .findFirst()
@@ -282,7 +280,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
             Json5Generator.toJson5(
                 parameter.getType(),
                 comments.get(parameter.getName()),
-                Collections.unmodifiableList(state.getBodyIgnoreTypes()),
+                Collections.unmodifiableList(state.getBodyIgnoreAnnotations()),
                 Collections.unmodifiableList(state.getObjects())
             );
     }
@@ -298,7 +296,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
             Json5Generator.toJson5(
                 method.getReturnType(),
                 SpringWebPsiUtil.returnComment(method),
-                Collections.unmodifiableList(state.getBodyIgnoreTypes()),
+                Collections.unmodifiableList(state.getBodyIgnoreAnnotations()),
                 Collections.unmodifiableList(state.getObjects())
             );
     }
