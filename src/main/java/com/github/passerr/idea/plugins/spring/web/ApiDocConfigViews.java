@@ -75,8 +75,8 @@ public abstract class ApiDocConfigViews {
             Arrays.asList(
                 Pair.pair("Api模版", apiTemplatePanel(setting)),
                 Pair.pair("查询参数", queryParamPanel(setting)),
-                Pair.pair("报文参数", bodyParamPanel(setting)),
-                Pair.pair("序列化配置", serialPanel(setting))
+                Pair.pair("报文体", bodyParamPanel(setting)),
+                Pair.pair("序列化", serialPanel(setting))
             );
     }
 
