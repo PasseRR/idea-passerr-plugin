@@ -1,7 +1,6 @@
-package com.github.passerr.idea.plugins.spring.web.json5;
+package com.github.passerr.idea.plugins.spring.web;
 
-import com.github.passerr.idea.plugins.spring.web.AliasType;
-import com.github.passerr.idea.plugins.spring.web.SpringWebPsiUtil;
+import com.github.passerr.idea.plugins.spring.web.json5.Json5Writer;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.diagnostic.Logger;
@@ -42,8 +41,13 @@ import java.util.stream.Collectors;
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
 public class Json5Generator {
-    // 忽略注解
+    /**
+     * 字段忽略注解
+     */
     private final Set<String> ignores;
+    /**
+     * 字段序列化
+     */
     private final Map<String, ApiDocObjectSerialPo> serials;
     private static final Logger LOG = Logger.getInstance(Json5Generator.class);
     private static final Consumer<Json5Writer> BEGIN_ARRAY = writer -> {
@@ -102,12 +106,7 @@ public class Json5Generator {
         Map<String, ApiDocObjectSerialPo> collect = originSerials.stream()
             .collect(Collectors.toMap(ApiDocObjectSerialPo::getType, it -> it, (o, n) -> n));
         // 保证存在原型类型
-        collect.putIfAbsent("boolean", new ApiDocObjectSerialPo("boolean", AliasType.BOOLEAN.getType(), "true"));
-        Arrays.asList("byte", "short", "char", "int")
-            .forEach(it -> collect.putIfAbsent(it, new ApiDocObjectSerialPo(it, AliasType.INT.getType(), "1024")));
-        Arrays.asList("float", "double")
-            .forEach(it -> collect.putIfAbsent(it, new ApiDocObjectSerialPo(it, AliasType.FLOAT.getType(), "102.4")));
-        collect.putIfAbsent("long", new ApiDocObjectSerialPo("long", AliasType.STRING.getType(), "2048"));
+        WebCopyConstants.PRIMITIVE_SERIALS.forEach(it -> collect.putIfAbsent(it.getType(), it.deepCopy()));
         this.serials = Collections.unmodifiableMap(collect);
     }
 
@@ -119,19 +118,12 @@ public class Json5Generator {
     boolean isIgnore(PsiType psiType) {
         if (psiType instanceof PsiPrimitiveType) {
             // void类型忽略
-            if ("void".equals(((PsiPrimitiveType) psiType).getName())) {
-                return true;
-            }
-            return false;
+            return void.class.getName().equals(((PsiPrimitiveType) psiType).getName());
         }
 
         PsiClass resolve = ((PsiClassType) psiType).resolve();
-        if (Objects.isNull(resolve)) {
-            return false;
-        }
-
         // java.lang.Void类型忽略
-        return CommonClassNames.JAVA_LANG_VOID.equals(resolve.getQualifiedName());
+        return resolve != null && Void.class.getName().equals(resolve.getQualifiedName());
     }
 
     String toJson5(PsiType psiType, String rootComment) {

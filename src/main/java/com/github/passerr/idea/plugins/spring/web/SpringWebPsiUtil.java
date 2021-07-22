@@ -106,7 +106,7 @@ public interface SpringWebPsiUtil {
                         .map(e -> e.getText().trim())
                         .collect(Collectors.joining(""))
                 )
-                .filter(it -> !it.isEmpty())
+                .filter(it -> !it.trim().isEmpty())
                 .orElse(null);
     }
 }
