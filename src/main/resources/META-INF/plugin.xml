@@ -18,7 +18,7 @@
             <li>添加复制spring controller方法全路径的action</li>
             <li>添加复制spring controller方法为api文档的action</li>
             <li>添加复制方法返回类型为json5的action</li>
-            <li>修改复制为mybatis日志为sql的动作 仅当选择内容包含</li>
+            <li>修改复制为mybatis日志为sql的动作 仅当选择内容包含Preparing:及Parameters:</li>
           </ul>
           <p>1.1.0:
           <ul>
