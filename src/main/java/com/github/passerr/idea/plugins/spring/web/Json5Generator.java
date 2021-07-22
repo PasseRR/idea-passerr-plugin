@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,10 @@ public class Json5Generator {
      * 字段序列化
      */
     private final Map<String, ApiDocObjectSerialPo> serials;
+    /**
+     * 调用次数记录
+     */
+    private final Map<String, Integer> count;
     private static final Logger LOG = Logger.getInstance(Json5Generator.class);
     private static final Consumer<Json5Writer> BEGIN_ARRAY = writer -> {
         try {
@@ -99,6 +105,8 @@ public class Json5Generator {
             LOG.error(e.getMessage(), e);
         }
     };
+    private static final BiFunction<PsiType, PsiField, String> COUNT_KEY = (t, f) ->
+        String.format("%s#%s", t.getCanonicalText(), f.getName());
 
     Json5Generator(List<String> originIgnores, List<ApiDocObjectSerialPo> originSerials) {
         // object不能在校验范围
@@ -108,6 +116,7 @@ public class Json5Generator {
         // 保证存在原型类型
         WebCopyConstants.PRIMITIVE_SERIALS.forEach(it -> collect.putIfAbsent(it.getType(), it.deepCopy()));
         this.serials = Collections.unmodifiableMap(collect);
+        this.count = new HashMap<>();
     }
 
     /**
@@ -214,8 +223,11 @@ public class Json5Generator {
                     .filter(SpringWebPsiUtil::isValidFiled)
                     // 非注解标记字段
                     .filter(it -> AnnotationUtil.findAnnotations(it, this.ignores).length == 0)
+                    // 允许递归调用一次
+                    .filter(it -> this.count.getOrDefault(COUNT_KEY.apply(type, it), 0) < 1)
                     .sorted(Comparator.comparing(PsiField::getName))
                     .forEach(it -> {
+                        this.count.merge(COUNT_KEY.apply(type, it), 1, Integer::sum);
                         // 字段注释
                         Optional.ofNullable(it.getDocComment())
                             .map(PsiDocComment::getDescriptionElements)
@@ -230,8 +242,18 @@ public class Json5Generator {
                             .filter(comment -> !comment.isEmpty())
                             .ifPresent(comment -> COMMENT.accept(writer, comment));
                         NAME.accept(writer, it.getName());
-                        // TODO 处理泛型和递归调用问题
-                        this.toJson5(writer, it.getType());
+                        PsiType fieldType = it.getType();
+                        // 存在泛型参数
+                        if (fieldType instanceof PsiClassReferenceType) {
+                            PsiClass parameterType = ((PsiClassReferenceType) fieldType).resolve();
+                            if (parameterType instanceof PsiTypeParameter
+                                && substitutionMap.containsKey(parameterType)) {
+                                this.toJson5(writer, substitutionMap.get(parameterType));
+                                // 提前结束泛型参数处理
+                                return;
+                            }
+                        }
+                        this.toJson5(writer, fieldType);
                     });
             }
             END_OBJECT.accept(writer);
