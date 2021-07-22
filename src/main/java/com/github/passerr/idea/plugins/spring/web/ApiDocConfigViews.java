@@ -14,8 +14,8 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.LayerDescriptor;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
@@ -90,7 +90,7 @@ public abstract class ApiDocConfigViews {
         // 编辑模块
         EditorFactory editorFactory = EditorFactory.getInstance();
         Document document = editorFactory.createDocument(setting.getTemplate());
-        document.addDocumentListener(new DocumentAdapter() {
+        document.addDocumentListener(new DocumentListener() {
             @Override
             public void documentChanged(DocumentEvent e) {
                 setting.setStringTemplate(e.getDocument().getText());

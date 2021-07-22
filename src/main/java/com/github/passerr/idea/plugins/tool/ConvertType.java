@@ -40,9 +40,8 @@ enum ConvertType {
         @Override
         void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
             try {
-                JsonParser jsonParser = new JsonParser();
                 // 可以同时解析数组或者Object
-                JsonElement element = jsonParser.parse(input.getText());
+                JsonElement element = JsonParser.parseString(input.getText());
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 output.setText(gson.toJson(element));
                 // 格式化成功后定位到第一行

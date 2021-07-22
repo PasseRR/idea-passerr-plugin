@@ -4,7 +4,6 @@ import com.intellij.codeInsight.actions.MultiCaretCodeInsightAction;
 import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.Result;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Caret;
@@ -64,14 +63,11 @@ public class ToggleCamelCase extends MultiCaretCodeInsightAction {
                         CommandProcessor.getInstance().executeCommand(
                             project,
                             () ->
-                                new WriteAction<Object>() {
-                                    @Override
-                                    protected void run(@NotNull Result<Object> result) {
-                                        int start = editor.getSelectionModel().getSelectionStart();
-                                        EditorModificationUtil.insertStringAtCaret(editor, newText);
-                                        editor.getSelectionModel().setSelection(start, start + newText.length());
-                                    }
-                                }.execute().throwException()
+                                WriteAction.run(() -> {
+                                    int start = editor.getSelectionModel().getSelectionStart();
+                                    EditorModificationUtil.insertStringAtCaret(editor, newText);
+                                    editor.getSelectionModel().setSelection(start, start + newText.length());
+                                })
                             ,
                             "CamelCase",
                             ActionGroup.EMPTY_GROUP
