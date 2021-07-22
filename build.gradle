@@ -34,7 +34,9 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-//buildSearchableOptions.enabled = false
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation'
+}
 
 dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
