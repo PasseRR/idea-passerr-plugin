@@ -7,6 +7,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -29,7 +30,7 @@ public class ApiDocStateComponent implements PersistentStateComponent<ApiDocSett
     }
 
     @Override
-    public void loadState(ApiDocSettingPo state) {
+    public void loadState(@NotNull ApiDocSettingPo state) {
         XmlSerializerUtil.copyBean(state, this.apiDocSettingPo);
     }
 

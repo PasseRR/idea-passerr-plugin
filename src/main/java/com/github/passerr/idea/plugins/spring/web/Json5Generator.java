@@ -130,6 +130,10 @@ public class Json5Generator {
             return void.class.getName().equals(((PsiPrimitiveType) psiType).getName());
         }
 
+        if (!(psiType instanceof PsiClassType)) {
+            return false;
+        }
+
         PsiClass resolve = ((PsiClassType) psiType).resolve();
         // java.lang.Void类型忽略
         return resolve != null && Void.class.getName().equals(resolve.getQualifiedName());

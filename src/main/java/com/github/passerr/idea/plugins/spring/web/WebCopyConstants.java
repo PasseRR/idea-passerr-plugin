@@ -79,7 +79,9 @@ public interface WebCopyConstants {
             new ApiDocObjectSerialPo(int.class.getName(), AliasType.INT.getType(), "1024"),
             new ApiDocObjectSerialPo(float.class.getName(), AliasType.FLOAT.getType(), "102.4"),
             new ApiDocObjectSerialPo(double.class.getName(), AliasType.FLOAT.getType(), "204.8"),
-            new ApiDocObjectSerialPo(long.class.getName(), AliasType.STRING.getType(), "2048")
+            new ApiDocObjectSerialPo(long.class.getName(), AliasType.STRING.getType(), "2048"),
+            // 将string作为了基本类型
+            new ApiDocObjectSerialPo(String.class.getName(), AliasType.STRING.getType(), "string")
         )
     );
     /**
@@ -87,34 +89,33 @@ public interface WebCopyConstants {
      */
     List<ApiDocObjectSerialPo> WRAPPED_SERIALS = Collections.unmodifiableList(
         Arrays.asList(
-            new ApiDocObjectSerialPo(Boolean.class.getSimpleName(), AliasType.BOOLEAN.getType(), "true"),
-            new ApiDocObjectSerialPo(Byte.class.getSimpleName(), AliasType.INT.getType(), "128"),
-            new ApiDocObjectSerialPo(Short.class.getSimpleName(), AliasType.INT.getType(), "256"),
-            new ApiDocObjectSerialPo(Character.class.getSimpleName(), AliasType.INT.getType(), "512"),
-            new ApiDocObjectSerialPo(Integer.class.getSimpleName(), AliasType.INT.getType(), "1024"),
-            new ApiDocObjectSerialPo(Float.class.getSimpleName(), AliasType.FLOAT.getType(), "102.4"),
-            new ApiDocObjectSerialPo(Double.class.getSimpleName(), AliasType.FLOAT.getType(), "204.8"),
-            new ApiDocObjectSerialPo(Long.class.getSimpleName(), AliasType.STRING.getType(), "2048"),
-            new ApiDocObjectSerialPo(BigDecimal.class.getSimpleName(), AliasType.FLOAT.getType(), "409.2"),
-            new ApiDocObjectSerialPo(BigInteger.class.getSimpleName(), AliasType.STRING.getType(), "4092"),
-            new ApiDocObjectSerialPo(String.class.getSimpleName(), AliasType.STRING.getType(), "string"),
+            new ApiDocObjectSerialPo(Boolean.class.getName(), AliasType.BOOLEAN.getType(), "true"),
+            new ApiDocObjectSerialPo(Byte.class.getName(), AliasType.INT.getType(), "128"),
+            new ApiDocObjectSerialPo(Short.class.getName(), AliasType.INT.getType(), "256"),
+            new ApiDocObjectSerialPo(Character.class.getName(), AliasType.INT.getType(), "512"),
+            new ApiDocObjectSerialPo(Integer.class.getName(), AliasType.INT.getType(), "1024"),
+            new ApiDocObjectSerialPo(Float.class.getName(), AliasType.FLOAT.getType(), "102.4"),
+            new ApiDocObjectSerialPo(Double.class.getName(), AliasType.FLOAT.getType(), "204.8"),
+            new ApiDocObjectSerialPo(Long.class.getName(), AliasType.STRING.getType(), "2048"),
+            new ApiDocObjectSerialPo(BigDecimal.class.getName(), AliasType.FLOAT.getType(), "409.2"),
+            new ApiDocObjectSerialPo(BigInteger.class.getName(), AliasType.STRING.getType(), "4092"),
             new ApiDocObjectSerialPo(
-                LocalTime.class.getSimpleName(),
+                LocalTime.class.getName(),
                 AliasType.STRING.getType(),
                 LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
             ),
             new ApiDocObjectSerialPo(
-                LocalDate.class.getSimpleName(),
+                LocalDate.class.getName(),
                 AliasType.STRING.getType(),
                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             ),
             new ApiDocObjectSerialPo(
-                Date.class.getSimpleName(),
+                Date.class.getName(),
                 AliasType.STRING.getType(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             ),
             new ApiDocObjectSerialPo(
-                LocalDateTime.class.getSimpleName(),
+                LocalDateTime.class.getName(),
                 AliasType.STRING.getType(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             )
