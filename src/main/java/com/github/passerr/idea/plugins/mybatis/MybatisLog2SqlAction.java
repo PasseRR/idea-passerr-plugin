@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.util.ui.TextTransferable;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -34,5 +35,27 @@ public class MybatisLog2SqlAction extends AnAction {
                 CopyPasteManager.getInstance().setContents(new TextTransferable(SqlFormatter.format(sql)));
             }
         }
+    }
+
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        String[] logs =
+            Optional.ofNullable(e.getData(PlatformDataKeys.EDITOR))
+                .map(Editor::getSelectionModel)
+                .map(SelectionModel::getSelectedText)
+                .orElse(LogConstants.EMPTY)
+                .split(LogConstants.BREAK_LINE);
+
+        int match = 0;
+        for (String log : logs) {
+            if (log.contains(LogConstants.PREFIX_SQL)) {
+                match++;
+            } else if (log.contains(LogConstants.PREFIX_PARAMS_WITHOUT_SPACE)) {
+                match++;
+            }
+        }
+
+        // 选中内容合法 才允许日志解析
+        e.getPresentation().setEnabled(match > 1);
     }
 }
