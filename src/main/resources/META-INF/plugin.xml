@@ -12,6 +12,14 @@
 
     <change-notes>
         <![CDATA[
+         <p>2.0.0:
+          <ul>
+            <li>从groovy改为java</li>
+            <li>添加复制spring controller方法全路径的action</li>
+            <li>添加复制spring controller方法为api文档的action</li>
+            <li>添加复制方法返回类型为json5的action</li>
+            <li>修改复制为mybatis日志为sql的动作 仅当选择内容包含</li>
+          </ul>
           <p>1.1.0:
           <ul>
             <li>differential input/output textarea</li>
@@ -66,10 +74,16 @@
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
         </action>
 
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
+                text="Copy Method Return Type Json5">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$Paste"/>
+        </action>
         <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 text="Copy Method Rest Path">
-            <add-to-group group-id="EditorPopupMenu" anchor="before" relative-to-action="$Paste"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="after"
+                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"/>
         </action>
         <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
                 class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
