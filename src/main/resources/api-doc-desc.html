@@ -2,118 +2,150 @@
 <body>
 <table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse">
     <tr>
-        <td><font face="verdana" size="-1">中文Along with static text, code and comments, you can also use
-            predefined variables (listed below) that will then be expanded like macros into the corresponding
-            values.<br>
-            It is also possible to specify an arbitrary number of custom variables in the format
-            <b>${&lt;VARIABLE_NAME&gt;}</b>. In this case, before the new
-            file is created, you will be prompted with a dialog where you can define particular values for all
-            custom variables.<br>
-            Using the <b>#parse</b> directive, you can include templates from the <i>Includes</i>
-            tab, by specifying the full name of the desired template as a parameter in quotation marks.
-            For example:<br>
-            <b>#parse("File Header.java")</b>
-        </font></td>
+        <td>
+            <font face="verdana">
+                关于rest接口内置的velocity参数，主要包括url、http方法、查询参数、路径参数、报文体、应答报文。
+                其中，查询参数及路径参数均为List类型，具体介绍如下。
+            </font>
+        </td>
     </tr>
 </table>
+<hr>
+<b>查询参数、路径参数属性</b>
 <table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse">
+    <thead>
     <tr>
-        <td colspan="3"><font face="verdana" size="-1">Predefined variables will take the following values:</font></td>
+        <td width="10%">属性名</td>
+        <td width="10%">类型</td>
+        <td width="80%">属性描述</td>
+    </tr>
+    </thead>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>name</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数名</font>
+        </td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${PACKAGE_NAME}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>type</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">name of the package in which the new file is
-            created</font></td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数java类型全名</font>
+        </td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${NAME}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>alias</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">name of the new file specified by you in the <i>New
-            &lt;TEMPLATE_NAME&gt;</i> dialog</font></td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数类型别名</font>
+        </td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${USER}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>desc</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current user system login name</font></td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数描述</font>
+        </td>
+    </tr>
+</table>
+<hr>
+<b>预定义velocity参数描述</b>
+<table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse">
+    <thead>
+    <tr>
+        <td width="10%">
+            参数名
+        </td>
+        <td width="10%">类型</td>
+        <td width="80%">
+            参数描述
+        </td>
+    </tr>
+    </thead>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${method}</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="90%" width="10%">
+            <font face="verdana" size="-1">http方法类型若为指定则为<b>UNKNOWN</b></font>
+        </td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${DATE}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${url}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current system date</font></td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">rest方法路径</font>
+        </td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${TIME}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasQueryParams}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current system time</font></td>
+        <td width="10%">boolean</td>
+        <td width="80%">
+            <font face="verdana" size="-1">是否有查询参数</font>
+        </td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${YEAR}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${queryParams}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current year</font></td>
+        <td width="10%">list</td>
+        <td width="80%"><font face="verdana" size="-1">查询参数列表</font></td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${MONTH}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasPathVariables}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current month</font></td>
+        <td width="10%">boolean</td>
+        <td width="80%"><font face="verdana" size="-1">是否有路径参数</font></td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${MONTH_NAME_SHORT}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${pathVariables}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">first 3 letters of the current month name. Example:
-            Jan, Feb, etc.</font></td>
+        <td width="10%">list</td>
+        <td width="80%"><font face="verdana" size="-1">路径参数列表</font></td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${MONTH_NAME_FULL}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasBody}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">full name of the current month. Example: January,
-            February, etc.</font></td>
+        <td width="10%">boolean</td>
+        <td width="80%"><font face="verdana" size="-1">是否存在请求报文体</font></td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${DAY}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${body}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current day of the month</font></td>
+        <td width="10%">string</td>
+        <td width="80%"><font face="verdana" size="-1">请求报文体json5序列化字符串包含字段注释</font></td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${HOUR}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasResponse}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current hour</font></td>
+        <td width="10%">boolean</td>
+        <td width="80%"><font face="verdana" size="-1">是否存在应答报文体</font></td>
     </tr>
     <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${MINUTE}</b></font></nobr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${response}</b></font></nobr>
         </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">current minute</font></td>
-    </tr>
-    <tr>
-        <td valign="top">
-            <nobr><font face="verdana" size="-2"><b>${PROJECT_NAME}</b></font></nobr>
-        </td>
-        <td width="10">&nbsp;</td>
-        <td width="100%" valign="top"><font face="verdana" size="-1">the name of the current project</font></td>
+        <td width="10%">string</td>
+        <td width="80%"><font face="verdana" size="-1">应答报文体json5序列化字符串包含字段注释</font></td>
     </tr>
 </table>
 <hr>
