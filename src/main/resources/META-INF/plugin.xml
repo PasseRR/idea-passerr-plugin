@@ -1,18 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <idea-plugin>
     <id>com.github.passerr.idea.plugins</id>
-    <name>PasseRR Idea Plugins</name>
+    <name>PasseRR Idea Tools</name>
     <vendor email="xie__hai@sina.com" url="https://github.com/PasseRR/idea-passerr-plugin">
         PasseRR
     </vendor>
 
     <description><![CDATA[
-      <p>
-        Switch easily between CamelCase, camelCase, snake_case and SNAKE_CASE. See Edit menu or use SHIFT + ALT + U.
-      </p>
+      变量命名切换、mybatis日志转可执行sql、常用的工具格式化、spring controller全路径复制、spring controller转api文档
       ]]></description>
 
     <change-notes>
         <![CDATA[
+         <p>2.0.0:
+          <ul>
+            <li>从groovy改为java</li>
+            <li>添加复制spring controller方法全路径的action</li>
+            <li>添加复制spring controller方法为api文档的action</li>
+            <li>添加复制方法返回类型为json5的action</li>
+            <li>修改复制为mybatis日志为sql的动作 仅当选择内容包含Preparing:及Parameters:</li>
+          </ul>
           <p>1.1.0:
           <ul>
             <li>differential input/output textarea</li>
@@ -47,9 +54,6 @@
 
     <idea-version since-build="140.0"/>
 
-    <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.java</depends>
-
     <application-components/>
 
     <project-components/>
@@ -70,10 +74,16 @@
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
         </action>
 
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
+                text="Copy Method Return Type Json5">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$Paste"/>
+        </action>
         <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
                 text="Copy Method Rest Path">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="after"
+                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"/>
         </action>
         <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
                 class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
@@ -84,9 +94,8 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="PTools" anchor="right" icon="/icon/tool.jpg"
+        <toolWindow id="PTools" anchor="right" icon="/icon/icon.svg"
                     factoryClass="com.github.passerr.idea.plugins.tool.TextHandlerToolWindow"/>
-
         <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>
         <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>
     </extensions>
