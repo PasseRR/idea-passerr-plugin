@@ -32,7 +32,7 @@ public class CopyReturnTypeAction extends BaseWebCopyAction {
         Optional.ofNullable(
             Json5Generator.toJson5(
                 method.getReturnType(),
-                SpringWebPsiUtil.returnComment(method),
+                null,
                 Collections.unmodifiableList(state.getBodyIgnoreAnnotations()),
                 Collections.unmodifiableList(state.getObjects())
             )

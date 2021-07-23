@@ -38,6 +38,8 @@ compileJava {
     options.compilerArgs << '-Xlint:deprecation'
 }
 
+buildSearchableOptions.enabled = false
+
 dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.2'

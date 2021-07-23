@@ -127,17 +127,18 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                             .map(PsiDocParamRef.class::cast)
                             .findFirst()
                             .map(PsiDocParamRef::getText)
-                            .ifPresent(p ->
-                                comments.put(
-                                    p,
-                                    Arrays.stream(it.getDataElements())
-                                        .filter(e -> e instanceof PsiDocToken)
-                                        .map(PsiDocToken.class::cast)
-                                        .filter(SpringWebPsiUtil::isDocCommentData)
-                                        .map(e -> e.getText().trim())
-                                        .collect(Collectors.joining(""))
-                                )
-                            )
+                            .ifPresent(p -> {
+                                String comment = Arrays.stream(it.getDataElements())
+                                    .filter(e -> e instanceof PsiDocToken)
+                                    .map(PsiDocToken.class::cast)
+                                    .filter(SpringWebPsiUtil::isDocCommentData)
+                                    .map(e -> e.getText().trim())
+                                    .collect(Collectors.joining(""));
+                                
+                                if (!comment.isEmpty()) {
+                                    comments.put(p, comment);
+                                }
+                            })
                     )
             );
 
@@ -294,7 +295,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
         return
             Json5Generator.toJson5(
                 method.getReturnType(),
-                SpringWebPsiUtil.returnComment(method),
+                null,
                 Collections.unmodifiableList(state.getBodyIgnoreAnnotations()),
                 Collections.unmodifiableList(state.getObjects())
             );

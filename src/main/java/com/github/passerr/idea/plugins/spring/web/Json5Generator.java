@@ -4,7 +4,6 @@ import com.github.passerr.idea.plugins.spring.web.json5.Json5Writer;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.CommonClassNames;
 import com.intellij.psi.PsiArrayType;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiClassType;
@@ -32,7 +31,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -54,7 +52,7 @@ public class Json5Generator {
     /**
      * 调用次数记录
      */
-    private final Map<String, Integer> count;
+    private final Map<PsiField, Integer> count;
     private static final Logger LOG = Logger.getInstance(Json5Generator.class);
     private static final Consumer<Json5Writer> BEGIN_ARRAY = writer -> {
         try {
@@ -105,8 +103,6 @@ public class Json5Generator {
             LOG.error(e.getMessage(), e);
         }
     };
-    private static final BiFunction<PsiType, PsiField, String> COUNT_KEY = (t, f) ->
-        String.format("%s#%s", t.getCanonicalText(), f.getName());
 
     Json5Generator(List<String> originIgnores, List<ApiDocObjectSerialPo> originSerials) {
         // object不能在校验范围
@@ -187,12 +183,6 @@ public class Json5Generator {
             return;
         }
         String className = psiClass.getQualifiedName();
-        if (CommonClassNames.JAVA_LANG_OBJECT.equals(className)) {
-            BEGIN_OBJECT.accept(writer);
-            END_OBJECT.accept(writer);
-            return;
-        }
-
         // 基本类型
         if (serials.containsKey(className)) {
             ApiDocObjectSerialPo po = serials.get(className);
@@ -228,10 +218,10 @@ public class Json5Generator {
                     // 非注解标记字段
                     .filter(it -> AnnotationUtil.findAnnotations(it, this.ignores).length == 0)
                     // 允许递归调用一次
-                    .filter(it -> this.count.getOrDefault(COUNT_KEY.apply(type, it), 0) < 1)
+                    .filter(it -> this.count.getOrDefault(it, 0) < 2)
                     .sorted(Comparator.comparing(PsiField::getName))
                     .forEach(it -> {
-                        this.count.merge(COUNT_KEY.apply(type, it), 1, Integer::sum);
+                        this.count.merge(it, 1, Integer::sum);
                         // 字段注释
                         Optional.ofNullable(it.getDocComment())
                             .map(PsiDocComment::getDescriptionElements)
