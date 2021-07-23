@@ -239,12 +239,15 @@ public class Json5Generator {
                         PsiType fieldType = it.getType();
                         // 存在泛型参数
                         if (fieldType instanceof PsiClassReferenceType) {
-                            PsiClass parameterType = ((PsiClassReferenceType) fieldType).resolve();
-                            if (parameterType instanceof PsiTypeParameter
-                                && substitutionMap.containsKey(parameterType)) {
-                                this.toJson5(writer, substitutionMap.get(parameterType));
-                                // 提前结束泛型参数处理
-                                return;
+                            PsiClass paramType = ((PsiClassReferenceType) fieldType).resolve();
+                            if (paramType instanceof PsiTypeParameter && substitutionMap.containsKey(paramType)) {
+                                PsiType psiType = substitutionMap.get(paramType);
+                                // 存在泛型类型为null的情况
+                                if (psiType != null) {
+                                    this.toJson5(writer, psiType);
+                                    // 提前结束泛型参数处理
+                                    return;
+                                }
                             }
                         }
                         this.toJson5(writer, fieldType);

@@ -16,6 +16,7 @@ import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.util.ui.TextTransferable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -70,12 +71,12 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
         String body = body(method, comments, state);
         // body示例
         map.put("hasBody", Objects.nonNull(body));
-        map.put("body", body);
+        map.put("body", StringEscapeUtils.unescapeJava(body));
 
         // 应答示例
         String response = response(method, state);
         map.put("hasResponse", Objects.nonNull(response));
-        map.put("response", response);
+        map.put("response", StringEscapeUtils.unescapeJava(response));
 
         // 模版替换 发送api文档至剪贴板
         CopyPasteManager.getInstance()

@@ -26,7 +26,7 @@ repositories {
 
 intellij {
     updateSinceUntilBuild = false
-    version = '2020.1'
+    version = '2020.2'
     plugins = ['java']
 }
 
@@ -38,7 +38,13 @@ compileJava {
     options.compilerArgs << '-Xlint:deprecation'
 }
 
-buildSearchableOptions.enabled = false
+runIde {
+    jbrVersion = "jbr-11_0_6b765.25"
+}
+
+buildPlugin {
+    buildSearchableOptions.enabled = false
+}
 
 dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
