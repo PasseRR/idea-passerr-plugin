@@ -275,10 +275,17 @@ public class Json5Generator {
             if (InheritanceUtil.isInheritor(fieldType, Iterable.class.getName())) {
                 BEGIN_ARRAY.accept(writer);
                 // 若存在泛型参数
-                if (paramClassReferenceType.getParameterCount() > 0) {
-                    PsiType parameter = paramClassReferenceType.getParameters()[0];
-                    this.toJson5(writer, parameter, ref + suffix + "<0>");
-                    this.toJson5(writer, parameter, ref + suffix + "<1>");
+                if (paramClassReferenceType.getParameterCount() > 0
+                    && paramClassReferenceType.getParameters()[0] instanceof PsiClassReferenceType) {
+                    PsiClassType parameter = (PsiClassType) paramClassReferenceType.getParameters()[0];
+                    PsiClass resolve = parameter.resolve();
+                    if (resolve instanceof PsiTypeParameter && substitutionMap.containsKey(resolve)) {
+                        this.toJson5(writer, substitutionMap.get(resolve), ref + suffix + "<0>");
+                        this.toJson5(writer, substitutionMap.get(resolve), ref + suffix + "<1>");
+                    } else {
+                        this.toJson5(writer, parameter, ref + suffix + "<0>");
+                        this.toJson5(writer, parameter, ref + suffix + "<1>");
+                    }
                 }
                 END_ARRAY.accept(writer);
                 return;
