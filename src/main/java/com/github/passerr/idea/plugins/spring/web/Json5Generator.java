@@ -199,10 +199,6 @@ public class Json5Generator {
         // 否则则为复杂类型
         if (type instanceof PsiClassReferenceType) {
             PsiClassReferenceType referenceType = (PsiClassReferenceType) type;
-            // 泛型参数
-            Map<PsiTypeParameter, PsiType> substitutionMap = referenceType.resolveGenerics().getSubstitutor()
-                .getSubstitutionMap();
-
             // 集合类型
             if (InheritanceUtil.isInheritor(type, Iterable.class.getName())) {
                 BEGIN_ARRAY.accept(writer);
@@ -218,11 +214,21 @@ public class Json5Generator {
             BEGIN_OBJECT.accept(writer);
             // 接口类型、枚举类型不序列化
             if (!psiClass.isInterface() && !psiClass.isEnum()) {
+                // 泛型参数
+                Map<PsiTypeParameter, PsiType> substitutionMap =
+                    referenceType.resolveGenerics()
+                        .getSubstitutor()
+                        .getSubstitutionMap();
+
                 Arrays.stream(psiClass.getAllFields())
                     // 非static、transient字段
                     .filter(SpringWebPsiUtil::isValidFiled)
                     // 非注解标记字段
                     .filter(it -> AnnotationUtil.findAnnotations(it, this.ignores).length == 0)
+                    // 去掉父类重复字段
+                    .collect(Collectors.toMap(PsiField::getName, it -> it, (o, n) -> o))
+                    .values()
+                    .stream()
                     .sorted(Comparator.comparing(PsiField::getName))
                     .forEach(it -> this.fieldJson5(writer, it, substitutionMap, ref));
             }
