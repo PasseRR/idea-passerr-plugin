@@ -22,7 +22,6 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +47,6 @@ public class Json5Generator {
      * 字段序列化
      */
     private final Map<String, ApiDocObjectSerialPo> serials;
-    /**
-     * 调用次数记录
-     */
-    private final Map<PsiField, Integer> count;
     private static final Logger LOG = Logger.getInstance(Json5Generator.class);
     private static final Consumer<Json5Writer> BEGIN_ARRAY = writer -> {
         try {
@@ -111,7 +106,6 @@ public class Json5Generator {
         // 保证存在原型类型
         WebCopyConstants.PRIMITIVE_SERIALS.forEach(it -> collect.putIfAbsent(it.getType(), it.deepCopy()));
         this.serials = Collections.unmodifiableMap(collect);
-        this.count = new HashMap<>();
     }
 
     /**
@@ -161,12 +155,12 @@ public class Json5Generator {
             COMMENT.accept(writer, rootComment.trim());
         }
 
-        this.toJson5(writer, psiType);
+        this.toJson5(writer, psiType, "$");
 
         return Optional.of(stringWriter.toString()).map(String::trim).filter(it -> it.length() > 0).orElse(null);
     }
 
-    void toJson5(Json5Writer writer, PsiType type) {
+    void toJson5(Json5Writer writer, PsiType type, String ref) {
         if (this.isIgnore(type)) {
             return;
         }
@@ -175,8 +169,8 @@ public class Json5Generator {
         if (type instanceof PsiArrayType) {
             PsiArrayType psiArrayType = (PsiArrayType) type;
             BEGIN_ARRAY.accept(writer);
-            this.toJson5(writer, psiArrayType.getComponentType());
-            this.toJson5(writer, psiArrayType.getComponentType());
+            this.toJson5(writer, psiArrayType.getComponentType(), ref + "[0]");
+            this.toJson5(writer, psiArrayType.getComponentType(), ref + "[1]");
             END_ARRAY.accept(writer);
             return;
         }
@@ -214,8 +208,8 @@ public class Json5Generator {
                 BEGIN_ARRAY.accept(writer);
                 // 若存在泛型参数
                 if (referenceType.getParameterCount() > 0) {
-                    this.toJson5(writer, referenceType.getParameters()[0]);
-                    this.toJson5(writer, referenceType.getParameters()[0]);
+                    this.toJson5(writer, referenceType.getParameters()[0], ref + "<0>");
+                    this.toJson5(writer, referenceType.getParameters()[0], ref + "<1>");
                 }
                 END_ARRAY.accept(writer);
                 return;
@@ -229,17 +223,15 @@ public class Json5Generator {
                     .filter(SpringWebPsiUtil::isValidFiled)
                     // 非注解标记字段
                     .filter(it -> AnnotationUtil.findAnnotations(it, this.ignores).length == 0)
-                    // 允许递归调用一次
-                    .filter(it -> this.count.getOrDefault(it, 0) < 2)
                     .sorted(Comparator.comparing(PsiField::getName))
-                    .forEach(it -> this.fieldJson5(writer, it, substitutionMap));
+                    .forEach(it -> this.fieldJson5(writer, it, substitutionMap, ref));
             }
             END_OBJECT.accept(writer);
         }
     }
 
-    private void fieldJson5(Json5Writer writer, PsiField it, Map<PsiTypeParameter, PsiType> substitutionMap) {
-        this.count.merge(it, 1, Integer::sum);
+    private void fieldJson5(Json5Writer writer, PsiField it, Map<PsiTypeParameter, PsiType> substitutionMap,
+                            String ref) {
         // 字段注释
         Optional.ofNullable(it.getDocComment())
             .map(PsiDocComment::getDescriptionElements)
@@ -255,6 +247,21 @@ public class Json5Generator {
             .ifPresent(comment -> COMMENT.accept(writer, comment));
         NAME.accept(writer, it.getName());
         PsiType fieldType = it.getType();
+
+        String suffix = String.format("@%s:%s", it.getType().getCanonicalText(), it.getName());
+        // 引用循环
+        if (ref.contains(suffix)) {
+            if (InheritanceUtil.isInheritor(fieldType, Iterable.class.getName())
+                || fieldType instanceof PsiArrayType) {
+                BEGIN_ARRAY.accept(writer);
+                END_ARRAY.accept(writer);
+            } else {
+                BEGIN_OBJECT.accept(writer);
+                END_OBJECT.accept(writer);
+            }
+            return;
+        }
+
         // 包装类型
         if (fieldType instanceof PsiClassReferenceType) {
             PsiClassReferenceType paramClassReferenceType = (PsiClassReferenceType) fieldType;
@@ -262,17 +269,10 @@ public class Json5Generator {
             if (InheritanceUtil.isInheritor(fieldType, Iterable.class.getName())) {
                 BEGIN_ARRAY.accept(writer);
                 // 若存在泛型参数
-                if (paramClassReferenceType.getParameterCount() > 0
-                    && paramClassReferenceType.getParameters()[0] instanceof PsiClassReferenceType) {
-                    PsiClass paramClass = PsiTypesUtil.getPsiClass(paramClassReferenceType.getParameters()[0]);
-                    if (paramClass instanceof PsiTypeParameter) {
-                        PsiType psiType = substitutionMap.get(paramClass);
-                        if (psiType != null) {
-                            this.toJson5(writer, psiType);
-                            this.toJson5(writer, psiType);
-                        }
-                    }
-
+                if (paramClassReferenceType.getParameterCount() > 0) {
+                    PsiType parameter = paramClassReferenceType.getParameters()[0];
+                    this.toJson5(writer, parameter, ref + suffix + "<0>");
+                    this.toJson5(writer, parameter, ref + suffix + "<1>");
                 }
                 END_ARRAY.accept(writer);
                 return;
@@ -283,13 +283,13 @@ public class Json5Generator {
                 PsiType psiType = substitutionMap.get(paramType);
                 // 存在泛型类型为null的情况
                 if (psiType != null) {
-                    this.toJson5(writer, psiType);
+                    this.toJson5(writer, psiType, ref + suffix);
                     // 提前结束泛型参数处理
                     return;
                 }
             }
         }
 
-        this.toJson5(writer, fieldType);
+        this.toJson5(writer, fieldType, ref + suffix);
     }
 }
