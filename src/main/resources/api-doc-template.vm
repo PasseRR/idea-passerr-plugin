@@ -9,7 +9,7 @@
 **查询参数**
 
 |参数名|类型|说明|
-|:---|:---|:---|---|
+|:---|:---|:---|
 #foreach($p in $queryParams)
 |$p.name|$p.alias|$p.desc|
 #end
