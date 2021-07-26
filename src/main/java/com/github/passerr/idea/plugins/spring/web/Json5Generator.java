@@ -20,7 +20,6 @@ import com.intellij.psi.util.PsiTypesUtil;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -116,6 +115,19 @@ public class Json5Generator {
     }
 
     /**
+     * 将任意类型转为json5
+     * @param psiType       {@link PsiType}
+     * @param rootComment   根注释
+     * @param originIgnores 忽略类型
+     * @param originSerials 序列化支持类型
+     * @return json5
+     */
+    public static String toJson5(PsiType psiType, String rootComment, List<String> originIgnores,
+                                 List<ApiDocObjectSerialPo> originSerials) {
+        return new Json5Generator(originIgnores, originSerials).toJson5(psiType, rootComment);
+    }
+
+    /**
      * 是否是忽略类型
      * @param psiType {@link PsiType}
      * @return true/false
@@ -198,7 +210,7 @@ public class Json5Generator {
                 .getSubstitutionMap();
 
             // 集合类型
-            if (InheritanceUtil.isInheritor(type, Collection.class.getName())) {
+            if (InheritanceUtil.isInheritor(type, Iterable.class.getName())) {
                 BEGIN_ARRAY.accept(writer);
                 // 若存在泛型参数
                 if (referenceType.getParameterCount() > 0) {
@@ -220,53 +232,64 @@ public class Json5Generator {
                     // 允许递归调用一次
                     .filter(it -> this.count.getOrDefault(it, 0) < 2)
                     .sorted(Comparator.comparing(PsiField::getName))
-                    .forEach(it -> {
-                        this.count.merge(it, 1, Integer::sum);
-                        // 字段注释
-                        Optional.ofNullable(it.getDocComment())
-                            .map(PsiDocComment::getDescriptionElements)
-                            .map(els ->
-                                Arrays.stream(els)
-                                    .filter(e -> e instanceof PsiDocToken)
-                                    .map(PsiDocToken.class::cast)
-                                    .filter(SpringWebPsiUtil::isDocCommentData)
-                                    .map(e -> e.getText().trim())
-                                    .collect(Collectors.joining(""))
-                            )
-                            .filter(comment -> !comment.isEmpty())
-                            .ifPresent(comment -> COMMENT.accept(writer, comment));
-                        NAME.accept(writer, it.getName());
-                        PsiType fieldType = it.getType();
-                        // 存在泛型参数
-                        if (fieldType instanceof PsiClassReferenceType) {
-                            PsiClass paramType = ((PsiClassReferenceType) fieldType).resolve();
-                            if (paramType instanceof PsiTypeParameter && substitutionMap.containsKey(paramType)) {
-                                PsiType psiType = substitutionMap.get(paramType);
-                                // 存在泛型类型为null的情况
-                                if (psiType != null) {
-                                    this.toJson5(writer, psiType);
-                                    // 提前结束泛型参数处理
-                                    return;
-                                }
-                            }
-                        }
-                        this.toJson5(writer, fieldType);
-                    });
+                    .forEach(it -> this.fieldJson5(writer, it, substitutionMap));
             }
             END_OBJECT.accept(writer);
         }
     }
 
-    /**
-     * 将任意类型转为json5
-     * @param psiType       {@link PsiType}
-     * @param rootComment   根注释
-     * @param originIgnores 忽略类型
-     * @param originSerials 序列化支持类型
-     * @return json5
-     */
-    public static String toJson5(PsiType psiType, String rootComment, List<String> originIgnores,
-                                 List<ApiDocObjectSerialPo> originSerials) {
-        return new Json5Generator(originIgnores, originSerials).toJson5(psiType, rootComment);
+    private void fieldJson5(Json5Writer writer, PsiField it, Map<PsiTypeParameter, PsiType> substitutionMap) {
+        this.count.merge(it, 1, Integer::sum);
+        // 字段注释
+        Optional.ofNullable(it.getDocComment())
+            .map(PsiDocComment::getDescriptionElements)
+            .map(els ->
+                Arrays.stream(els)
+                    .filter(e -> e instanceof PsiDocToken)
+                    .map(PsiDocToken.class::cast)
+                    .filter(SpringWebPsiUtil::isDocCommentData)
+                    .map(e -> e.getText().trim())
+                    .collect(Collectors.joining(""))
+            )
+            .filter(comment -> !comment.isEmpty())
+            .ifPresent(comment -> COMMENT.accept(writer, comment));
+        NAME.accept(writer, it.getName());
+        PsiType fieldType = it.getType();
+        // 包装类型
+        if (fieldType instanceof PsiClassReferenceType) {
+            PsiClassReferenceType paramClassReferenceType = (PsiClassReferenceType) fieldType;
+            // 集合类型
+            if (InheritanceUtil.isInheritor(fieldType, Iterable.class.getName())) {
+                BEGIN_ARRAY.accept(writer);
+                // 若存在泛型参数
+                if (paramClassReferenceType.getParameterCount() > 0
+                    && paramClassReferenceType.getParameters()[0] instanceof PsiClassReferenceType) {
+                    PsiClass paramClass = PsiTypesUtil.getPsiClass(paramClassReferenceType.getParameters()[0]);
+                    if (paramClass instanceof PsiTypeParameter) {
+                        PsiType psiType = substitutionMap.get(paramClass);
+                        if (psiType != null) {
+                            this.toJson5(writer, psiType);
+                            this.toJson5(writer, psiType);
+                        }
+                    }
+
+                }
+                END_ARRAY.accept(writer);
+                return;
+            }
+
+            PsiClass paramType = paramClassReferenceType.resolve();
+            if (paramType instanceof PsiTypeParameter && substitutionMap.containsKey(paramType)) {
+                PsiType psiType = substitutionMap.get(paramType);
+                // 存在泛型类型为null的情况
+                if (psiType != null) {
+                    this.toJson5(writer, psiType);
+                    // 提前结束泛型参数处理
+                    return;
+                }
+            }
+        }
+
+        this.toJson5(writer, fieldType);
     }
 }
