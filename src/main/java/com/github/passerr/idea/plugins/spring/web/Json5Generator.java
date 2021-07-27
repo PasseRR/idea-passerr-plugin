@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -214,11 +215,16 @@ public class Json5Generator {
             BEGIN_OBJECT.accept(writer);
             // 接口类型、枚举类型不序列化
             if (!psiClass.isInterface() && !psiClass.isEnum()) {
-                // 泛型参数
-                Map<PsiTypeParameter, PsiType> substitutionMap =
-                    referenceType.resolveGenerics()
-                        .getSubstitutor()
-                        .getSubstitutionMap();
+                // 当前class泛型参数
+                Map<PsiTypeParameter, PsiType> substitutionMap = new HashMap<>(
+                    referenceType.resolveGenerics().getSubstitutor().getSubstitutionMap()
+                );
+
+                // 若存在父类 添加父类的的泛型
+                PsiClassType[] extendsListTypes = psiClass.getExtendsListTypes();
+                for (PsiClassType extendsListType : extendsListTypes) {
+                    substitutionMap.putAll(extendsListType.resolveGenerics().getSubstitutor().getSubstitutionMap());
+                }
 
                 Arrays.stream(psiClass.getAllFields())
                     // 非static、transient字段
