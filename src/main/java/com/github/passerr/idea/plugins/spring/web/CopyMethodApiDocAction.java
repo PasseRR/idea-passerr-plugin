@@ -135,7 +135,7 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                                     .filter(SpringWebPsiUtil::isDocCommentData)
                                     .map(e -> e.getText().trim())
                                     .collect(Collectors.joining(""));
-                                
+
                                 if (!comment.isEmpty()) {
                                     comments.put(p, comment);
                                 }
@@ -172,6 +172,8 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                             new Var(
                                 Optional.ofNullable(PsiAnnotationMemberValueUtil.value(annotation, "value"))
                                     .map(String::valueOf)
+                                    // 过滤注解没有value的情况
+                                    .filter(c -> !c.isEmpty())
                                     .orElseGet(it::getName),
                                 type,
                                 alias,
