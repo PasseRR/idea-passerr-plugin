@@ -1,4 +1,5 @@
-# idea-passerr-plugin
+# idea-passerr-plugin [![lv](https://img.shields.io/badge/dynamic/json?style=flat-square&label=%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC&url=https://gitee.com/api/v5/repos/PasseRR/idea-passerr-plugin/releases/latest&query=$.tag_name)](https://gitee.com/PasseRR/idea-passerr-plugin/releases)
+
 
 ## 1.命名切换
 
