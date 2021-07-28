@@ -12,6 +12,11 @@
 
     <change-notes>
         <![CDATA[
+        <p>2.0.1:
+          <ul>
+            <li>修复@PathVariablem没有value时文档参数名默认为java参数名</li>
+            <li>修复继承父类的泛型参数丢失问题</li>
+          </ul>
          <p>2.0.0:
           <ul>
             <li>从groovy改为java</li>
