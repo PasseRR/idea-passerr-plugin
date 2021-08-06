@@ -7,6 +7,7 @@
     </vendor>
 
     <description><![CDATA[
+      camel case switch, mybatis log convert to  executable sql, common tools, spring controller path copy, spring controller convert to api document.
       变量命名切换、mybatis日志转可执行sql、常用的工具格式化、spring controller全路径复制、spring controller转api文档
       ]]></description>
 
@@ -14,20 +15,17 @@
         <![CDATA[
         <p>2.0.2:
           <ul>
-            <li>完善可发布到jetbrain插件市场</li>
+            <li>compatibility settings handle</li>
           </ul>
         <p>2.0.1:
-          <ul>
-            <li>修复@PathVariablem没有value时文档参数名默认为java参数名</li>
-            <li>修复继承父类的泛型参数丢失问题</li>
+          <ul> 
+            <li>version2.0.0 bug fix</li>
           </ul>
          <p>2.0.0:
           <ul>
-            <li>从groovy改为java</li>
-            <li>添加复制spring controller方法全路径的action</li>
-            <li>添加复制spring controller方法为api文档的action</li>
-            <li>添加复制方法返回类型为json5的action</li>
-            <li>修改复制为mybatis日志为sql的动作 仅当选择内容包含Preparing:及Parameters:</li>
+            <li>spring controller path copy</li>
+            <li>spring controller convert to api document</li>
+            <li>return type copy as json5</li>
           </ul>
           <p>1.1.0:
           <ul>
