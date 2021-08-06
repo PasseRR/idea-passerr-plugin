@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.github.passerr.idea.plugins</id>
     <name>PasseRR Idea Tools</name>
-    <vendor email="xie__hai@sina.com" url="https://github.com/PasseRR/idea-passerr-plugin">
+    <vendor email="xie__hai@sina.com" url="https://gitee.com/PasseRR/idea-passerr-plugin">
         PasseRR
     </vendor>
 
@@ -12,6 +12,10 @@
 
     <change-notes>
         <![CDATA[
+        <p>2.0.2:
+          <ul>
+            <li>完善可发布到jetbrain插件市场</li>
+          </ul>
         <p>2.0.1:
           <ul>
             <li>修复@PathVariablem没有value时文档参数名默认为java参数名</li>
@@ -58,6 +62,8 @@
     </change-notes>
 
     <idea-version since-build="140.0"/>
+    
+    <depends>com.intellij.modules.lang</depends>
 
     <application-components/>
 
