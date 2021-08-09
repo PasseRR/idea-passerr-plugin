@@ -36,12 +36,14 @@ enum ConvertType {
     /**
      * 自动格式化json
      */
+    @SuppressWarnings("deprecation")
     JSON(SyntaxConstants.SYNTAX_STYLE_JSON) {
         @Override
         void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
             try {
                 // 可以同时解析数组或者Object
-                JsonElement element = JsonParser.parseString(input.getText());
+                JsonParser parser = new JsonParser();
+                JsonElement element = parser.parse(input.getText());
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 output.setText(gson.toJson(element));
                 // 格式化成功后定位到第一行
