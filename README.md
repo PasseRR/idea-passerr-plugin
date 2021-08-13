@@ -1,5 +1,13 @@
 # idea-passerr-plugin [![lv](https://img.shields.io/badge/dynamic/json?style=flat-square&label=%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC&url=https://gitee.com/api/v5/repos/PasseRR/idea-passerr-plugin/releases/latest&query=$.tag_name)](https://gitee.com/PasseRR/idea-passerr-plugin/releases)
 
+- 离线安装  
+[gitee下载](https://gitee.com/PasseRR/idea-passerr-plugin/releases)
+最新zip直接安装或者
+[插件市场](https://plugins.jetbrains.com/plugin/17350-passerr-idea-tools)
+下载安装
+  
+- 在线安装  
+  plugin中搜索`PasseRR`直接安装
 
 ## 1.命名切换
 
