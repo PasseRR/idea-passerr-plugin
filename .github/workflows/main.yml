@@ -1,0 +1,20 @@
+name: 'GitHub Actions Mirror'
+
+on: [push, delete]
+
+# 自动同步代码到gitee
+jobs:
+  mirror_to_gitee:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2.4.0
+        with:
+          fetch-depth: 0
+      - name: 'Mirror to gitee'
+        uses: pixta-dev/repository-mirroring-action@v1.0.2
+        with:
+          target_repo_url:
+            git@gitee.com:PasseRR/idea-passerr-plugin.git
+          ssh_private_key:
+            ${{ secrets.GITEE_KEY }}
