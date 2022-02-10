@@ -120,7 +120,7 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="PTools" anchor="right" icon="/icon/icon.svg"
+        <toolWindow id="PTools" anchor="right" icon="/META-INF/icon.svg"
                     factoryClass="com.github.passerr.idea.plugins.tool.TextHandlerToolWindow"/>
         <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>
         <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>
