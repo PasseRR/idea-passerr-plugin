@@ -11,8 +11,12 @@
 
 ## 1.命名切换
 
-在CamelCase, camelCase, snake_case and SNAKE_CASE之间 默认快捷键`Alt + Shift + U`  
-![命名](./images/camel.gif)
+在camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case之间 默认快捷键`Alt + Shift + U`  
+![命名](./images/naming.gif)
+
+命名设置
+![命名设置](./images/naming_settings.gif)
+
 
 ## 2.格式化窗口
 

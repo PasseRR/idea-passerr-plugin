@@ -9,7 +9,7 @@
     <description><![CDATA[
       <p>EN
       <ul>
-        <li>Switch easily between kebab-case, KEBAB-CASE, SNAKE_CASE, PascalCase, camelCase, snake_case.</li>
+        <li>Switch easily between camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case.</li>
         <li>Copy <a href="https://mybatis.org/mybatis-3/">mybatis</a> log as executable sql, through console menu or common tools.</li>
         <li>Some common tools for developer, like url encoder/decoder, md5, json format, mybatis log converter.</li>
         <li>Copy <a href="https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/mvc.html">springmvc</a> controller method full http path</li>
@@ -18,7 +18,7 @@
       </ul>
       <p>CN
       <ul>
-        <li>变量命名切换在kebab-case, KEBAB-CASE, SNAKE_CASE, PascalCase, camelCase, snake_case之间切换</li>
+        <li>变量命名切换在camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case之间切换</li>
         <li>mybatis日志转可执行sql，可以通过console菜单或者工具window</li>
         <li>一些常用的开发工具，如url编码/解码、md5加密、json格式化、mybatis日志转换</li>
         <li>springmvc controller方法http全路径复制</li>
@@ -29,6 +29,11 @@
 
     <change-notes>
         <![CDATA[
+        <p>2.1.0:
+          <ul>
+            <li>add KEBAB-CASE, kebab-case naming support</li>
+            <li>custom setting between camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case</li>
+          </ul>
         <p>2.0.2:
           <ul>
             <li>compatibility settings handle</li>
