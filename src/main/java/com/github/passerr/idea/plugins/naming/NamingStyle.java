@@ -66,10 +66,7 @@ enum NamingStyle {
 
         @Override
         String toggle(String text) {
-            return
-                Arrays.stream(NamingStyle.replaceSpecial(text).split(SPECIAL))
-                    .map(String::toUpperCase)
-                    .collect(Collectors.joining(UNDER_SCORE));
+            return NamingStyle.replaceUpperAsSpecial(text, UNDER_SCORE).toUpperCase();
         }
     },
     /**
@@ -91,10 +88,7 @@ enum NamingStyle {
 
         @Override
         String toggle(String text) {
-            return
-                Arrays.stream(NamingStyle.replaceSpecial(text).split(SPECIAL))
-                    .map(String::toLowerCase)
-                    .collect(Collectors.joining(UNDER_SCORE));
+            return NamingStyle.replaceUpperAsSpecial(text, UNDER_SCORE).toLowerCase();
         }
     },
     /**
@@ -117,10 +111,7 @@ enum NamingStyle {
 
         @Override
         String toggle(String text) {
-            return
-                Arrays.stream(NamingStyle.replaceSpecial(text).split(SPECIAL))
-                    .map(String::toUpperCase)
-                    .collect(Collectors.joining(MINUS));
+            return NamingStyle.replaceUpperAsSpecial(text, MINUS).toUpperCase();
         }
     },
     /**
@@ -142,10 +133,7 @@ enum NamingStyle {
 
         @Override
         String toggle(String text) {
-            return
-                Arrays.stream(NamingStyle.replaceSpecial(text).split(SPECIAL))
-                    .map(String::toLowerCase)
-                    .collect(Collectors.joining(MINUS));
+            return NamingStyle.replaceUpperAsSpecial(text, MINUS).toLowerCase();
         }
     },
     /**
@@ -168,10 +156,6 @@ enum NamingStyle {
 
     static final String UNDER_SCORE = "_";
     static final String MINUS = "-";
-    /**
-     * 特殊字符串
-     */
-    private static final String SPECIAL = "⇞";
 
     /**
      * 是否匹配当前风格
@@ -203,9 +187,9 @@ enum NamingStyle {
      * @param text 当前命名
      * @return 替换后命名
      */
-    static String replaceSpecial(String text) {
-        String s = text.replaceAll("[A-Z]", SPECIAL + "$0");
-        return s.startsWith(SPECIAL) ? s.substring(1) : s;
+    static String replaceUpperAsSpecial(String text, String special) {
+        String s = text.replaceAll("[A-Z]", special + "$0");
+        return Character.isUpperCase(text.charAt(0)) ? s.substring(1) : s;
     }
 
     /**
