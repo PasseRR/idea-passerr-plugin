@@ -29,6 +29,11 @@
 
     <change-notes>
         <![CDATA[
+        <p>3.0.0:
+          <ul>
+            <li></li>
+            <li>custom setting between camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case</li>
+          </ul>
         <p>2.1.0:
           <ul>
             <li>add KEBAB-CASE, kebab-case naming support</li>
@@ -83,13 +88,15 @@
     <idea-version since-build="173.4"/>
 
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.java</depends>
+    <depends config-file="java.xml">com.intellij.modules.java</depends>
+    <depends config-file="database.xml">com.intellij.database</depends>
 
     <application-components/>
 
     <project-components/>
 
     <actions>
+        <!-- 命名切换 -->
         <action id="com.github.passerr.idea.plugins.naming.NamingAction"
                 class="com.github.passerr.idea.plugins.naming.NamingAction"
                 text="Toggle Naming"
@@ -97,39 +104,22 @@
             <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
         </action>
-
+        <!-- 复制为可执行的sql -->
         <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
                 class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
                 text="Copy As Executable Sql"
                 description="Convert log to executable sql">
             <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
         </action>
-
-        <action id="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
-                class="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
-                text="Copy Method Return Type Json5">
-            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$Paste"/>
-        </action>
-        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
-                class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
-                text="Copy Method Rest Path">
-            <add-to-group group-id="EditorPopupMenu" anchor="after"
-                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"/>
-        </action>
-        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
-                class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
-                text="Copy Method Api Doc">
-            <add-to-group group-id="EditorPopupMenu" anchor="after"
-                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"/>
-        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- 常用工具组件 -->
         <toolWindow id="PTools" anchor="right" icon="/META-INF/pluginIcon.svg"
                     factoryClass="com.github.passerr.idea.plugins.tool.TextHandlerToolWindow"/>
-        <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>
+        <!-- 命名切换配置持久化组件 -->
         <applicationService serviceImplementation="com.github.passerr.idea.plugins.naming.NamingStateComponent"/>
-        <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>
+        <!-- 命名切换配置ui -->
         <applicationConfigurable instance="com.github.passerr.idea.plugins.naming.NamingConfigurable"/>
     </extensions>
 </idea-plugin>

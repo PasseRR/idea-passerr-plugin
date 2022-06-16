@@ -1,5 +1,5 @@
 group 'com.github.passerr'
-version '2.1.0'
+version '3.0.0'
 
 buildscript {
     repositories {
@@ -27,7 +27,8 @@ repositories {
 intellij {
     updateSinceUntilBuild = false
     version = '2020.2'
-    plugins = ['java']
+    type = 'IU'
+    plugins = ['java', 'DatabaseTools']
 }
 
 tasks.withType(JavaCompile) {

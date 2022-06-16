@@ -1,0 +1,31 @@
+<idea-plugin>
+    <actions>
+        <!-- 复制json5 -->
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"
+                text="Copy Method Return Type Json5">
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="$Paste"/>
+        </action>
+        <!-- 复制rest路径 -->
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"
+                text="Copy Method Rest Path">
+            <add-to-group group-id="EditorPopupMenu" anchor="after"
+                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"/>
+        </action>
+        <!-- 复制api文档 -->
+        <action id="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
+                class="com.github.passerr.idea.plugins.spring.web.CopyMethodApiDocAction"
+                text="Copy Method Api Doc">
+            <add-to-group group-id="EditorPopupMenu" anchor="after"
+                          relative-to-action="com.github.passerr.idea.plugins.spring.web.CopyMethodPathAction"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- api配置持久化组件 -->
+        <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>
+        <!-- api配置ui -->
+        <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>
+    </extensions>
+</idea-plugin>
