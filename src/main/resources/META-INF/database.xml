@@ -1,11 +1,14 @@
 <idea-plugin>
     <actions>
-<!--        <action id="bmd-mybatis-generate-action"-->
-<!--                class="com.baomidou.plugin.idea.mybatisx.generate.action.MybatisGeneratorMainAction"-->
-<!--                text="MybatisX-Generator"-->
-<!--                description="MybatisX generator idea plugin">-->
-<!--            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>-->
-<!--        </action>-->
+        <!-- 数据库设计文档导出 -->
+        <action id="com.github.passerr.idea.plugins.database.doc.ExportDatabaseDocAction"
+                class="com.github.passerr.idea.plugins.database.doc.ExportDatabaseDocAction"
+                text="Export Database Document"
+                description="Export Database Document As Docx/Pdf">
+            <add-to-group group-id="DatabaseViewPopupMenu"
+                          anchor="before"
+                          relative-to-action="Console.TableResult.ShowDumpDialogAction"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">

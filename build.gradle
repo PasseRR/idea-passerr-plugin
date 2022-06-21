@@ -51,4 +51,7 @@ dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
     implementation group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '2.6.1'
+    implementation('cn.wisewe:docx4j-wisewe-output:1.7.0.RELEASE') {
+        exclude group: 'com.itextpdf'
+    }
 }
