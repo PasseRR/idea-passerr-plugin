@@ -9,7 +9,7 @@
 - 在线安装  
   plugin中搜索`PasseRR`直接安装
 
-## 1.命名切换
+## 1. 命名切换
 
 在camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case之间 默认快捷键`Alt + Shift + U`  
 ![命名](./images/naming/naming.gif)
@@ -18,20 +18,20 @@
 ![命名设置](./images/naming/naming_settings.gif)
 
 
-## 2.格式化窗口
+## 2. 格式化窗口
 
 右侧的ToolWindow有一个叫PTools的窗口   
 分为上下两个文本域，上边为输入文本域，下边为输出文本域，中间为工具菜单及转换按钮   
 点开可以进行json格式化、mybatis日志格式化为可执行sql、url编码解码、base64加解密、md5加密   
 转换在输入文本域中快捷键为`Ctrl + Enter`
 
-* Json格式化  
+### 2.1 Json格式化  
   ![Json](./images/tool/json.gif)
 
-* Mybatis日志格式化  
+### 2.2 Mybatis日志格式化  
   ![Mybatis](./images/mybatis/log.gif)
 
-* 编码解码/加密解密
+### 2.3 编码解码/加密解密
   ![Encode](./images/tool/encode.gif)
 
 ## 3.Console栏直接复制mybatis日志为可执行的sql
