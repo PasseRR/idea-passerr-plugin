@@ -4,6 +4,7 @@ import com.github.passerr.idea.plugins.base.BaseTableModel;
 import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
+import com.github.passerr.idea.plugins.base.ResourceUtil;
 import com.github.passerr.idea.plugins.spring.web.highlight.FileTemplateTokenType;
 import com.github.passerr.idea.plugins.spring.web.highlight.TemplateHighlighter;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;

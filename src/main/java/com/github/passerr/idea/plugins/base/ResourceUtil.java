@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.spring.web;
+package com.github.passerr.idea.plugins.base;
 
 import com.google.common.io.CharStreams;
 
