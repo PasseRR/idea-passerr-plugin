@@ -2,7 +2,7 @@ package com.github.passerr.idea.plugins;
 
 import com.intellij.ui.table.JBTable;
 
-import javax.swing.*;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.TableModel;
 
 /**

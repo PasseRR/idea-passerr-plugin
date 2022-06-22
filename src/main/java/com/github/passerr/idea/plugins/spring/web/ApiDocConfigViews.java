@@ -37,7 +37,6 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
-import com.intellij.util.ui.HTMLEditorKitBuilder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
@@ -47,6 +46,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -132,7 +132,7 @@ public abstract class ApiDocConfigViews {
         // 描述模块
         JEditorPane desc = new JEditorPane(UIUtil.HTML_MIME, "");
         desc.setEditable(false);
-        desc.setEditorKit(HTMLEditorKitBuilder.simple());
+        desc.setEditorKit(new HTMLEditorKit());
         desc.addHyperlinkListener(new BrowserHyperlinkListener());
         desc.setText(ResourceUtil.readAsString("/api-doc-desc.html"));
         desc.setCaretPosition(0);
