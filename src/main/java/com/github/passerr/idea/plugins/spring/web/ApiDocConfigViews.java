@@ -135,7 +135,7 @@ public abstract class ApiDocConfigViews {
         desc.setEditable(false);
         desc.setEditorKit(new HTMLEditorKit());
         desc.addHyperlinkListener(new BrowserHyperlinkListener());
-        desc.setText(ResourceUtil.readAsString("/api-doc-desc.html"));
+        desc.setText(ResourceUtil.readAsString("/api-doc/desc.html"));
         desc.setCaretPosition(0);
 
         JPanel descriptionPanel = new JPanel(new GridBagLayout());

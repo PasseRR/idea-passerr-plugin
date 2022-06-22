@@ -46,7 +46,7 @@ public class ApiDocSettingPo {
     List<ApiDocObjectSerialPo> objects;
 
     public ApiDocSettingPo() {
-        this.template = new StringBuilder(ResourceUtil.readAsString("/api-doc-template.vm").replace("\r\n", "\n"));
+        this.template = new StringBuilder(ResourceUtil.readAsString("/api-doc/template.vm").replace("\r\n", "\n"));
         this.queryParamIgnoreTypes = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_TYPES);
         this.queryParamIgnoreAnnotations = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS);
         this.bodyIgnoreAnnotations = new ArrayList<>(WebCopyConstants.FIELD_IGNORE_ANNOTATIONS);
