@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.mybatis;
 
-import com.github.passerr.idea.plugins.NotificationThread;
+import com.github.passerr.idea.plugins.base.NotificationThread;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 

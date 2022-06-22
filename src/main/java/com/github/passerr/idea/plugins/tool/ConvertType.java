@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.tool;
 
-import com.github.passerr.idea.plugins.NotificationThread;
+import com.github.passerr.idea.plugins.base.NotificationThread;
 import com.github.passerr.idea.plugins.mybatis.LogParser;
 import com.github.passerr.idea.plugins.mybatis.SqlFormatter;
 import com.google.gson.Gson;

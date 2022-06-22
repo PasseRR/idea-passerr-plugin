@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins;
+package com.github.passerr.idea.plugins.base;
 
 import com.intellij.util.ui.ItemRemovable;
 import lombok.AccessLevel;

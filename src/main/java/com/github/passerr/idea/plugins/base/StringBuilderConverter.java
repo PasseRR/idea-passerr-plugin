@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.spring.web.po;
+package com.github.passerr.idea.plugins.base;
 
 import com.intellij.util.xmlb.Converter;
 import org.jetbrains.annotations.NotNull;

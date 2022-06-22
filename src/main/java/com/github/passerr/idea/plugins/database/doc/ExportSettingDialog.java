@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.database.doc;
 
-import com.github.passerr.idea.plugins.NotificationThread;
+import com.github.passerr.idea.plugins.base.NotificationThread;
 import com.intellij.database.model.DasObject;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;

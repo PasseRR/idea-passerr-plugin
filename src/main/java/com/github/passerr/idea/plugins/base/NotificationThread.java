@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins;
+package com.github.passerr.idea.plugins.base;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
