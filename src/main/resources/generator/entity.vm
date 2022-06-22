@@ -1,0 +1,32 @@
+package ${entity.packageName};
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+${entity.fieldImports}
+
+/**
+ * ${entity.desc}实体
+ * @author $author
+ * @date $date
+ */
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@TableName("${entity.tableName}")
+@ApiModel
+public class ${entity.className} {
+#foreach($f in $fields)
+    #if (${f.primaryKey})
+    @TableId("${f.columnName}")
+    #else
+    @TableField("${f.columnName}")
+    #end
+    @ApiModelProperty("${f.desc}")
+    ${f.fieldType} ${f.fieldName};
+#end
+}
