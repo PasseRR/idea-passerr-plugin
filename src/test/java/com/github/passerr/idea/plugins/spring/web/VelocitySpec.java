@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web;
 
+import com.github.passerr.idea.plugins.base.VelocityUtil;
 import org.junit.Test;
 
 /**

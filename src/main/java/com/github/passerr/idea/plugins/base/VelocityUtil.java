@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.spring.web;
+package com.github.passerr.idea.plugins.base;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;

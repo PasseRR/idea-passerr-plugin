@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web;
 
+import com.github.passerr.idea.plugins.base.VelocityUtil;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
