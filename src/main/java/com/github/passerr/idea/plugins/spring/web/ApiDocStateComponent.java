@@ -2,8 +2,8 @@ package com.github.passerr.idea.plugins.spring.web;
 
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
@@ -51,6 +51,6 @@ public class ApiDocStateComponent implements PersistentStateComponent<ApiDocSett
     }
 
     static ApiDocStateComponent getInstance() {
-        return ServiceManager.getService(ApiDocStateComponent.class);
+        return ApplicationManager.getApplication().getService(ApiDocStateComponent.class);
     }
 }

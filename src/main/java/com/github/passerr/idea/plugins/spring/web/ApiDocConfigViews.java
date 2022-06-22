@@ -37,6 +37,7 @@ import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.ui.HTMLEditorKitBuilder;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
@@ -131,7 +132,7 @@ public abstract class ApiDocConfigViews {
         // 描述模块
         JEditorPane desc = new JEditorPane(UIUtil.HTML_MIME, "");
         desc.setEditable(false);
-        desc.setEditorKit(UIUtil.getHTMLEditorKit());
+        desc.setEditorKit(HTMLEditorKitBuilder.simple());
         desc.addHyperlinkListener(new BrowserHyperlinkListener());
         desc.setText(ResourceUtil.readAsString("/api-doc-desc.html"));
         desc.setCaretPosition(0);
