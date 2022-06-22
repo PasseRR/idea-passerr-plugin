@@ -11,6 +11,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextBrowseFolderListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.ui.DocumentAdapter;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.jdesktop.swingx.JXTextField;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -28,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -38,11 +41,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExportSettingDialog extends DialogWrapper {
     final List<DasObject> schemas;
-    String title = "数据库设计";
+    String title;
     String path = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
     final AtomicInteger tableFields = new AtomicInteger();
     final AtomicInteger columnFields = new AtomicInteger();
     private static final TextBrowseFolderListener BROWSE_FOLDER_LISTENER;
+    private static final String DEFAULT_TITLE = "数据库设计";
 
     static {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
@@ -64,8 +68,13 @@ public class ExportSettingDialog extends DialogWrapper {
         panel.setLayout(new GridLayout(4, 1));
 
         JXTextField title = new JXTextField();
-        title.setPrompt(this.title);
-        title.addActionListener(e -> this.title = title.getText());
+        title.setPrompt(DEFAULT_TITLE);
+        title.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                ExportSettingDialog.this.title = title.getText();
+            }
+        });
         panel.add(LabeledComponent.create(title, "   自定义标题", BorderLayout.WEST));
 
         JPanel tablePanel = new JPanel();
@@ -94,9 +103,9 @@ public class ExportSettingDialog extends DialogWrapper {
     protected void doOKAction() {
         if (Objects.nonNull(this.schemas)) {
             try {
-                DocxExporter.export(
+                DocExporter.export(
                     this.schemas,
-                    this.title,
+                    Optional.ofNullable(this.title).filter(it -> !it.isEmpty()).orElse(DEFAULT_TITLE),
                     this.tableFields.get(),
                     this.columnFields.get(),
                     this.path

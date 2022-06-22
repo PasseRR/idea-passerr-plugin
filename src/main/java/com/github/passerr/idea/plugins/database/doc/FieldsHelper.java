@@ -2,6 +2,7 @@ package com.github.passerr.idea.plugins.database.doc;
 
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasObject;
+import com.intellij.database.util.DasUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -141,13 +142,13 @@ class FieldsHelper {
         PRIMARY("是否主键", false, 1 << 3, true) {
             @Override
             public String value(DasColumn dasColumn) {
-                return "否";
+                return DasUtil.isPrimary(dasColumn) ? "√" : "";
             }
         },
-        NULLABLE("是否可为空", false, 1 << 4, true) {
+        NULLABLE("允许为空", false, 1 << 4, true) {
             @Override
             public String value(DasColumn dasColumn) {
-                return dasColumn.isNotNull() ? "否" : "是";
+                return dasColumn.isNotNull() ? "" : "√";
             }
         },
         DEFAULT("默认值", false, 1 << 5, true) {
