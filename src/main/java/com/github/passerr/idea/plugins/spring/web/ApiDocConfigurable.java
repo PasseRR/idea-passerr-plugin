@@ -1,20 +1,16 @@
 package com.github.passerr.idea.plugins.spring.web;
 
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.TabbedPaneWrapper;
-import com.intellij.ui.tabs.JBTabs;
-import com.intellij.ui.tabs.TabInfo;
+import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Generated;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import java.awt.Component;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +21,6 @@ import java.util.Objects;
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
 public class ApiDocConfigurable implements SearchableConfigurable, Configurable.NoScroll {
-    Disposable disposable;
     ApiDocSettingPo source;
     ApiDocSettingPo copy;
 
@@ -47,33 +42,23 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
 
     @Override
     public JComponent createComponent() {
-        this.disposable = Disposer.newDisposable();
-        TabbedPaneWrapper tabbedPanel = new TabbedPaneWrapper(disposable);
+        JBTabbedPane tabbedPanel = new JBTabbedPane();
         List<Pair<String, JPanel>> panels = ApiDocConfigViews.panels(this.copy);
         panels.forEach(it -> tabbedPanel.addTab(it.getFirst(), it.getSecond()));
 
         tabbedPanel.addChangeListener(e -> {
-            TabInfo selectedInfo = ((JBTabs) e.getSource()).getSelectedInfo();
-            if (Objects.isNull(selectedInfo)) {
-                return;
-            }
+            int selectedIndex = ((JBTabbedPane) e.getSource()).getSelectedIndex();
+
             // 切换tab自动保存
             if (this.isModified()) {
                 this.apply();
             }
-            String tab = selectedInfo.getText();
-            panels.stream()
-                .filter(it -> Objects.equals(it.getFirst(), tab))
-                .findFirst()
-                .ifPresent(it -> {
-                    it.getSecond().validate();
-                    it.getSecond().repaint();
-                });
+            Component component = tabbedPanel.getTabComponentAt(selectedIndex);
+            component.validate();
+            component.repaint();
         });
 
-        tabbedPanel.setSelectedIndex(0);
-
-        return tabbedPanel.getComponent();
+        return tabbedPanel;
     }
 
     @Override
@@ -89,15 +74,6 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
     @Override
     public void reset() {
         this.copy.shallowCopy(this.source);
-    }
-
-    @Generated({})
-    @Override
-    public void disposeUIResources() {
-        if (this.disposable != null) {
-            Disposer.dispose(this.disposable);
-            this.disposable = null;
-        }
     }
 
     @NotNull

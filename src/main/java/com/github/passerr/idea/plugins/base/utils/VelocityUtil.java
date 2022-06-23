@@ -41,8 +41,6 @@ import java.util.function.Function;
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
 public interface VelocityUtil {
-    EditorHighlighter VELOCITY_HIGHLIGHTER = createVelocityHighlight();
-
     /**
      * 模版替换
      * @param template 模版
@@ -90,7 +88,7 @@ public interface VelocityUtil {
         editorSettings.setAdditionalColumnsCount(3);
         editorSettings.setAdditionalLinesCount(3);
         editorSettings.setCaretRowShown(false);
-        ((EditorEx) editor).setHighlighter(VELOCITY_HIGHLIGHTER);
+        ((EditorEx) editor).setHighlighter(createVelocityHighlight());
 
         return editor.getComponent();
     }

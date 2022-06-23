@@ -1,8 +1,142 @@
 <html>
 <body>
-待内容填充
-<!-- TODO 使用文档说明 -->
+<b>查询参数、路径参数属性</b>
+<table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse">
+    <thead>
+    <tr>
+        <td width="10%">属性名</td>
+        <td width="10%">类型</td>
+        <td width="80%">属性描述</td>
+    </tr>
+    </thead>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>name</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数名</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>type</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数java类型全名</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>alias</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数类型别名</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>desc</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">参数描述</font>
+        </td>
+    </tr>
+</table>
 <hr>
+<b>预定义velocity参数描述</b>
+<table width="100%" border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse">
+    <thead>
+    <tr>
+        <td width="10%">
+            参数名
+        </td>
+        <td width="10%">类型</td>
+        <td width="80%">
+            参数描述
+        </td>
+    </tr>
+    </thead>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${method}</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="90%" width="10%">
+            <font face="verdana" size="-1">http方法类型若未指定则为<b>UNKNOWN</b></font>
+        </td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${url}</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%">
+            <font face="verdana" size="-1">rest方法路径</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasQueryParams}</b></font></nobr>
+        </td>
+        <td width="10%">boolean</td>
+        <td width="80%">
+            <font face="verdana" size="-1">是否有查询参数</font>
+        </td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${queryParams}</b></font></nobr>
+        </td>
+        <td width="10%">list</td>
+        <td width="80%"><font face="verdana" size="-1">查询参数列表</font></td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasPathVariables}</b></font></nobr>
+        </td>
+        <td width="10%">boolean</td>
+        <td width="80%"><font face="verdana" size="-1">是否有路径参数</font></td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${pathVariables}</b></font></nobr>
+        </td>
+        <td width="10%">list</td>
+        <td width="80%"><font face="verdana" size="-1">路径参数列表</font></td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasBody}</b></font></nobr>
+        </td>
+        <td width="10%">boolean</td>
+        <td width="80%"><font face="verdana" size="-1">是否存在请求报文体</font></td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${body}</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%"><font face="verdana" size="-1">请求报文体json5序列化字符串包含字段注释</font></td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${hasResponse}</b></font></nobr>
+        </td>
+        <td width="10%">boolean</td>
+        <td width="80%"><font face="verdana" size="-1">是否存在应答报文体</font></td>
+    </tr>
+    <tr>
+        <td width="10%">
+            <nobr><font face="verdana" size="-1"><b>${response}</b></font></nobr>
+        </td>
+        <td width="10%">string</td>
+        <td width="80%"><font face="verdana" size="-1">应答报文体json5序列化字符串包含字段注释</font></td>
+    </tr>
+</table>
 <font face="verdana" size="-1"><a
         href='http://velocity.apache.org/engine/devel/user-guide.html#Velocity_Template_Language_VTL:_An_Introduction'>
     Apache Velocity</a> template language is used

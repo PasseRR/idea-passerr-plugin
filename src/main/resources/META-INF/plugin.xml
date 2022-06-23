@@ -15,6 +15,8 @@
         <li>Copy <a href="https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/mvc.html">springmvc</a> controller method full http path</li>
         <li>Easily copy <a href="https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/mvc.html">springmvc</a> controller method as api document, custom api template</li>
         <li>Copy java method return type as <a href="https://json5.org/">json5</a></li>
+        <li>export database tables as doc document</li>
+        <li>mybatis&spring code generator</li>
       </ul>
       <p>CN
       <ul>
@@ -24,6 +26,8 @@
         <li>springmvc controller方法http全路径复制</li>
         <li>复制springmvc controller方法为api文档，可以自定义api文档模版</li>
         <li>复制java方法返回类型为json5</li>
+        <li>导出数据库表为word文档</li>
+        <li>mybatis代码生成器</li>
       </ul>
       ]]></description>
 
@@ -31,8 +35,9 @@
         <![CDATA[
         <p>3.0.0:
           <ul>
-            <li></li>
-            <li>custom setting between camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case</li>
+            <li>handle plugin api compatible</li>
+            <li>export database tables as doc document</li>
+            <li>mybatis&spring code generator</li>
           </ul>
         <p>2.1.0:
           <ul>

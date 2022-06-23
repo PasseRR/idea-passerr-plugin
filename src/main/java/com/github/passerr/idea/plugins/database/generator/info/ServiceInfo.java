@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
 /**
- * 服务接口信息
+ * 服务信息
  * @author xiehai
  * @date 2022/06/22 14:58
  */

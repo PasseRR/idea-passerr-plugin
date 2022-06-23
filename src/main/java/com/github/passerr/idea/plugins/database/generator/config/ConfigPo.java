@@ -1,7 +1,7 @@
 package com.github.passerr.idea.plugins.database.generator.config;
 
-import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
 import com.github.passerr.idea.plugins.base.StringBuilderConverter;
+import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -31,8 +31,6 @@ public class ConfigPo {
     StringBuilder mapperXml;
     @OptionTag(tag = "service", nameAttribute = "", converter = StringBuilderConverter.class)
     StringBuilder service;
-    @OptionTag(tag = "serviceImpl", nameAttribute = "", converter = StringBuilderConverter.class)
-    StringBuilder serviceImpl;
     @OptionTag(tag = "controller", nameAttribute = "", converter = StringBuilderConverter.class)
     StringBuilder controller;
 
@@ -44,7 +42,6 @@ public class ConfigPo {
         this.mapper = new StringBuilder(ResourceUtil.readWithoutLr("/generator/mapper.vm"));
         this.mapperXml = new StringBuilder(ResourceUtil.readWithoutLr("/generator/mapper-xml.vm"));
         this.service = new StringBuilder(ResourceUtil.readWithoutLr("/generator/service.vm"));
-        this.serviceImpl = new StringBuilder(ResourceUtil.readWithoutLr("/generator/service-impl.vm"));
         this.controller = new StringBuilder(ResourceUtil.readWithoutLr("/generator/controller.vm"));
     }
 
@@ -61,7 +58,6 @@ public class ConfigPo {
                 new StringBuilder(this.mapper),
                 new StringBuilder(this.mapperXml),
                 new StringBuilder(this.service),
-                new StringBuilder(this.serviceImpl),
                 new StringBuilder(this.controller)
             );
     }
@@ -77,7 +73,6 @@ public class ConfigPo {
         ConfigPo.copyStringBuilder(this.mapper, configPo.mapper);
         ConfigPo.copyStringBuilder(this.mapperXml, configPo.mapperXml);
         ConfigPo.copyStringBuilder(this.service, configPo.service);
-        ConfigPo.copyStringBuilder(this.serviceImpl, configPo.serviceImpl);
         ConfigPo.copyStringBuilder(this.controller, configPo.controller);
     }
 
@@ -98,7 +93,6 @@ public class ConfigPo {
                 Objects.equals(this.mapper.toString(), that.mapper.toString()) &&
                 Objects.equals(this.mapperXml.toString(), that.mapperXml.toString()) &&
                 Objects.equals(this.service.toString(), that.service.toString()) &&
-                Objects.equals(this.serviceImpl.toString(), that.serviceImpl.toString()) &&
                 Objects.equals(this.controller.toString(), that.controller.toString());
     }
 
@@ -107,7 +101,7 @@ public class ConfigPo {
         return
             Objects.hash(
                 this.url, this.author, this.entity, this.mapper,
-                this.mapperXml, this.service, this.serviceImpl, this.controller
+                this.mapperXml, this.service, this.controller
             );
     }
 }

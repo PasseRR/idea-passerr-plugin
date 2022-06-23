@@ -27,6 +27,10 @@ public class EntityInfo extends ClassInfo {
      */
     String tableName;
     /**
+     * 串行化小写表名
+     */
+    String kebabTableName;
+    /**
      * 列名列表
      */
     List<FieldInfo> fields;

@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+## 实体字段类型非java.lang包引入
 #foreach($i in ${entity.imports})
 import $i;
 #end

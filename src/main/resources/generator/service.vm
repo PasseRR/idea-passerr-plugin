@@ -1,12 +1,15 @@
-package ${service.packageName};
+package ${serviceImpl.packageName};
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
 import ${entity.fullClassName};
+import ${mapper.fullClassName};
 
 /**
- * ${entity.desc}服务接口
+ * ${entity.desc}服务
  * @author $author
  * @date $date
  */
-public interface ${service.className} extends IService<${entity.className}> {
+@Service
+public class ${service.className} extends ServiceImpl<${mapper.className}, ${entity.className}> {
 }

@@ -2,13 +2,13 @@ package com.github.passerr.idea.plugins.database.generator.config;
 
 import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
 import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
-import com.intellij.openapi.Disposable;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
-import com.intellij.ui.TabbedPaneWrapper;
+import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jdesktop.swingx.JXTextField;
@@ -21,6 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -40,32 +41,26 @@ class Views {
      * @return {@link Component}
      */
     static Component syncView(ConfigPo copy) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JXTextField urlField = new JXTextField();
-        urlField.setPrompt("配置同步URL");
-        urlField.getDocument().addDocumentListener(new DocumentAdapter() {
+        JXTextField authorField = new JXTextField();
+        authorField.setPrompt("作者配置");
+        authorField.setText(copy.getAuthor().toString());
+        authorField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(@NotNull DocumentEvent e) {
-                copy.setUrl(new StringBuilder(urlField.getText()));
+                copy.setAuthor(new StringBuilder(authorField.getText()));
             }
         });
-        panel.add(LabeledComponent.create(urlField, "同步URL", BorderLayout.WEST), BorderLayout.CENTER);
-        JButton button = new JButton("同步");
-        button.addActionListener(e -> {
-            // TODO 同步
-        });
-        panel.add(button, BorderLayout.EAST);
 
-        return panel;
+        return LabeledComponent.create(authorField, "author", BorderLayout.WEST);
     }
 
     /**
      * tab配置模块ui
      * @return {@link Component}
      */
-    static Component tabsView(Disposable disposable, ConfigPo copy) {
+    static Component tabsView(ConfigPo copy) {
         // tab配置
-        TabbedPaneWrapper tabbedPanel = new TabbedPaneWrapper(disposable);
+        JBTabbedPane tabbedPanel = new JBTabbedPane();
         tabbedPanel.addTab(
             "entity模版",
             VelocityUtil.velocityEditor(copy, ConfigPo::getEntity, s -> copy.setEntity(new StringBuilder(s)))
@@ -83,15 +78,19 @@ class Views {
             VelocityUtil.velocityEditor(copy, ConfigPo::getService, s -> copy.setService(new StringBuilder(s)))
         );
         tabbedPanel.addTab(
-            "serviceImpl模版",
-            VelocityUtil.velocityEditor(copy, ConfigPo::getServiceImpl, s -> copy.setServiceImpl(new StringBuilder(s)))
-        );
-        tabbedPanel.addTab(
             "controller模版",
             VelocityUtil.velocityEditor(copy, ConfigPo::getController, s -> copy.setController(new StringBuilder(s)))
         );
+        tabbedPanel.addTab("", new JPanel());
+        int last = tabbedPanel.getTabCount() - 1;
+        JButton button = new JButton("", AllIcons.Actions.Refresh);
+        button.setPreferredSize(new Dimension(30, 30));
+        button.setToolTipText("从远程同步配置");
+        button.addActionListener(e -> new SyncDialog(copy.getUrl()).show());
+        tabbedPanel.setTabComponentAt(last, button);
+        tabbedPanel.setEnabledAt(last, false);
 
-        return tabbedPanel.getComponent();
+        return tabbedPanel;
     }
 
     /**
@@ -108,7 +107,7 @@ class Views {
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.add(
-            SeparatorFactory.createSeparator("描述:", null),
+            SeparatorFactory.createSeparator("变量描述:", null),
             new GridBagConstraints(
                 0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,

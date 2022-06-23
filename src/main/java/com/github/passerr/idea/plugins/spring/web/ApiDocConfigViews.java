@@ -83,7 +83,7 @@ public abstract class ApiDocConfigViews {
         );
         panel.add(
             templatePanel,
-            new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+            new GridBagConstraints(0, 0, 1, 1, 1, 0.65, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.emptyInsets(), 0, 0
             )
         );
@@ -111,7 +111,7 @@ public abstract class ApiDocConfigViews {
         );
         panel.add(
             descriptionPanel,
-            new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+            new GridBagConstraints(0, 1, 1, 1, 1, 0.35, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.emptyInsets(), 0, 0
             )
         );
