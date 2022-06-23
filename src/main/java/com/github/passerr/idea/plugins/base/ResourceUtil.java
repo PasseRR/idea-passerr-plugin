@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.base;
 
+import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.google.common.io.CharStreams;
 
 import java.io.InputStream;
@@ -25,5 +26,14 @@ public interface ResourceUtil {
         } catch (Exception ignore) {
             return "";
         }
+    }
+
+    /**
+     * 读取文件后替换控制符
+     * @param path 文件路径
+     * @return 文件内容
+     */
+    static String readWithoutLr(String path) {
+        return ResourceUtil.readAsString(path).replace(StringConstants.CR_LF, StringConstants.LF);
     }
 }

@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.database.doc;
 
+import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.model.DasObject;
 import com.intellij.database.util.DasUtil;
@@ -142,25 +143,25 @@ class FieldsHelper {
         PRIMARY("是否主键", false, 1 << 3, true) {
             @Override
             public String value(DasColumn dasColumn) {
-                return DasUtil.isPrimary(dasColumn) ? "√" : "";
+                return DasUtil.isPrimary(dasColumn) ? StringConstants.TICK : StringConstants.EMPTY;
             }
         },
         NULLABLE("允许为空", false, 1 << 4, true) {
             @Override
             public String value(DasColumn dasColumn) {
-                return dasColumn.isNotNull() ? "" : "√";
+                return dasColumn.isNotNull() ? StringConstants.EMPTY : StringConstants.TICK;
             }
         },
         DEFAULT("默认值", false, 1 << 5, true) {
             @Override
             public String value(DasColumn dasColumn) {
-                return Optional.ofNullable(dasColumn.getDefault()).orElse("");
+                return Optional.ofNullable(dasColumn.getDefault()).orElse(StringConstants.EMPTY);
             }
         },
         COMMENT("注释", true, 1 << 6, true) {
             @Override
             public String value(DasColumn dasColumn) {
-                return Optional.ofNullable(dasColumn.getComment()).orElse("");
+                return Optional.ofNullable(dasColumn.getComment()).orElse(StringConstants.EMPTY);
             }
         };
         String label;

@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 表实体信息
@@ -28,7 +29,11 @@ public class EntityInfo extends ClassInfo {
     /**
      * 列名列表
      */
-    List<String> tableColumns;
+    List<FieldInfo> fields;
+    /**
+     * 额外需要import的
+     */
+    Set<String> imports;
 
     public String getDesc() {
         return Optional.ofNullable(this.tableComment).filter(it -> !it.isEmpty()).orElse(this.tableName);

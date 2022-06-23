@@ -1,8 +1,8 @@
 package com.github.passerr.idea.plugins.spring.web.po;
 
+import com.github.passerr.idea.plugins.base.ResourceUtil;
 import com.github.passerr.idea.plugins.base.StringBuilderConverter;
 import com.github.passerr.idea.plugins.spring.web.AliasType;
-import com.github.passerr.idea.plugins.base.ResourceUtil;
 import com.github.passerr.idea.plugins.spring.web.WebCopyConstants;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiType;
@@ -46,7 +46,7 @@ public class ApiDocSettingPo {
     List<ApiDocObjectSerialPo> objects;
 
     public ApiDocSettingPo() {
-        this.template = new StringBuilder(ResourceUtil.readAsString("/api-doc/template.vm").replace("\r\n", "\n"));
+        this.template = new StringBuilder(ResourceUtil.readWithoutLr("/api-doc/template.vm"));
         this.queryParamIgnoreTypes = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_TYPES);
         this.queryParamIgnoreAnnotations = new ArrayList<>(WebCopyConstants.QUERY_PARAM_IGNORE_ANNOTATIONS);
         this.bodyIgnoreAnnotations = new ArrayList<>(WebCopyConstants.FIELD_IGNORE_ANNOTATIONS);
@@ -109,8 +109,8 @@ public class ApiDocSettingPo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {return true;}
+        if (o == null || getClass() != o.getClass()) {return false;}
         ApiDocSettingPo that = (ApiDocSettingPo) o;
         return
             Objects.equals(template.toString(), that.template.toString()) &&

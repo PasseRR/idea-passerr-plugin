@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Objects;
+
 /**
  * 配置持久化对象
  * @author xiehai
@@ -38,12 +40,12 @@ public class ConfigPo {
         // 默认配置
         this.url = new StringBuilder();
         this.author = new StringBuilder("generator");
-        this.entity = new StringBuilder(ResourceUtil.readAsString("/generator/entity.vm"));
-        this.mapper = new StringBuilder(ResourceUtil.readAsString("/generator/mapper.vm"));
-        this.mapperXml = new StringBuilder(ResourceUtil.readAsString("/generator/mapper-xml.vm"));
-        this.service = new StringBuilder(ResourceUtil.readAsString("/generator/service.vm"));
-        this.serviceImpl = new StringBuilder(ResourceUtil.readAsString("/generator/service-impl.vm"));
-        this.controller = new StringBuilder(ResourceUtil.readAsString("/generator/controller.vm"));
+        this.entity = new StringBuilder(ResourceUtil.readWithoutLr("/generator/entity.vm"));
+        this.mapper = new StringBuilder(ResourceUtil.readWithoutLr("/generator/mapper.vm"));
+        this.mapperXml = new StringBuilder(ResourceUtil.readWithoutLr("/generator/mapper-xml.vm"));
+        this.service = new StringBuilder(ResourceUtil.readWithoutLr("/generator/service.vm"));
+        this.serviceImpl = new StringBuilder(ResourceUtil.readWithoutLr("/generator/service-impl.vm"));
+        this.controller = new StringBuilder(ResourceUtil.readWithoutLr("/generator/controller.vm"));
     }
 
     /**
@@ -82,5 +84,30 @@ public class ConfigPo {
     static void copyStringBuilder(StringBuilder source, CharSequence value) {
         source.setLength(0);
         source.append(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {return true;}
+        if (o == null || this.getClass() != o.getClass()) {return false;}
+        ConfigPo that = (ConfigPo) o;
+        return
+            Objects.equals(this.url.toString(), that.url.toString()) &&
+                Objects.equals(this.author.toString(), that.author.toString()) &&
+                Objects.equals(this.entity.toString(), that.entity.toString()) &&
+                Objects.equals(this.mapper.toString(), that.mapper.toString()) &&
+                Objects.equals(this.mapperXml.toString(), that.mapperXml.toString()) &&
+                Objects.equals(this.service.toString(), that.service.toString()) &&
+                Objects.equals(this.serviceImpl.toString(), that.serviceImpl.toString()) &&
+                Objects.equals(this.controller.toString(), that.controller.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return
+            Objects.hash(
+                this.url, this.author, this.entity, this.mapper,
+                this.mapperXml, this.service, this.serviceImpl, this.controller
+            );
     }
 }

@@ -5,33 +5,11 @@ import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.base.ResourceUtil;
-import com.github.passerr.idea.plugins.spring.web.highlight.FileTemplateTokenType;
-import com.github.passerr.idea.plugins.spring.web.highlight.TemplateHighlighter;
+import com.github.passerr.idea.plugins.base.VelocityUtil;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.EditorSettings;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.util.LayerDescriptor;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
-import com.intellij.openapi.fileTypes.PlainSyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Pair;
-import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.PanelWithButtons;
 import com.intellij.ui.ScrollPaneFactory;
@@ -89,26 +67,6 @@ public abstract class ApiDocConfigViews {
      */
     private static JPanel apiTemplatePanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
-        // 编辑模块
-        EditorFactory editorFactory = EditorFactory.getInstance();
-        Document document = editorFactory.createDocument(setting.getTemplate());
-        document.addDocumentListener(new DocumentListener() {
-            @Override
-            public void documentChanged(DocumentEvent e) {
-                setting.setStringTemplate(e.getDocument().getText());
-            }
-        });
-        Editor editor = editorFactory.createEditor(document);
-        EditorSettings editorSettings = editor.getSettings();
-        editorSettings.setVirtualSpace(false);
-        editorSettings.setLineMarkerAreaShown(false);
-        editorSettings.setIndentGuidesShown(true);
-        editorSettings.setLineNumbersShown(true);
-        editorSettings.setFoldingOutlineShown(false);
-        editorSettings.setAdditionalColumnsCount(3);
-        editorSettings.setAdditionalLinesCount(3);
-        editorSettings.setCaretRowShown(false);
-        ((EditorEx) editor).setHighlighter(createVelocityHighlight());
 
         JPanel templatePanel = new JPanel(new GridBagLayout());
         templatePanel.add(
@@ -118,7 +76,7 @@ public abstract class ApiDocConfigViews {
             )
         );
         templatePanel.add(
-            editor.getComponent(),
+            VelocityUtil.velocityEditor(setting, ApiDocSettingPo::getTemplate, setting::setStringTemplate),
             new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 JBUI.insetsTop(2), 0, 0
             )
@@ -565,27 +523,5 @@ public abstract class ApiDocConfigViews {
         );
 
         return panel;
-    }
-
-    private static EditorHighlighter createVelocityHighlight() {
-        FileType ft = FileTypeManager.getInstance().getFileTypeByExtension("ft");
-        if (ft != FileTypes.UNKNOWN) {
-            return
-                EditorHighlighterFactory.getInstance()
-                    .createEditorHighlighter(
-                        ProjectManagerEx.getInstance().getDefaultProject(),
-                        new LightVirtualFile("aaa.psr.spring.web.ft")
-                    );
-        }
-
-        SyntaxHighlighter ohl =
-            Optional.ofNullable(SyntaxHighlighterFactory.getSyntaxHighlighter(FileTypes.PLAIN_TEXT, null, null))
-                .orElseGet(PlainSyntaxHighlighter::new);
-        final EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-        LayeredLexerEditorHighlighter highlighter =
-            new LayeredLexerEditorHighlighter(new TemplateHighlighter(), scheme);
-        highlighter.registerLayer(FileTemplateTokenType.TEXT, new LayerDescriptor(ohl, ""));
-
-        return highlighter;
     }
 }

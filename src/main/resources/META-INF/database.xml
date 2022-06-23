@@ -12,5 +12,11 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- 代码生成配置状态 -->
+        <applicationService
+                serviceImplementation="com.github.passerr.idea.plugins.database.generator.config.GeneratorStateComponent"/>
+        <!-- 代码生成配置界面 -->
+        <applicationConfigurable
+                instance="com.github.passerr.idea.plugins.database.generator.config.GeneratorConfigurable"/>
     </extensions>
 </idea-plugin>
