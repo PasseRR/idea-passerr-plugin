@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.base;
+package com.github.passerr.idea.plugins.base.utils;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.google.common.io.CharStreams;
@@ -24,7 +24,7 @@ public interface ResourceUtil {
             assert resourceAsStream != null;
             return CharStreams.toString(new InputStreamReader(resourceAsStream, StandardCharsets.UTF_8));
         } catch (Exception ignore) {
-            return "";
+            return StringConstants.EMPTY;
         }
     }
 

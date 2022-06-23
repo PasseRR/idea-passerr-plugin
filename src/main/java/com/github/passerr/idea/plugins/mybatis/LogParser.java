@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.mybatis;
 
-import com.github.passerr.idea.plugins.base.NotificationThread;
+import com.github.passerr.idea.plugins.base.utils.NotificationUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 
@@ -59,26 +59,26 @@ public class LogParser {
         // 是否找到包含sql及参数的日志
         if (Objects.isNull(sqlLine)) {
             // 提示信息
-            new NotificationThread(
+            NotificationUtil.notify(
                 new Notification(
                     "Copy As Executable Sql",
                     "Copy As Executable Sql",
                     "selected log without \"Preparing:\" line, nothing will send to clipboard!",
                     NotificationType.WARNING
                 )
-            ).start();
+            );
 
             return EMPTY;
         } else if (Objects.isNull(valueLine)) {
             // 提示信息
-            new NotificationThread(
+            NotificationUtil.notify(
                 new Notification(
                     "Copy As Executable Sql",
                     "Copy As Executable Sql",
                     "selected log without \"Parameters:\" line, nothing will send to clipboard!",
                     NotificationType.WARNING
                 )
-            ).start();
+            );
 
             return EMPTY;
         }

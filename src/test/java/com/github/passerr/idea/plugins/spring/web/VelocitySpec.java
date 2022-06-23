@@ -1,7 +1,7 @@
 package com.github.passerr.idea.plugins.spring.web;
 
-import com.github.passerr.idea.plugins.base.ResourceUtil;
-import com.github.passerr.idea.plugins.base.VelocityUtil;
+import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
+import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
 import org.junit.Test;
 
 import java.util.HashMap;

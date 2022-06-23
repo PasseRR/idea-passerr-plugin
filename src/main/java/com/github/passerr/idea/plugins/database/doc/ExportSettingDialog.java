@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.database.doc;
 
-import com.github.passerr.idea.plugins.base.NotificationThread;
+import com.github.passerr.idea.plugins.base.utils.NotificationUtil;
 import com.intellij.database.model.DasObject;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
@@ -113,11 +113,11 @@ public class ExportSettingDialog extends DialogWrapper {
             } finally {
                 Notification notification = new Notification(
                     "database document export",
-                    "数据库文档导出",
-                    "数据库文档导出成功!",
+                    "database document export",
+                    "database document export success!",
                     NotificationType.INFORMATION
                 );
-                notification.addAction(new NotificationAction("查看") {
+                notification.addAction(new NotificationAction("view") {
                     @Override
                     public void actionPerformed(@NotNull AnActionEvent e, @NotNull Notification notification) {
                         try {
@@ -126,7 +126,7 @@ public class ExportSettingDialog extends DialogWrapper {
                         }
                     }
                 });
-                new NotificationThread(notification).start();
+                NotificationUtil.notify(notification);
             }
         }
         // 执行文档导出

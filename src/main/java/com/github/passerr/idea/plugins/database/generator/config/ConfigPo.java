@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.database.generator.config;
 
-import com.github.passerr.idea.plugins.base.ResourceUtil;
+import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
 import com.github.passerr.idea.plugins.base.StringBuilderConverter;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import lombok.AccessLevel;

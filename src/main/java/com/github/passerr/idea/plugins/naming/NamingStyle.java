@@ -1,5 +1,6 @@
 package com.github.passerr.idea.plugins.naming;
 
+import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -154,8 +155,8 @@ enum NamingStyle {
      */
     final int bit;
 
-    static final String UNDER_SCORE = "_";
-    static final String MINUS = "-";
+    static final String UNDER_SCORE = StringConstants.UNDERSCORE;
+    static final String MINUS = StringConstants.MINUS;
 
     /**
      * 是否匹配当前风格

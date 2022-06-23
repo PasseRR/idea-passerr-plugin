@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.base;
+package com.github.passerr.idea.plugins.base.utils;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
@@ -14,16 +14,11 @@ import java.util.concurrent.TimeUnit;
  * @Copyright (c) gome inc Gome Co.,LTD
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class NotificationThread extends Thread {
+class NotificationThread extends Thread {
     Notification notification;
     int sleepTime;
-
-    public NotificationThread(Notification notification) {
-        // 默认4秒关闭弹窗
-        this(notification, 4);
-    }
-
-    public NotificationThread(Notification notification, int sleepTime) {
+    
+    NotificationThread(Notification notification, int sleepTime) {
         assert sleepTime > 0;
         this.notification = notification;
         // 默认4秒关闭弹窗

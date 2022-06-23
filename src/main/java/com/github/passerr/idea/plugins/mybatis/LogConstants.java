@@ -1,5 +1,7 @@
 package com.github.passerr.idea.plugins.mybatis;
 
+import com.github.passerr.idea.plugins.base.constants.StringConstants;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +15,7 @@ interface LogConstants {
     /**
      * 空格
      */
-    String SPACE = " ";
+    String SPACE = StringConstants.SPACE;
     /**
      * sql语句前缀
      */
@@ -49,7 +51,7 @@ interface LogConstants {
     /**
      * 空字符串
      */
-    String EMPTY = "";
+    String EMPTY = StringConstants.EMPTY;
     /**
      * null值
      */

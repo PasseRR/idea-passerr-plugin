@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.tool;
 
-import com.github.passerr.idea.plugins.base.NotificationThread;
+import com.github.passerr.idea.plugins.base.utils.NotificationUtil;
 import com.github.passerr.idea.plugins.mybatis.LogParser;
 import com.github.passerr.idea.plugins.mybatis.SqlFormatter;
 import com.google.gson.Gson;
@@ -69,7 +69,7 @@ enum ConvertType {
                     // 定位到失败行
                     input.setCaretPosition(lineIndex);
                 }
-                new NotificationThread(new Notification("Json Format", "Json Format", msg, ERROR)).start();
+                NotificationUtil.notify(new Notification("Json Format", "Json Format", msg, ERROR));
             }
         }
     },

@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.base;
+package com.github.passerr.idea.plugins.base.utils;
 
 import com.github.passerr.idea.plugins.spring.web.highlight.FileTemplateTokenType;
 import com.github.passerr.idea.plugins.spring.web.highlight.TemplateHighlighter;
@@ -90,7 +90,7 @@ public interface VelocityUtil {
         editorSettings.setAdditionalColumnsCount(3);
         editorSettings.setAdditionalLinesCount(3);
         editorSettings.setCaretRowShown(false);
-        ((EditorEx) editor).setHighlighter(VelocityUtil.createVelocityHighlight());
+        ((EditorEx) editor).setHighlighter(VELOCITY_HIGHLIGHTER);
 
         return editor.getComponent();
     }

@@ -1,6 +1,6 @@
 package com.github.passerr.idea.plugins.spring.web.po;
 
-import com.github.passerr.idea.plugins.base.ResourceUtil;
+import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
 import com.github.passerr.idea.plugins.base.StringBuilderConverter;
 import com.github.passerr.idea.plugins.spring.web.AliasType;
 import com.github.passerr.idea.plugins.spring.web.WebCopyConstants;

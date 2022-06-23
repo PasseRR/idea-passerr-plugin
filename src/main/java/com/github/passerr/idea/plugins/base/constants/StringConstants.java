@@ -11,6 +11,18 @@ public interface StringConstants {
      */
     String EMPTY = "";
     /**
+     * 空格字符串{@value}
+     */
+    String SPACE = " ";
+    /**
+     * 减号字符串{@value}
+     */
+    String MINUS = "-";
+    /**
+     * 下划线字符串{@value}
+     */
+    String UNDERSCORE = "_";
+    /**
      * CR控制符{@value}
      */
     String CR = "\r";

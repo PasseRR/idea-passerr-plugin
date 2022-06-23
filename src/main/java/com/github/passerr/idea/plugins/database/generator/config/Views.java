@@ -1,7 +1,7 @@
 package com.github.passerr.idea.plugins.database.generator.config;
 
-import com.github.passerr.idea.plugins.base.ResourceUtil;
-import com.github.passerr.idea.plugins.base.VelocityUtil;
+import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
+import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.ui.BrowserHyperlinkListener;
