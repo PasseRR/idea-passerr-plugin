@@ -53,6 +53,18 @@ public class DialogConfigInfo {
      * controller包名 默认controller
      */
     String controllerPackage = "controller";
+    /**
+     * 是否使用serviceImpl
+     */
+    boolean useServiceImpl = false;
+    /**
+     * serviceImpl的包名
+     */
+    String serviceImplPackage = "service.impl";
+    /**
+     * serviceImpl的后缀
+     */
+    String serviceImplSuffix = "Impl";
 
     DialogConfigInfo(String basePath) {
         this.basePath = basePath;

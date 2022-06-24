@@ -48,10 +48,13 @@ class GenerateDialog extends DialogWrapper {
     @Override
     protected @Nullable JComponent createCenterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
-        this.baseComp(panel, 0);
-        this.entityComp(panel, 1);
-        this.mapperComp(panel, 2);
-        this.mapperXmlComp(panel, 3);
+        int row = 0;
+        this.baseComp(panel, row++);
+        this.entityComp(panel, row++);
+        this.mapperComp(panel, row++);
+        this.serviceComp(panel, row++);
+        this.mapperXmlComp(panel, row++);
+        this.serviceImplComp(panel, row);
 
         return panel;
     }
@@ -176,11 +179,9 @@ class GenerateDialog extends DialogWrapper {
         );
         JCheckBox isResources = new JCheckBox();
         isResources.setSelected(this.configInfo.resourcesDir);
-        isResources.addItemListener(e -> {
-            this.configInfo.setResourcesDir(e.getStateChange() == ItemEvent.SELECTED);
-        });
+        isResources.addItemListener(e -> this.configInfo.setResourcesDir(e.getStateChange() == ItemEvent.SELECTED));
         LabeledComponent<JCheckBox> resourcesLabeled =
-            LabeledComponent.create(isResources, "是否资源目录路径", BorderLayout.BEFORE_LINE_BEGINS);
+            LabeledComponent.create(isResources, "生成xml到资源目录", BorderLayout.BEFORE_LINE_BEGINS);
         panel.add(
             resourcesLabeled,
             new GridBagConstraints(
@@ -219,22 +220,100 @@ class GenerateDialog extends DialogWrapper {
     }
 
     protected void serviceComp(JPanel panel, int row) {
-        // 默认包名
-        JXTextField defaultPackage = new JXTextField();
-        defaultPackage.setText(this.configInfo.mapperPackage);
-        defaultPackage.getDocument().addDocumentListener(new DocumentAdapter() {
+        // service包名
+        JXTextField servicePackage = new JXTextField();
+        servicePackage.setText(this.configInfo.servicePackage);
+        servicePackage.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(@NotNull DocumentEvent e) {
-                GenerateDialog.this.configInfo.setMapperPackage(defaultPackage.getText());
+                GenerateDialog.this.configInfo.setServicePackage(servicePackage.getText());
             }
         });
         panel.add(
-            LabeledComponent.create(defaultPackage, "mapper包名", BorderLayout.BEFORE_LINE_BEGINS),
+            LabeledComponent.create(servicePackage, "service包名", BorderLayout.BEFORE_LINE_BEGINS),
             new GridBagConstraints(
                 0, row, 2, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.insetsBottom(2), 0, 0
             )
         );
+
+        // controller包名
+        JXTextField controllerPackage = new JXTextField();
+        controllerPackage.setText(this.configInfo.controllerPackage);
+        controllerPackage.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                GenerateDialog.this.configInfo.setControllerPackage(controllerPackage.getText());
+            }
+        });
+        panel.add(
+            LabeledComponent.create(controllerPackage, "controller包名", BorderLayout.BEFORE_LINE_BEGINS),
+            new GridBagConstraints(
+                2, row, 2, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+    }
+
+    protected void serviceImplComp(JPanel panel, int row) {
+        JCheckBox useServiceImpl = new JCheckBox();
+        useServiceImpl.setSelected(this.configInfo.useServiceImpl);
+        panel.add(
+            LabeledComponent.create(useServiceImpl, "是否使用service实现", BorderLayout.BEFORE_LINE_BEGINS),
+            new GridBagConstraints(
+                0, row, 1, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+
+        // serviceImpl包名
+        JXTextField serviceImplPackage = new JXTextField();
+        serviceImplPackage.setText(this.configInfo.serviceImplPackage);
+        serviceImplPackage.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                GenerateDialog.this.configInfo.setServiceImplPackage(serviceImplPackage.getText());
+            }
+        });
+        LabeledComponent<JXTextField> packageLabeled =
+            LabeledComponent.create(serviceImplPackage, "service实现包名", BorderLayout.BEFORE_LINE_BEGINS);
+        panel.add(
+            packageLabeled,
+            new GridBagConstraints(
+                1, row, 1, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+
+        // service实现后缀
+        JXTextField serviceImplSuffix = new JXTextField();
+        serviceImplSuffix.setText(this.configInfo.serviceImplSuffix);
+        serviceImplSuffix.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                GenerateDialog.this.configInfo.setServiceImplSuffix(serviceImplSuffix.getText());
+            }
+        });
+        LabeledComponent<JXTextField> suffixLabeled =
+            LabeledComponent.create(serviceImplSuffix, "service实现后缀", BorderLayout.BEFORE_LINE_BEGINS);
+        panel.add(
+            suffixLabeled,
+            new GridBagConstraints(
+                2, row, 2, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+
+        useServiceImpl.addItemListener(e -> {
+            boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+            this.configInfo.setUseServiceImpl(selected);
+            packageLabeled.setVisible(selected);
+            suffixLabeled.setVisible(selected);
+        });
     }
 }
