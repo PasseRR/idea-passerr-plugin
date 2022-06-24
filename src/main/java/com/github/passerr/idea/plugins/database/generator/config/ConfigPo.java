@@ -2,13 +2,18 @@ package com.github.passerr.idea.plugins.database.generator.config;
 
 import com.github.passerr.idea.plugins.base.StringBuilderConverter;
 import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
+import com.github.passerr.idea.plugins.base.utils.StringBuilderUtil;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import com.intellij.util.xmlb.annotations.Tag;
+import com.intellij.util.xmlb.annotations.XCollection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 配置持久化对象
@@ -33,6 +38,9 @@ public class ConfigPo {
     StringBuilder service;
     @OptionTag(tag = "controller", nameAttribute = "", converter = StringBuilderConverter.class)
     StringBuilder controller;
+    @Tag("types")
+    @XCollection(elementTypes = TypeMappingPo.class)
+    List<TypeMappingPo> types;
 
     public ConfigPo() {
         // 默认配置
@@ -43,6 +51,7 @@ public class ConfigPo {
         this.mapperXml = new StringBuilder(ResourceUtil.readWithoutLr("/generator/mapper-xml.vm"));
         this.service = new StringBuilder(ResourceUtil.readWithoutLr("/generator/service.vm"));
         this.controller = new StringBuilder(ResourceUtil.readWithoutLr("/generator/controller.vm"));
+        this.types = TypeMappingPo.defaultMappings();
     }
 
     /**
@@ -58,7 +67,8 @@ public class ConfigPo {
                 new StringBuilder(this.mapper),
                 new StringBuilder(this.mapperXml),
                 new StringBuilder(this.service),
-                new StringBuilder(this.controller)
+                new StringBuilder(this.controller),
+                this.types.stream().map(TypeMappingPo::deepCopy).collect(Collectors.toList())
             );
     }
 
@@ -67,18 +77,15 @@ public class ConfigPo {
      * @param configPo {@link ConfigPo}
      */
     public void from(ConfigPo configPo) {
-        ConfigPo.copyStringBuilder(this.url, configPo.url);
-        ConfigPo.copyStringBuilder(this.author, configPo.author);
-        ConfigPo.copyStringBuilder(this.entity, configPo.entity);
-        ConfigPo.copyStringBuilder(this.mapper, configPo.mapper);
-        ConfigPo.copyStringBuilder(this.mapperXml, configPo.mapperXml);
-        ConfigPo.copyStringBuilder(this.service, configPo.service);
-        ConfigPo.copyStringBuilder(this.controller, configPo.controller);
-    }
-
-    static void copyStringBuilder(StringBuilder source, CharSequence value) {
-        source.setLength(0);
-        source.append(value);
+        StringBuilderUtil.reset(this.url, configPo.url);
+        StringBuilderUtil.reset(this.author, configPo.author);
+        StringBuilderUtil.reset(this.entity, configPo.entity);
+        StringBuilderUtil.reset(this.mapper, configPo.mapper);
+        StringBuilderUtil.reset(this.mapperXml, configPo.mapperXml);
+        StringBuilderUtil.reset(this.service, configPo.service);
+        StringBuilderUtil.reset(this.controller, configPo.controller);
+        this.types.clear();
+        this.types.addAll(configPo.types);
     }
 
     @Override
@@ -93,7 +100,8 @@ public class ConfigPo {
                 Objects.equals(this.mapper.toString(), that.mapper.toString()) &&
                 Objects.equals(this.mapperXml.toString(), that.mapperXml.toString()) &&
                 Objects.equals(this.service.toString(), that.service.toString()) &&
-                Objects.equals(this.controller.toString(), that.controller.toString());
+                Objects.equals(this.controller.toString(), that.controller.toString()) &&
+                Objects.equals(this.types, that.types);
     }
 
     @Override
@@ -101,7 +109,7 @@ public class ConfigPo {
         return
             Objects.hash(
                 this.url, this.author, this.entity, this.mapper,
-                this.mapperXml, this.service, this.controller
+                this.mapperXml, this.service, this.controller, this.types
             );
     }
 }

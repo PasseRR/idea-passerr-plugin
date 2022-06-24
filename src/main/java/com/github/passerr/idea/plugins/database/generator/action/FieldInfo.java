@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.info;
+package com.github.passerr.idea.plugins.database.generator.action;
 
 import com.intellij.database.model.DasColumn;
 import lombok.AccessLevel;
@@ -31,19 +31,23 @@ public class FieldInfo {
     /**
      * 字段名
      */
-    String fieldName;
+    String camelName;
     /**
      * 列java类型
      */
-    String fieldType;
+    String javaTypeName;
     /**
-     * 列jdbc类型{@link java.sql.Types}
+     * 列jdbc类型{@link java.sql.Types} 用于特殊处理
      */
     int jdbcType;
     /**
      * 是否是主键
      */
     boolean primaryKey;
+    /**
+     * 额外的导入信息
+     */
+    String extraImport;
 
     public String getDesc() {
         return Optional.ofNullable(this.columnComment).filter(it -> !it.isEmpty()).orElse(this.columnName);

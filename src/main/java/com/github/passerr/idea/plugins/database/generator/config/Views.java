@@ -1,20 +1,29 @@
 package com.github.passerr.idea.plugins.database.generator.config;
 
+import com.github.passerr.idea.plugins.base.BaseTableModel;
+import com.github.passerr.idea.plugins.base.IdeaDialog;
+import com.github.passerr.idea.plugins.base.IdeaJbTable;
+import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
 import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.PanelWithButtons;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
+import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBTabbedPane;
+import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 import org.jdesktop.swingx.JXTextField;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
@@ -24,6 +33,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * 配置视图
@@ -81,6 +93,7 @@ class Views {
             "controller模版",
             VelocityUtil.velocityEditor(copy, ConfigPo::getController, s -> copy.setController(new StringBuilder(s)))
         );
+        tabbedPanel.addTab("类型映射", typesTab(copy.getTypes()));
         tabbedPanel.addTab("", new JPanel());
         int last = tabbedPanel.getTabCount() - 1;
         JButton button = new JButton("", AllIcons.Actions.Refresh);
@@ -91,6 +104,84 @@ class Views {
         tabbedPanel.setEnabledAt(last, false);
 
         return tabbedPanel;
+    }
+
+    /**
+     * 类型映射配置表
+     * @param list 类型映射列表
+     * @return {@link Component}
+     */
+    private static Component typesTab(List<TypeMappingPo> list) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        PanelWithButtons top = new IdeaPanelWithButtons("") {
+            @Override
+            protected JComponent createMainComponent() {
+                BaseTableModel<TypeMappingPo> model =
+                    new BaseTableModel<TypeMappingPo>(Arrays.asList("JDBC类型", "JAVA类型"), list) {
+                        @Override
+                        protected List<Function<TypeMappingPo, Object>> columns() {
+                            return Arrays.asList(TypeMappingPo::getJdbcType, TypeMappingPo::getJavaType);
+                        }
+                    };
+                JBTable table = new IdeaJbTable(model);
+                // 弹出层构建器
+                Function<IdeaDialog<TypeMappingPo>, JComponent> function = dialog -> {
+                    JPanel p = new JPanel();
+                    p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+                    TypeMappingPo value = dialog.getValue();
+
+                    JXTextField jdbcField = new JXTextField();
+                    jdbcField.setText(value.getJdbcType());
+                    jdbcField.setEditable(false);
+                    jdbcField.setColumns(20);
+
+                    p.add(LabeledComponent.create(jdbcField, "JDBC类型", BorderLayout.WEST));
+
+                    JXTextField javaField = new JXTextField();
+                    javaField.setText(value.getJavaType());
+                    javaField.getDocument().addDocumentListener(new DocumentAdapter() {
+                        @Override
+                        protected void textChanged(@NotNull DocumentEvent e) {
+                            value.setJavaType(javaField.getText());
+                        }
+                    });
+                    p.add(LabeledComponent.create(javaField, "JAVA类型", BorderLayout.WEST));
+
+                    return p;
+                };
+                return
+                    ToolbarDecorator.createDecorator(table)
+                        .disableAddAction()
+                        .setEditAction(it ->
+                            new IdeaDialog<TypeMappingPo>(panel)
+                                .title("修改类型映射")
+                                .value(model.getRow(table.getSelectedRow()))
+                                .okAction(t ->
+                                    list.set(table.getSelectedRow(), t)
+                                )
+                                .changePredicate(t -> !t.getJavaType().isEmpty())
+                                .componentFunction(function)
+                                .doInit()
+                                .showAndGet()
+                        )
+                        .setEditActionName("编辑")
+                        .disableRemoveAction()
+                        .disableUpDownActions()
+                        .createPanel();
+            }
+        };
+
+        panel.add(
+            top,
+            new GridBagConstraints(
+                0, 0, 1, 1, 1, 1,
+                GridBagConstraints.NORTH,
+                GridBagConstraints.BOTH,
+                JBUI.emptyInsets(), 0, 0
+            )
+        );
+
+        return panel;
     }
 
     /**

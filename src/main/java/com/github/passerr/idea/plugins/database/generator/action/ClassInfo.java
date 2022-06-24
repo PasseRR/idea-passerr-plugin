@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.info;
+package com.github.passerr.idea.plugins.database.generator.action;
 
 import lombok.AccessLevel;
 import lombok.Data;
