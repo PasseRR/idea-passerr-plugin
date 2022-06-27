@@ -1,5 +1,7 @@
 package com.github.passerr.idea.plugins.database.generator.action;
 
+import com.github.passerr.idea.plugins.database.generator.config.ConfigPo;
+import com.github.passerr.idea.plugins.database.generator.config.GeneratorStateComponent;
 import com.intellij.database.model.DasTable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -34,6 +36,7 @@ class GenerateDialog extends DialogWrapper {
      * 配置信息
      */
     DialogConfigInfo configInfo;
+    ConfigPo configPo;
 
     protected GenerateDialog(Project project, List<DasTable> list) {
         super(project);
@@ -42,6 +45,7 @@ class GenerateDialog extends DialogWrapper {
         super.setCancelButtonText("取消");
         this.configInfo = new DialogConfigInfo(project.getBasePath());
         this.list = list;
+        this.configPo = GeneratorStateComponent.getInstance().getState();
         super.init();
     }
 
@@ -52,9 +56,11 @@ class GenerateDialog extends DialogWrapper {
         this.baseComp(panel, row++);
         this.entityComp(panel, row++);
         this.mapperComp(panel, row++);
-        this.serviceComp(panel, row++);
         this.mapperXmlComp(panel, row++);
-        this.serviceImplComp(panel, row);
+        this.serviceComp(panel, row++);
+        if (this.configPo.isUseServiceImpl()) {
+            this.serviceImplComp(panel, row);
+        }
 
         return panel;
     }
@@ -258,17 +264,6 @@ class GenerateDialog extends DialogWrapper {
     }
 
     protected void serviceImplComp(JPanel panel, int row) {
-        JCheckBox useServiceImpl = new JCheckBox();
-        useServiceImpl.setSelected(this.configInfo.useServiceImpl);
-        panel.add(
-            LabeledComponent.create(useServiceImpl, "是否使用service实现", BorderLayout.BEFORE_LINE_BEGINS),
-            new GridBagConstraints(
-                0, row, 1, 1, 1, 1,
-                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
-                JBUI.insetsBottom(2), 0, 0
-            )
-        );
-
         // serviceImpl包名
         JXTextField serviceImplPackage = new JXTextField();
         serviceImplPackage.setText(this.configInfo.serviceImplPackage);
@@ -283,7 +278,7 @@ class GenerateDialog extends DialogWrapper {
         panel.add(
             packageLabeled,
             new GridBagConstraints(
-                1, row, 1, 1, 1, 1,
+                0, row, 1, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.insetsBottom(2), 0, 0
             )
@@ -308,12 +303,5 @@ class GenerateDialog extends DialogWrapper {
                 JBUI.insetsBottom(2), 0, 0
             )
         );
-
-        useServiceImpl.addItemListener(e -> {
-            boolean selected = e.getStateChange() == ItemEvent.SELECTED;
-            this.configInfo.setUseServiceImpl(selected);
-            packageLabeled.setVisible(selected);
-            suffixLabeled.setVisible(selected);
-        });
     }
 }

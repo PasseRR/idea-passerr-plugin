@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -33,6 +34,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ItemEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -71,6 +73,10 @@ class Views {
      * @return {@link Component}
      */
     static Component tabsView(ConfigPo copy) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        JCheckBox useServiceImpl = new JCheckBox();
+        panel.add(LabeledComponent.create(useServiceImpl, "使用service实现", BorderLayout.WEST));
         // tab配置
         JBTabbedPane tabbedPanel = new JBTabbedPane();
         tabbedPanel.addTab(
@@ -90,9 +96,15 @@ class Views {
             VelocityUtil.velocityEditor(copy, ConfigPo::getService, s -> copy.setService(new StringBuilder(s)))
         );
         tabbedPanel.addTab(
+            "service实现模版",
+            VelocityUtil.velocityEditor(copy, ConfigPo::getServiceImpl, s -> copy.setServiceImpl(new StringBuilder(s)))
+        );
+        tabbedPanel.addTab(
             "controller模版",
             VelocityUtil.velocityEditor(copy, ConfigPo::getController, s -> copy.setController(new StringBuilder(s)))
         );
+        tabbedPanel.setEnabledAt(4, false);
+        tabbedPanel.getTabComponentAt(4).setEnabled(false);
         tabbedPanel.addTab("类型映射", typesTab(copy.getTypes()));
         tabbedPanel.addTab("", new JPanel());
         int last = tabbedPanel.getTabCount() - 1;
@@ -102,8 +114,16 @@ class Views {
         button.addActionListener(e -> new SyncDialog(copy.getUrl()).show());
         tabbedPanel.setTabComponentAt(last, button);
         tabbedPanel.setEnabledAt(last, false);
+        panel.add(tabbedPanel);
 
-        return tabbedPanel;
+        useServiceImpl.addItemListener(e -> {
+            boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+            copy.setUseServiceImpl(selected);
+            tabbedPanel.setEnabledAt(4, selected);
+            tabbedPanel.getTabComponentAt(4).setEnabled(selected);
+        });
+
+        return panel;
     }
 
     /**
