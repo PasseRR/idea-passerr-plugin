@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter
 @FieldDefaults(level = AccessLevel.PROTECTED, makeFinal = true)
-enum NamingStyle {
+public enum NamingStyle {
     /**
      * 驼峰
      */

@@ -47,4 +47,17 @@ class NamingNode {
 
         return target.toggle(current.pascal(text));
     }
+
+    /**
+     * 根据命名猜测源命名类型
+     * @param text 原始命名
+     * @return {@link NamingStyle}
+     */
+    static NamingStyle guess(String text) {
+        for (NamingNode node = HEAD; ; node = node.next) {
+            if (node.style.match(text)) {
+                return node.style;
+            }
+        }
+    }
 }

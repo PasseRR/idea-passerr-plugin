@@ -23,6 +23,10 @@ public interface StringConstants {
      */
     String UNDERSCORE = "_";
     /**
+     * 点字符串{@value}
+     */
+    String POINT = ".";
+    /**
      * CR控制符{@value}
      */
     String CR = "\r";

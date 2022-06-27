@@ -1,6 +1,11 @@
 package com.github.passerr.idea.plugins.database.generator.action;
 
+import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import lombok.Data;
+
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * 弹窗配置信息
@@ -65,8 +70,52 @@ public class DialogConfigInfo {
      * serviceImpl的后缀
      */
     String serviceImplSuffix = "Impl";
+    /**
+     * 默认覆盖文件
+     */
+    boolean overrideFile = true;
+    /**
+     * 表前缀
+     */
+    String tablePrefix;
 
     DialogConfigInfo(String basePath) {
         this.basePath = basePath;
+    }
+
+    /**
+     * 路径加上包路径后的代码目录路径
+     * @param function 需要与{{@link #basePackage}}合并的路径
+     * @return 合并后的路径
+     */
+    public String sourcePath(Function<DialogConfigInfo, String> function) {
+        return
+            DialogConfigUtil.mergePath(
+                Paths.get(this.basePath, "src", "main", "java").toString(),
+                this.basePackage,
+                function.apply(this)
+            );
+    }
+
+    /**
+     * 路径加上包路径后的资源文件路径
+     * @param function 资源目录
+     * @return 合并后的路径
+     */
+    public String resourcePath(Function<DialogConfigInfo, String> function) {
+        return
+            DialogConfigUtil.mergePath(
+                Paths.get(this.basePath, "src", "main", "resources").toString(),
+                function.apply(this),
+                StringConstants.EMPTY
+            );
+    }
+
+    public String packages(Function<DialogConfigInfo, String> function) {
+        return DialogConfigUtil.mergePackage(this.basePackage, function.apply(this));
+    }
+
+    public String getTablePrefix() {
+        return Optional.ofNullable(tablePrefix).map(String::trim).orElse(StringConstants.EMPTY);
     }
 }

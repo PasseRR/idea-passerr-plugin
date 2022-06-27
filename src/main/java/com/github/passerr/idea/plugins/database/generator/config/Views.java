@@ -65,7 +65,7 @@ class Views {
             }
         });
 
-        return LabeledComponent.create(authorField, "author", BorderLayout.WEST);
+        return LabeledComponent.create(authorField, "作者", BorderLayout.WEST);
     }
 
     /**

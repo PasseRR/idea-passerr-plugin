@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.action;
+package com.github.passerr.idea.plugins.database.generator.action.template;
 
 import com.intellij.database.model.DasColumn;
 import lombok.AccessLevel;
@@ -48,6 +48,9 @@ public class FieldInfo {
      * 额外的导入信息
      */
     String extraImport;
+
+    FieldInfo() {
+    }
 
     public String getDesc() {
         return Optional.ofNullable(this.columnComment).filter(it -> !it.isEmpty()).orElse(this.columnName);

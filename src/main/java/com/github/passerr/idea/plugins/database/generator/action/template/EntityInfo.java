@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.action;
+package com.github.passerr.idea.plugins.database.generator.action.template;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -28,17 +28,12 @@ public class EntityInfo extends ClassInfo {
      */
     String tableName;
     /**
-     * 串行化小写表名
-     */
-    String kebab;
-    /**
-     * 首字母小写驼峰
-     */
-    String camel;
-    /**
      * 列名列表
      */
     List<FieldInfo> fields = new ArrayList<>();
+
+    EntityInfo() {
+    }
 
     public String getDesc() {
         return Optional.ofNullable(this.tableComment).filter(it -> !it.isEmpty()).orElse(this.tableName);
@@ -50,15 +45,6 @@ public class EntityInfo extends ClassInfo {
      */
     public List<String> getFieldsImport() {
         return fields.stream().map(FieldInfo::getExtraImport).distinct().sorted().collect(Collectors.toList());
-    }
-
-    /**
-     * 表主键
-     * @return {@link FieldInfo}
-     */
-    public FieldInfo getPrimaryKey() {
-        // 多个主键只会找第一个
-        return fields.stream().filter(FieldInfo::isPrimaryKey).findFirst().orElse(null);
     }
 
     /**
