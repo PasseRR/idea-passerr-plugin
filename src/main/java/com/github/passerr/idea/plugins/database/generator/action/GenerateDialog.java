@@ -1,9 +1,13 @@
 package com.github.passerr.idea.plugins.database.generator.action;
 
+import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.github.passerr.idea.plugins.database.generator.config.ConfigPo;
 import com.github.passerr.idea.plugins.database.generator.config.GeneratorStateComponent;
 import com.intellij.database.model.DasTable;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.ui.DocumentAdapter;
@@ -22,6 +26,8 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -37,13 +43,15 @@ class GenerateDialog extends DialogWrapper {
      */
     DialogConfigInfo configInfo;
     ConfigPo configPo;
+    Module[] modules;
 
     protected GenerateDialog(Project project, List<DasTable> list) {
         super(project);
+        this.modules = ModuleManager.getInstance(project).getModules();
         super.setTitle("代码生成");
         super.setOKButtonText("确定");
         super.setCancelButtonText("取消");
-        this.configInfo = new DialogConfigInfo(project.getBasePath());
+        this.configInfo = new DialogConfigInfo(GenerateDialog.modulePath(0, modules[0].getModuleFilePath()));
         this.list = list;
         this.configPo = GeneratorStateComponent.getInstance().getState();
         super.init();
@@ -66,13 +74,17 @@ class GenerateDialog extends DialogWrapper {
     }
 
     protected void baseComp(JPanel panel, int row) {
-        // 项目路径
-        JXTextField projectPath = new JXTextField();
-        projectPath.setEditable(false);
-        projectPath.setColumns(25);
-        projectPath.setText(this.configInfo.basePath);
+        ComboBox<Module> comboBox = new ComboBox<>(modules);
+        comboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                Module item = (Module) e.getItem();
+                this.configInfo.basePath =
+                    GenerateDialog.modulePath(comboBox.getSelectedIndex(), item.getModuleFilePath());
+            }
+        });
+        comboBox.setSelectedIndex(0);
         panel.add(
-            LabeledComponent.create(projectPath, "项目路径", BorderLayout.BEFORE_LINE_BEGINS),
+            LabeledComponent.create(comboBox, "选择模块", BorderLayout.BEFORE_LINE_BEGINS),
             new GridBagConstraints(
                 0, row, 2, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,
@@ -303,5 +315,18 @@ class GenerateDialog extends DialogWrapper {
                 JBUI.insetsBottom(2), 0, 0
             )
         );
+    }
+
+    private static String modulePath(int index, String moduleFilePath) {
+        String prefix = "../";
+        if (index == 0) {
+            prefix += prefix;
+        }
+        try {
+            return Paths.get(moduleFilePath, prefix).toRealPath().toString();
+        } catch (IOException ignore) {
+        }
+
+        return StringConstants.EMPTY;
     }
 }
