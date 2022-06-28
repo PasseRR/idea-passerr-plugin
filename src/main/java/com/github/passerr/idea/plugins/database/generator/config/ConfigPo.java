@@ -94,7 +94,9 @@ public class ConfigPo {
         StringBuilderUtil.reset(this.serviceImpl, configPo.serviceImpl);
         StringBuilderUtil.reset(this.controller, configPo.controller);
         this.types.clear();
-        this.types.addAll(configPo.types);
+        this.types.addAll(
+            configPo.types.stream().map(TypeMappingPo::deepCopy).collect(Collectors.toList())
+        );
     }
 
     @Override

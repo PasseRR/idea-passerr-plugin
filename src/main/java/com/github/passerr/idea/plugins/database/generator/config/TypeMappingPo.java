@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 /**
@@ -23,6 +24,19 @@ import java.util.function.BiConsumer;
 public class TypeMappingPo {
     String jdbcType;
     String javaType;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {return true;}
+        if (o == null || getClass() != o.getClass()) {return false;}
+        TypeMappingPo that = (TypeMappingPo) o;
+        return Objects.equals(jdbcType, that.jdbcType) && Objects.equals(javaType, that.javaType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(jdbcType, javaType);
+    }
 
     TypeMappingPo deepCopy() {
         return new TypeMappingPo().setJavaType(this.javaType).setJdbcType(this.jdbcType);

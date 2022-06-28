@@ -29,16 +29,17 @@ class Views {
     static JPanel dialogMainPanel(Module[] modules, ConfigPo configPo, DialogConfigInfo configInfo) {
         JPanel panel = new JPanel(new GridBagLayout());
         int row = 0;
-        baseComp(modules, configInfo, panel, row++);
-        entityComp(configInfo, panel, row++);
-        mapperComp(configInfo, panel, row++);
-        mapperXmlComp(configInfo, panel, row++);
-        serviceComp(configInfo, panel, row++);
+        Views.baseComp(modules, configInfo, panel, row++);
+        Views.entityComp(configInfo, panel, row++);
+        Views.mapperComp(configInfo, panel, row++);
+        Views.mapperXmlComp(configInfo, panel, row++);
+        Views.serviceComp(configInfo, panel, row++);
+        Views.controllerComp(configInfo, panel, row++);
         if (configPo.isUseServiceImpl()) {
-            serviceImplComp(configInfo, panel, row++);
+            Views.serviceImplComp(configInfo, panel, row++);
         }
 
-        // TODO 添加 是否文件覆盖、表前缀
+        Views.otherComp(configInfo, panel, row);
 
         return panel;
     }
@@ -225,7 +226,25 @@ class Views {
             )
         );
 
-        // controller包名
+        JXTextField serviceSuffix = new JXTextField();
+        serviceSuffix.setText(configInfo.serviceSuffix);
+        serviceSuffix.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                configInfo.setServiceSuffix(serviceSuffix.getText());
+            }
+        });
+        panel.add(
+            LabeledComponent.create(serviceSuffix, "service后缀", BorderLayout.BEFORE_LINE_BEGINS),
+            new GridBagConstraints(
+                2, row, 2, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+    }
+
+    static void controllerComp(DialogConfigInfo configInfo, JPanel panel, int row) {
         JXTextField controllerPackage = new JXTextField();
         controllerPackage.setText(configInfo.controllerPackage);
         controllerPackage.getDocument().addDocumentListener(new DocumentAdapter() {
@@ -236,6 +255,23 @@ class Views {
         });
         panel.add(
             LabeledComponent.create(controllerPackage, "controller包名", BorderLayout.BEFORE_LINE_BEGINS),
+            new GridBagConstraints(
+                0, row, 2, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+
+        JXTextField controllerSuffix = new JXTextField();
+        controllerSuffix.setText(configInfo.controllerSuffix);
+        controllerSuffix.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                configInfo.setControllerSuffix(controllerSuffix.getText());
+            }
+        });
+        panel.add(
+            LabeledComponent.create(controllerSuffix, "controller后缀", BorderLayout.BEFORE_LINE_BEGINS),
             new GridBagConstraints(
                 2, row, 2, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,
@@ -259,7 +295,7 @@ class Views {
         panel.add(
             packageLabeled,
             new GridBagConstraints(
-                0, row, 1, 1, 1, 1,
+                0, row, 2, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.insetsBottom(2), 0, 0
             )
@@ -278,6 +314,39 @@ class Views {
             LabeledComponent.create(serviceImplSuffix, "service实现后缀", BorderLayout.BEFORE_LINE_BEGINS);
         panel.add(
             suffixLabeled,
+            new GridBagConstraints(
+                2, row, 2, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+    }
+
+    static void otherComp(DialogConfigInfo configInfo, JPanel panel, int row) {
+        JCheckBox overrideFile = new JCheckBox();
+        overrideFile.setSelected(configInfo.overrideFile);
+        overrideFile.addItemListener(e -> configInfo.setOverrideFile(e.getStateChange() == ItemEvent.SELECTED));
+        panel.add(
+            LabeledComponent.create(overrideFile, "是否覆盖文件", BorderLayout.BEFORE_LINE_BEGINS),
+            new GridBagConstraints(
+                0, row, 2, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+                JBUI.insetsBottom(2), 0, 0
+            )
+        );
+
+        // 默认包名
+        JXTextField tablePrefix = new JXTextField();
+        tablePrefix.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                configInfo.setTablePrefix(tablePrefix.getText());
+            }
+        });
+        LabeledComponent<JXTextField> pathLabeled =
+            LabeledComponent.create(tablePrefix, "数据库表前缀", BorderLayout.BEFORE_LINE_BEGINS);
+        panel.add(
+            pathLabeled,
             new GridBagConstraints(
                 2, row, 2, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,

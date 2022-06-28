@@ -17,7 +17,7 @@ public class DialogConfigInfo {
     /**
      * 项目根路径
      */
-    String basePath;
+    transient String basePath;
     /**
      * 基础包名
      */
@@ -55,9 +55,17 @@ public class DialogConfigInfo {
      */
     String servicePackage = "service";
     /**
+     * service后缀
+     */
+    String serviceSuffix = "Service";
+    /**
      * controller包名 默认controller
      */
     String controllerPackage = "controller";
+    /**
+     * controller后缀
+     */
+    String controllerSuffix = "Controller";
     /**
      * 是否使用serviceImpl
      */
@@ -81,6 +89,10 @@ public class DialogConfigInfo {
 
     DialogConfigInfo(String basePath) {
         this.basePath = basePath;
+    }
+
+    public DialogConfigInfo() {
+        
     }
 
     /**

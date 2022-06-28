@@ -53,7 +53,11 @@ public enum Templates {
                 && tableName.length() > configInfo.getTablePrefix().length()) {
                 tableName = tableName.substring(configInfo.getTablePrefix().length());
             }
-            entity.setClassName(NamingUtil.toggle(NamingStyle.PASCAL, tableName));
+            entity.setBaseName(NamingUtil.toggle(NamingStyle.PASCAL, tableName));
+            entity.setClassName(
+                entity.getBaseName() +
+                    Optional.ofNullable(configInfo.getEntitySuffix()).map(String::trim).orElse(StringConstants.EMPTY)
+            );
             entity.setKebabName(NamingUtil.toggle(NamingStyle.LOWER_KEBAB, entity.getClassName()));
 
             DasUtil.getColumns(table)
@@ -90,7 +94,8 @@ public enum Templates {
             mapper.setPackageName(this.getPackage(configInfo));
             mapper.setImports(TemplateUtil.imports(templateInfo.getEntity().getFullClassName()));
             mapper.setClassName(
-                String.format("%s%s", templateInfo.getEntity().getClassName(), configInfo.getMapperSuffix())
+                templateInfo.getEntity().getBaseName() +
+                    Optional.ofNullable(configInfo.getMapperSuffix()).map(String::trim).orElse(StringConstants.EMPTY)
             );
         }
 
@@ -133,7 +138,10 @@ public enum Templates {
         void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
             ServiceInfo service = templateInfo.getService();
             service.setPackageName(this.getPackage(configInfo));
-            service.setClassName(String.format("%sService", templateInfo.getEntity().getClassName()));
+            service.setClassName(
+                templateInfo.getEntity().getBaseName() +
+                    Optional.ofNullable(configInfo.getServiceSuffix()).map(String::trim).orElse(StringConstants.EMPTY)
+            );
             service.setImports(
                 TemplateUtil.imports(
                     Arrays.asList(
@@ -155,7 +163,10 @@ public enum Templates {
             ServiceImplInfo serviceImpl = templateInfo.getServiceImpl();
             serviceImpl.setPackageName(this.getPackage(configInfo));
             serviceImpl.setClassName(
-                String.format("%s%s", templateInfo.getEntity().getClassName(), configInfo.getServiceImplSuffix())
+                templateInfo.getService().getClassName() +
+                    Optional.ofNullable(configInfo.getServiceImplSuffix())
+                        .map(String::trim)
+                        .orElse(StringConstants.EMPTY)
             );
             serviceImpl.setImports(
                 TemplateUtil.imports(
@@ -178,7 +189,12 @@ public enum Templates {
         void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
             ControllerInfo controller = templateInfo.getController();
             controller.setPackageName(this.getPackage(configInfo));
-            controller.setClassName(String.format("%sController", templateInfo.getEntity().getClassName()));
+            controller.setClassName(
+                templateInfo.getEntity().getBaseName() +
+                    Optional.ofNullable(configInfo.getControllerSuffix())
+                        .map(String::trim)
+                        .orElse(StringConstants.EMPTY)
+            );
             controller.setImports(
                 TemplateUtil.imports(
                     Arrays.asList(

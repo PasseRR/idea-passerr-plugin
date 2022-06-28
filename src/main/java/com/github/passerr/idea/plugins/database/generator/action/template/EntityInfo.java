@@ -3,6 +3,7 @@ package com.github.passerr.idea.plugins.database.generator.action.template;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
@@ -18,6 +19,11 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EntityInfo extends ClassInfo {
+    /**
+     * 基础名称 没有加后缀的名称
+     */
+    @Getter(AccessLevel.PACKAGE)
+    String baseName;
     /**
      * 表注释
      */
