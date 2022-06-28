@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,17 +26,23 @@ ${controller.imports}
 @RequiredArgsConstructor
 @Api(tags = "${entity.desc}管理")
 public class ${controller.className} {
-    ${service.className} ${service.className};
+    ${service.className} ${service.fieldName};
     
     @PostMapping
     @ApiOperation("${entity.desc}添加")
     public Boolean add(@RequestBody ${entity.className} entity) {
-        return this.${service.className}.save(entity);
+        return this.${service.fieldName}.save(entity);
     }
 
     @PutMapping
     @ApiOperation("${entity.desc}修改")
     public Boolean update(@RequestBody ${entity.className} entity) {
-        return this.${service.className}.updateById(entity);
+        return this.${service.fieldName}.updateById(entity);
+    }
+
+    @DeleteMapping("/{${entity.pk.fieldName}}")
+    @ApiOperation("${entity.desc}删除")
+    public Boolean delete(@PathVariable @ApiParam("${entity.pk.desc}") ${entity.pk.className} ${entity.pk.fieldName}) {
+        return this.${service.fieldName}.removeById(${entity.pk.fieldName});
     }
 }

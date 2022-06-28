@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * 类基础信息
@@ -15,6 +16,9 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class ClassInfo {
+    /**
+     * 包名
+     */
     String packageName;
     /**
      * 实体类名称
@@ -31,6 +35,10 @@ class ClassInfo {
     String imports;
 
     public String getFullClassName() {
+        if (StringUtils.isEmpty(this.packageName)) {
+            return null;
+        }
+        
         return String.format("%s.%s", this.packageName, this.className);
     }
 

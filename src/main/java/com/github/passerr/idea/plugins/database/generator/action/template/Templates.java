@@ -61,7 +61,7 @@ public enum Templates {
                 .forEach(it -> {
                     entity.addField(it);
                     if (it.isPrimaryKey()) {
-                        entity.setPrimaryKey(it);
+                        entity.setPk(it);
                     }
                 });
 
@@ -69,7 +69,7 @@ public enum Templates {
             entity.setImports(
                 TemplateUtil.imports(
                     entity.getFields().stream()
-                        .map(FieldInfo::getPackageName)
+                        .map(FieldInfo::getFullClassName)
                         .filter(StringUtils::isNotBlank)
                         .distinct()
                         .sorted()
@@ -182,7 +182,7 @@ public enum Templates {
             controller.setImports(
                 TemplateUtil.imports(
                     Arrays.asList(
-                        Optional.ofNullable(templateInfo.getEntity().getPrimaryKey())
+                        Optional.ofNullable(templateInfo.getEntity().getPk())
                             .map(FieldInfo::getPackageName)
                             .orElse(StringConstants.EMPTY),
                         templateInfo.getEntity().getFullClassName(),

@@ -33,7 +33,7 @@ public class EntityInfo extends ClassInfo {
     /**
      * 主键列信息
      */
-    FieldInfo primaryKey;
+    FieldInfo pk;
     /**
      * 小写蛇形命名名称
      */
