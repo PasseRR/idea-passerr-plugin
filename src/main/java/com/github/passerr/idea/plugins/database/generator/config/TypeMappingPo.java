@@ -3,6 +3,7 @@ package com.github.passerr.idea.plugins.database.generator.config;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.JDBCType;
@@ -21,7 +22,7 @@ import java.util.function.BiConsumer;
  */
 @Data
 @Accessors(chain = true)
-public class TypeMappingPo {
+public class TypeMappingPo implements Serializable {
     String jdbcType;
     String javaType;
 

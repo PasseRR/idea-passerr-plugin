@@ -26,12 +26,12 @@ import java.util.Objects;
  * @date 2022/06/23 19:23
  */
 class SyncDialog extends DialogWrapper {
-    final StringBuilder sb;
+    final ConfigPo configPo;
     String url;
 
-    SyncDialog(StringBuilder sb) {
+    SyncDialog(ConfigPo configPo) {
         super(true);
-        this.sb = sb;
+        this.configPo = configPo;
         super.setTitle("模版远程同步");
         super.setOKButtonText("同步");
         super.setCancelButtonText("取消");
@@ -41,7 +41,7 @@ class SyncDialog extends DialogWrapper {
     @Override
     protected @Nullable JComponent createCenterPanel() {
         JXTextField urlField = new JXTextField();
-        urlField.setText(this.sb.toString());
+        urlField.setText(this.configPo.getUrl());
         urlField.setColumns(35);
         urlField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override

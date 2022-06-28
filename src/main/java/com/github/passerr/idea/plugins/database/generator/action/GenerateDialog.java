@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -63,7 +64,12 @@ class GenerateDialog extends DialogWrapper {
         try {
             // 模版参数
             Map<String, Object> map = new HashMap<>(8);
-            map.put("author", configPo.getAuthor());
+            map.put(
+                "author",
+                Optional.ofNullable(configPo.getConfig().getAuthor())
+                    .map(String::trim)
+                    .orElse("generator")
+            );
             map.put("date", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             // 缓存准备类型转换数据
             Map<String, String> types = this.configPo.getTypes()

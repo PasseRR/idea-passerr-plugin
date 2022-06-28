@@ -34,7 +34,7 @@ public class GeneratorConfigurable implements SearchableConfigurable, Configurab
 
     @Override
     public String getDisplayName() {
-        return "Generator Setting";
+        return "Generator Templates";
     }
 
     @Override
@@ -45,20 +45,11 @@ public class GeneratorConfigurable implements SearchableConfigurable, Configurab
     @Override
     public @Nullable JComponent createComponent() {
         JPanel panel = new JPanel(new GridBagLayout());
-        // 数据同步
-        panel.add(
-            Views.syncView(this.copy),
-            new GridBagConstraints(
-                0, 0, 1, 1, 1, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                JBUI.insetsBottom(2), 0, 0
-            )
-        );
         // 模版配置
         panel.add(
             Views.tabsView(this.copy),
             new GridBagConstraints(
-                0, 1, 1, 1, 1, 0.6,
+                0, 0, 1, 1, 1, 0.6,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.insetsBottom(2), 0, 0
             )
@@ -67,7 +58,7 @@ public class GeneratorConfigurable implements SearchableConfigurable, Configurab
         panel.add(
             Views.DESC_VIEW,
             new GridBagConstraints(
-                0, 2, 1, 1, 1, 0.4,
+                0, 1, 1, 1, 1, 0.4,
                 GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.insetsBottom(2), 0, 0
             )
@@ -75,7 +66,7 @@ public class GeneratorConfigurable implements SearchableConfigurable, Configurab
 
         return panel;
     }
-    
+
     @Override
     public boolean isModified() {
         return !Objects.equals(this.src, this.copy);

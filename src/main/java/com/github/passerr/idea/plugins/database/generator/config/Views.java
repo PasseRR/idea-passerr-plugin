@@ -51,24 +51,6 @@ class Views {
     static final Component DESC_VIEW = descView();
 
     /**
-     * 同步模块ui
-     * @return {@link Component}
-     */
-    static Component syncView(ConfigPo copy) {
-        JXTextField authorField = new JXTextField();
-        authorField.setPrompt("作者配置");
-        authorField.setText(copy.getAuthor().toString());
-        authorField.getDocument().addDocumentListener(new DocumentAdapter() {
-            @Override
-            protected void textChanged(@NotNull DocumentEvent e) {
-                copy.setAuthor(new StringBuilder(authorField.getText()));
-            }
-        });
-
-        return LabeledComponent.create(authorField, "作者", BorderLayout.WEST);
-    }
-
-    /**
      * tab配置模块ui
      * @return {@link Component}
      */
@@ -81,27 +63,27 @@ class Views {
         JBTabbedPane tabbedPanel = new JBTabbedPane();
         tabbedPanel.addTab(
             "entity模版",
-            VelocityUtil.velocityEditor(copy, ConfigPo::getEntity, s -> copy.setEntity(new StringBuilder(s)))
+            VelocityUtil.velocityEditor(copy, ConfigPo::getEntity, copy::setEntity)
         );
         tabbedPanel.addTab(
             "mapper模版",
-            VelocityUtil.velocityEditor(copy, ConfigPo::getMapper, s -> copy.setMapper(new StringBuilder(s)))
+            VelocityUtil.velocityEditor(copy, ConfigPo::getMapper, copy::setEntity)
         );
         tabbedPanel.addTab(
             "mapper xml模版",
-            VelocityUtil.velocityEditor(copy, ConfigPo::getMapperXml, s -> copy.setMapperXml(new StringBuilder(s)))
+            VelocityUtil.velocityEditor(copy, ConfigPo::getMapperXml, copy::setMapperXml)
         );
         tabbedPanel.addTab(
             "service模版",
-            VelocityUtil.velocityEditor(copy, ConfigPo::getService, s -> copy.setService(new StringBuilder(s)))
+            VelocityUtil.velocityEditor(copy, ConfigPo::getService, copy::setService)
         );
         tabbedPanel.addTab(
             "service实现模版",
-            VelocityUtil.velocityEditor(copy, ConfigPo::getServiceImpl, s -> copy.setServiceImpl(new StringBuilder(s)))
+            VelocityUtil.velocityEditor(copy, ConfigPo::getServiceImpl, copy::setServiceImpl)
         );
         tabbedPanel.addTab(
             "controller模版",
-            VelocityUtil.velocityEditor(copy, ConfigPo::getController, s -> copy.setController(new StringBuilder(s)))
+            VelocityUtil.velocityEditor(copy, ConfigPo::getController, copy::setController)
         );
         tabbedPanel.setEnabledAt(4, false);
         tabbedPanel.getTabComponentAt(4).setEnabled(false);
@@ -111,7 +93,7 @@ class Views {
         JButton button = new JButton("", AllIcons.Actions.Refresh);
         button.setPreferredSize(new Dimension(30, 30));
         button.setToolTipText("从远程同步配置");
-        button.addActionListener(e -> new SyncDialog(copy.getUrl()).show());
+        button.addActionListener(e -> new SyncDialog(copy).show());
         tabbedPanel.setTabComponentAt(last, button);
         tabbedPanel.setEnabledAt(last, false);
         panel.add(tabbedPanel);

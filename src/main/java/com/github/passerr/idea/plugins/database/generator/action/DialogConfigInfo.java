@@ -3,6 +3,7 @@ package com.github.passerr.idea.plugins.database.generator.action;
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.function.Function;
@@ -13,7 +14,7 @@ import java.util.function.Function;
  * @date 2022/06/24 16:41
  */
 @Data
-public class DialogConfigInfo {
+public class DialogConfigInfo implements Serializable {
     /**
      * 项目根路径
      */
@@ -83,6 +84,10 @@ public class DialogConfigInfo {
      */
     boolean overrideFile = true;
     /**
+     * 作者
+     */
+    String author;
+    /**
      * 表前缀
      */
     String tablePrefix;
@@ -92,9 +97,9 @@ public class DialogConfigInfo {
     }
 
     public DialogConfigInfo() {
-        
-    }
 
+    }
+    
     /**
      * 路径加上包路径后的代码目录路径
      * @param function 需要与{{@link #basePackage}}合并的路径

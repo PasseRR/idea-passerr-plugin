@@ -214,12 +214,12 @@ public enum Templates {
         }
     };
 
-    Function<ConfigPo, StringBuilder> templateFunction;
+    Function<ConfigPo, String> templateFunction;
     Function<DialogConfigInfo, String> packageFunction;
     BiPredicate<ConfigPo, DialogConfigInfo> validPredicate;
     private static final Logger LOG = Logger.getInstance(Json5Generator.class);
 
-    Templates(Function<ConfigPo, StringBuilder> templateFunction,
+    Templates(Function<ConfigPo, String> templateFunction,
               Function<DialogConfigInfo, String> packageFunction) {
         this(templateFunction, packageFunction, (po, info) -> true);
     }
@@ -247,7 +247,7 @@ public enum Templates {
         Arrays.stream(Templates.values())
             .filter(it -> it.validPredicate.test(configPo, configInfo))
             .forEach(it -> {
-                StringBuilder template = it.templateFunction.apply(configPo);
+                StringBuilder template = new StringBuilder(it.templateFunction.apply(configPo));
                 String path = it.getPath(configInfo);
                 String fileName = it.getFileName(templateInfo);
                 File file = Paths.get(path, fileName).toFile();
