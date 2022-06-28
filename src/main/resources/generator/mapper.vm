@@ -1,7 +1,7 @@
 package ${mapper.packageName};
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import ${entity.fullClassName};
+${mapper.imports}
 
 /**
  * ${entity.desc}mapper

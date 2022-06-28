@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 表实体信息
@@ -31,20 +30,20 @@ public class EntityInfo extends ClassInfo {
      * 列名列表
      */
     List<FieldInfo> fields = new ArrayList<>();
+    /**
+     * 主键列信息
+     */
+    FieldInfo primaryKey;
+    /**
+     * 小写蛇形命名名称
+     */
+    String kebabName;
 
     EntityInfo() {
     }
 
     public String getDesc() {
         return Optional.ofNullable(this.tableComment).filter(it -> !it.isEmpty()).orElse(this.tableName);
-    }
-
-    /**
-     * 字段额外的导入包信息
-     * @return {@link List}
-     */
-    public List<String> getFieldsImport() {
-        return fields.stream().map(FieldInfo::getExtraImport).distinct().sorted().collect(Collectors.toList());
     }
 
     /**

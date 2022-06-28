@@ -2,9 +2,7 @@ package ${serviceImpl.packageName};
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import ${entity.fullClassName};
-import ${mapper.fullClassName};
-import ${service.fullClassName};
+${serviceImpl.imports}
 
 /**
  * ${entity.desc}服务实现

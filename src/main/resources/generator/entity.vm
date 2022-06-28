@@ -8,9 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-## 实体字段类型非java.lang包引入
-#foreach($i in ${entity.imports})
-import $i;
+#if(${entity.imports})
+${entity.imports}
 #end
 
 /**
@@ -24,12 +23,12 @@ import $i;
 @ApiModel
 public class ${entity.className} {
 #foreach($f in $entity.fields)
-    #if (${f.primaryKey})
+#if (${f.primaryKey})
     @TableId("${f.columnName}")
-    #else
+#else
     @TableField("${f.columnName}")
-    #end
+#end
     @ApiModelProperty("${f.desc}")
-    ${f.fieldType} ${f.fieldName};
+    ${f.className} ${f.fieldName};
 #end
 }

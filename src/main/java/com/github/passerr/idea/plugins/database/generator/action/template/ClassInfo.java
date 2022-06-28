@@ -23,8 +23,12 @@ class ClassInfo {
     /**
      * 实体作为属性/参数是的名字
      */
-    @Setter(AccessLevel.NONE)
+    @Setter(AccessLevel.PACKAGE)
     String fieldName;
+    /**
+     * 需要导入的包名
+     */
+    String imports;
 
     public String getFullClassName() {
         return String.format("%s.%s", this.packageName, this.className);

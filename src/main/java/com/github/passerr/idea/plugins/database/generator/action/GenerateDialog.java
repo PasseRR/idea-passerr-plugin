@@ -4,7 +4,8 @@ import com.github.passerr.idea.plugins.base.utils.NotificationUtil;
 import com.github.passerr.idea.plugins.database.generator.action.template.Templates;
 import com.github.passerr.idea.plugins.database.generator.config.ConfigPo;
 import com.github.passerr.idea.plugins.database.generator.config.GeneratorStateComponent;
-import com.intellij.database.model.DasTable;
+import com.github.passerr.idea.plugins.database.generator.config.TypeMappingPo;
+import com.intellij.database.psi.DbTable;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.module.Module;
@@ -22,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 代码生成弹窗
@@ -30,7 +32,7 @@ import java.util.Map;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 class GenerateDialog extends DialogWrapper {
-    List<DasTable> list;
+    List<DbTable> list;
     /**
      * 配置信息
      */
@@ -38,7 +40,7 @@ class GenerateDialog extends DialogWrapper {
     ConfigPo configPo;
     Module[] modules;
 
-    protected GenerateDialog(Project project, List<DasTable> list) {
+    protected GenerateDialog(Project project, List<DbTable> list) {
         super(project);
         this.modules = ModuleManager.getInstance(project).getModules();
         super.setTitle("代码生成");
@@ -63,7 +65,12 @@ class GenerateDialog extends DialogWrapper {
             Map<String, Object> map = new HashMap<>(8);
             map.put("author", configPo.getAuthor());
             map.put("date", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            this.list.forEach(it -> Templates.generate(map, it, this.configPo, this.configInfo));
+            // 缓存准备类型转换数据
+            Map<String, String> types = this.configPo.getTypes()
+                .stream()
+                .collect(Collectors.toMap(TypeMappingPo::getJdbcType, TypeMappingPo::getJavaType));
+
+            this.list.forEach(it -> Templates.generate(map, it, this.configPo, this.configInfo, types));
         } finally {
             NotificationUtil.notify(
                 new Notification(
