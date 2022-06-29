@@ -4,10 +4,13 @@ import com.github.passerr.idea.plugins.base.BaseTableModel;
 import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
+import com.github.passerr.idea.plugins.base.utils.GsonUtil;
 import com.github.passerr.idea.plugins.database.generator.template.po.TemplatePo;
 import com.github.passerr.idea.plugins.database.generator.template.po.TemplatesPo;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
+import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -15,7 +18,6 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
-import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.swingx.JXTextField;
 import org.jetbrains.annotations.NotNull;
@@ -24,10 +26,13 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +49,7 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
 
     GeneratorTemplateConfigurable() {
         this.src = GeneratorTemplateStateComponent.getInstance().getState();
-        this.copy = SerializationUtils.clone(this.src);
+        this.copy = GsonUtil.deepCopy(this.src, TemplatesPo.class);
     }
 
     @Override
@@ -145,7 +150,15 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
                             new ToolbarDecorator.ElementActionButton("模板设置", AllIcons.General.Settings) {
                                 @Override
                                 public void actionPerformed(@NotNull AnActionEvent e) {
-                                    // TODO 查看详情
+                                    new TemplateSettingDialog(copy.getTemplates().get(table.getSelectedRow())).show();
+                                }
+
+                                @Override
+                                public ShortcutSet getShortcut() {
+                                    return
+                                        new CustomShortcutSet(
+                                            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_MASK)
+                                        );
                                 }
                             }
                         )
@@ -155,9 +168,31 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
                                 public void actionPerformed(@NotNull AnActionEvent e) {
                                     // TODO 模板同步
                                 }
+
+                                @Override
+                                public ShortcutSet getShortcut() {
+                                    return new CustomShortcutSet(KeyEvent.VK_F5);
+                                }
                             }
                         )
-                        .disableUpDownActions()
+                        .setMoveUpAction(it -> {
+                            int index = table.getSelectedRow(), next = index - 1;
+                            TemplatePo t = templates.get(index);
+                            templates.set(index, templates.get(next));
+                            templates.set(next, t);
+                            table.setRowSelectionInterval(next, next);
+                            model.fireTableRowsUpdated(next, index);
+                        })
+                        .setMoveUpActionName("上移")
+                        .setMoveDownAction(it -> {
+                            int index = table.getSelectedRow(), next = index + 1;
+                            TemplatePo t = templates.get(index);
+                            templates.set(index, templates.get(next));
+                            templates.set(next, t);
+                            table.setRowSelectionInterval(next, next);
+                            model.fireTableRowsUpdated(index, next);
+                        })
+                        .setMoveUpActionName("下移")
                         .createPanel();
             }
         };

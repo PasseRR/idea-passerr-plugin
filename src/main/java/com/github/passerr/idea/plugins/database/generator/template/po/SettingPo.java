@@ -1,16 +1,34 @@
 package com.github.passerr.idea.plugins.database.generator.template.po;
 
+import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
- * 弹窗配置信息
+ * 代码生成参数设置
  * @author xiehai
  * @date 2022/06/24 16:41
  */
 @Data
-public class DialogConfigPo implements Serializable {
+public class SettingPo {
+    /**
+     * 项目根路径
+     */
+    @Transient
+    String basePath;
+    /**
+     * 表前缀
+     */
+    @Transient
+    String tablePrefix;
+    /**
+     * 默认覆盖文件
+     */
+    @Transient
+    boolean overrideFile = true;
+    /**
+     * 作者
+     */
+    String author = "generator";
     /**
      * 基础包名
      */
@@ -60,10 +78,6 @@ public class DialogConfigPo implements Serializable {
      */
     String controllerSuffix = "Controller";
     /**
-     * 是否使用serviceImpl
-     */
-    boolean useServiceImpl = false;
-    /**
      * serviceImpl的包名
      */
     String serviceImplPackage = "service.impl";
@@ -71,16 +85,4 @@ public class DialogConfigPo implements Serializable {
      * serviceImpl的后缀
      */
     String serviceImplSuffix = "Impl";
-    /**
-     * 默认覆盖文件
-     */
-    boolean overrideFile = true;
-    /**
-     * 作者
-     */
-    String author;
-    /**
-     * 表前缀
-     */
-    String tablePrefix;
 }

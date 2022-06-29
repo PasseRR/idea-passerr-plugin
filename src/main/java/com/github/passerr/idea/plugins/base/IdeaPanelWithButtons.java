@@ -21,6 +21,10 @@ public abstract class IdeaPanelWithButtons extends PanelWithButtons {
         super.initPanel();
     }
 
+    public IdeaPanelWithButtons() {
+        this(null);
+    }
+
     @Nullable
     @Override
     protected String getLabelText() {

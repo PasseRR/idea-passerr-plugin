@@ -1,11 +1,8 @@
 package com.github.passerr.idea.plugins.database.generator.template.po;
 
-import com.github.passerr.idea.plugins.database.generator.config.ConfigPo;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
 
 /**
  * 模板配置
@@ -14,19 +11,19 @@ import java.io.Serializable;
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TemplatePo implements Serializable {
+public class TemplatePo {
     String name;
     String url;
-    ConfigPo configPo;
+    DetailPo detail = new DetailPo();
 
-    protected static TemplatePo serviceTemplate() {
+    static TemplatePo serviceTemplate() {
         TemplatePo po = new TemplatePo();
         po.setName("MybatisPlus Service");
         po.setUrl("https://gitee.com/PasseRR/template1");
         return po;
     }
 
-    protected static TemplatePo serviceImplTemplate() {
+    static TemplatePo serviceImplTemplate() {
         TemplatePo po = new TemplatePo();
         po.setName("MybatisPlus Service With Impl");
         po.setUrl("https://gitee.com/PasseRR/template2");

@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
  */
 @Data
 @Accessors(chain = true)
-public class TypeMappingPo implements Serializable {
+public class MappingPo implements Serializable {
     String jdbcType;
     String javaType;
 
@@ -30,7 +30,7 @@ public class TypeMappingPo implements Serializable {
     public boolean equals(Object o) {
         if (this == o) {return true;}
         if (o == null || getClass() != o.getClass()) {return false;}
-        TypeMappingPo that = (TypeMappingPo) o;
+        MappingPo that = (MappingPo) o;
         return Objects.equals(jdbcType, that.jdbcType) && Objects.equals(javaType, that.javaType);
     }
 
@@ -39,20 +39,20 @@ public class TypeMappingPo implements Serializable {
         return Objects.hash(jdbcType, javaType);
     }
 
-    TypeMappingPo deepCopy() {
-        return new TypeMappingPo().setJavaType(this.javaType).setJdbcType(this.jdbcType);
+    MappingPo deepCopy() {
+        return new MappingPo().setJavaType(this.javaType).setJdbcType(this.jdbcType);
     }
 
     /**
      * 默认jdb类型支持
      * @return {@link List}
      */
-    static List<TypeMappingPo> defaultMappings() {
-        List<TypeMappingPo> list = new ArrayList<>();
+    static List<MappingPo> defaultMappings() {
+        List<MappingPo> list = new ArrayList<>();
         BiConsumer<Class<?>, JDBCType> put = (clazz, type) ->
             // byte[]特殊处理
             list.add(
-                new TypeMappingPo().setJdbcType(type.name())
+                new MappingPo().setJdbcType(type.name())
                     .setJavaType(clazz == byte[].class ? "byte[]" : clazz.getName())
             );
         BiConsumer<Class<?>, List<JDBCType>> puts = (clazz, types) -> types.forEach(it -> put.accept(clazz, it));

@@ -1,12 +1,11 @@
 package com.github.passerr.idea.plugins.database.generator.template.po;
 
+import com.github.passerr.idea.plugins.base.utils.GsonUtil;
 import com.intellij.util.xmlb.annotations.Tag;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TemplatesPo implements Serializable {
+public class TemplatesPo {
     @Tag("templates")
     List<TemplatePo> templates;
 
@@ -35,11 +34,15 @@ public class TemplatesPo implements Serializable {
             this.templates = new ArrayList<>();
         }
 
-        this.templates.add(SerializationUtils.clone(templatePo));
+        this.templates.add(GsonUtil.deepCopy(templatePo, TemplatePo.class));
     }
 
     public void from(TemplatesPo po) {
         this.templates.clear();
-        this.templates.addAll(po.getTemplates().stream().map(SerializationUtils::clone).collect(Collectors.toList()));
+        this.templates.addAll(
+            po.getTemplates().stream()
+                .map(it -> GsonUtil.deepCopy(it, TemplatePo.class))
+                .collect(Collectors.toList())
+        );
     }
 }
