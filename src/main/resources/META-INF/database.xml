@@ -22,9 +22,9 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- 代码生成配置状态 -->
         <applicationService
-                serviceImplementation="com.github.passerr.idea.plugins.database.generator.template.GeneratorTemplateStateComponent"/>
+                serviceImplementation="com.github.passerr.idea.plugins.database.generator.config.GeneratorTemplateStateComponent"/>
         <!-- 代码生成配置界面 -->
         <applicationConfigurable
-                instance="com.github.passerr.idea.plugins.database.generator.template.GeneratorTemplateConfigurable"/>
+                instance="com.github.passerr.idea.plugins.database.generator.config.GeneratorTemplateConfigurable"/>
     </extensions>
 </idea-plugin>

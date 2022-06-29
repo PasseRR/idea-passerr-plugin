@@ -1,0 +1,9 @@
+{
+  "useServiceImpl": true,
+  "entity": "../entity.vm",
+  "mapper": "../mapper.vm",
+  "mapperXml": "../mapper-xml.vm",
+  "service": "service.vm",
+  "serviceImpl": "service-impl.vm",
+  "controller": "../controller.vm"
+}

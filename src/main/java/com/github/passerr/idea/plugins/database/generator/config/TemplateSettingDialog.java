@@ -1,6 +1,6 @@
-package com.github.passerr.idea.plugins.database.generator.template;
+package com.github.passerr.idea.plugins.database.generator.config;
 
-import com.github.passerr.idea.plugins.database.generator.template.po.TemplatePo;
+import com.github.passerr.idea.plugins.database.generator.config.po.TemplatePo;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.Nullable;
 

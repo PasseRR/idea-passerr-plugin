@@ -28,4 +28,13 @@ public interface PluginUtil {
     static String url() {
         return PLUGIN_DESCRIPTOR.getUrl();
     }
+
+    /**
+     * 获得git分支指定路径
+     * @param path 路径
+     * @return 全路径
+     */
+    static String gitTagUrl(String path) {
+        return String.format("%s/tree/%s/%s", url(), version(), path);
+    }
 }

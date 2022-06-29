@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.template.po;
+package com.github.passerr.idea.plugins.database.generator.config.po;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.intellij.util.xmlb.annotations.Transient;
@@ -98,7 +98,7 @@ public class SettingPo {
      */
     public String sourcePath(Function<SettingPo, String> function) {
         return
-            DialogConfigUtil.mergePath(
+            SettingUtil.mergePath(
                 Paths.get(this.basePath, "src", "main", "java").toString(),
                 this.basePackage,
                 function.apply(this)
@@ -112,7 +112,7 @@ public class SettingPo {
      */
     public String resourcePath(Function<SettingPo, String> function) {
         return
-            DialogConfigUtil.mergePath(
+            SettingUtil.mergePath(
                 Paths.get(this.basePath, "src", "main", "resources").toString(),
                 function.apply(this),
                 StringConstants.EMPTY
@@ -120,7 +120,7 @@ public class SettingPo {
     }
 
     public String packages(Function<SettingPo, String> function) {
-        return DialogConfigUtil.mergePackage(this.basePackage, function.apply(this));
+        return SettingUtil.mergePackage(this.basePackage, function.apply(this));
     }
 
     public String getTablePrefix() {

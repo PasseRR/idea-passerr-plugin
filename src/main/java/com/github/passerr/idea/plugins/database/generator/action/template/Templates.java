@@ -2,9 +2,9 @@ package com.github.passerr.idea.plugins.database.generator.action.template;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
-import com.github.passerr.idea.plugins.database.generator.template.po.DetailPo;
-import com.github.passerr.idea.plugins.database.generator.template.po.SettingPo;
-import com.github.passerr.idea.plugins.database.generator.template.po.TemplatePo;
+import com.github.passerr.idea.plugins.database.generator.config.po.DetailPo;
+import com.github.passerr.idea.plugins.database.generator.config.po.SettingPo;
+import com.github.passerr.idea.plugins.database.generator.config.po.TemplatePo;
 import com.github.passerr.idea.plugins.naming.NamingStyle;
 import com.github.passerr.idea.plugins.naming.NamingUtil;
 import com.github.passerr.idea.plugins.spring.web.Json5Generator;

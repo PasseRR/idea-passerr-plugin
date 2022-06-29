@@ -1,7 +1,7 @@
 package com.github.passerr.idea.plugins.database.generator.action;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
-import com.github.passerr.idea.plugins.database.generator.template.po.SettingPo;
+import com.github.passerr.idea.plugins.database.generator.config.po.SettingPo;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;

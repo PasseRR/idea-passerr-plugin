@@ -1,12 +1,12 @@
-package com.github.passerr.idea.plugins.database.generator.template;
+package com.github.passerr.idea.plugins.database.generator.config;
 
 import com.github.passerr.idea.plugins.base.BaseTableModel;
 import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.base.utils.GsonUtil;
-import com.github.passerr.idea.plugins.database.generator.template.po.TemplatePo;
-import com.github.passerr.idea.plugins.database.generator.template.po.TemplatesPo;
+import com.github.passerr.idea.plugins.database.generator.config.po.TemplatePo;
+import com.github.passerr.idea.plugins.database.generator.config.po.TemplatesPo;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
@@ -102,6 +102,7 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
 
                     JXTextField url = new JXTextField();
                     url.setText(value.getUrl());
+                    url.setColumns(35);
                     url.getDocument().addDocumentListener(new DocumentAdapter() {
                         @Override
                         protected void textChanged(@NotNull DocumentEvent e) {

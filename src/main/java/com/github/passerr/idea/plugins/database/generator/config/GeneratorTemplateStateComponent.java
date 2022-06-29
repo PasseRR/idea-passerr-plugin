@@ -1,6 +1,6 @@
-package com.github.passerr.idea.plugins.database.generator.template;
+package com.github.passerr.idea.plugins.database.generator.config;
 
-import com.github.passerr.idea.plugins.database.generator.template.po.TemplatesPo;
+import com.github.passerr.idea.plugins.database.generator.config.po.TemplatesPo;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;

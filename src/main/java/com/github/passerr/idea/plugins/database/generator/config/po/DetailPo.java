@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.template.po;
+package com.github.passerr.idea.plugins.database.generator.config.po;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.intellij.util.xmlb.annotations.Tag;
@@ -20,7 +20,7 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Accessors(chain = true)
 public class DetailPo {
-    boolean useServiceImpl;
+    boolean useServiceImpl = true;
     String entity = StringConstants.EMPTY;
     String mapper = StringConstants.EMPTY;
     String mapperXml = StringConstants.EMPTY;
@@ -29,13 +29,10 @@ public class DetailPo {
     String controller = StringConstants.EMPTY;
     @Tag("types")
     @XCollection(elementTypes = MappingPo.class)
-    List<MappingPo> types;
-    SettingPo settings;
+    List<MappingPo> types = MappingPo.defaultMappings();
+    SettingPo settings = new SettingPo();
 
     DetailPo() {
-        this.useServiceImpl = true;
-        this.types = MappingPo.defaultMappings();
-        this.settings = new SettingPo();
     }
 
     @Override

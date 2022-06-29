@@ -2,10 +2,10 @@ package com.github.passerr.idea.plugins.database.generator.action;
 
 import com.github.passerr.idea.plugins.base.utils.NotificationUtil;
 import com.github.passerr.idea.plugins.database.generator.action.template.Templates;
-import com.github.passerr.idea.plugins.database.generator.template.GeneratorTemplateStateComponent;
-import com.github.passerr.idea.plugins.database.generator.template.po.MappingPo;
-import com.github.passerr.idea.plugins.database.generator.template.po.TemplatePo;
-import com.github.passerr.idea.plugins.database.generator.template.po.TemplatesPo;
+import com.github.passerr.idea.plugins.database.generator.config.GeneratorTemplateStateComponent;
+import com.github.passerr.idea.plugins.database.generator.config.po.MappingPo;
+import com.github.passerr.idea.plugins.database.generator.config.po.TemplatePo;
+import com.github.passerr.idea.plugins.database.generator.config.po.TemplatesPo;
 import com.intellij.database.psi.DbTable;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;

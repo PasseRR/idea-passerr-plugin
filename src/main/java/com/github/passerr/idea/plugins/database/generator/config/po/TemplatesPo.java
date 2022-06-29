@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.template.po;
+package com.github.passerr.idea.plugins.database.generator.config.po;
 
 import com.github.passerr.idea.plugins.base.utils.GsonUtil;
 import com.intellij.util.xmlb.annotations.Tag;

@@ -1,4 +1,4 @@
-package com.github.passerr.idea.plugins.database.generator.template.po;
+package com.github.passerr.idea.plugins.database.generator.config.po;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
  * @author xiehai
  * @date 2022/06/27 17:13
  */
-interface DialogConfigUtil {
+interface SettingUtil {
     /**
      * 两个包路径合并
      * @param a a包
@@ -38,7 +38,7 @@ interface DialogConfigUtil {
      * @return 合并后的包名
      */
     static String mergePackage(String a, String b) {
-        return String.join(StringConstants.POINT, DialogConfigUtil.merge(a, b));
+        return String.join(StringConstants.POINT, SettingUtil.merge(a, b));
     }
 
     /**
@@ -49,6 +49,6 @@ interface DialogConfigUtil {
      * @return 合并后的路径
      */
     static String mergePath(String base, String a, String b) {
-        return Paths.get(base, DialogConfigUtil.merge(a, b)).toString();
+        return Paths.get(base, SettingUtil.merge(a, b)).toString();
     }
 }
