@@ -36,6 +36,10 @@ public class TemplatesPo {
 
         this.templates.add(GsonUtil.deepCopy(templatePo, TemplatePo.class));
     }
+    
+    public TemplatesPo deepCopy() {
+        return GsonUtil.deepCopy(this, TemplatesPo.class);
+    }
 
     public void from(TemplatesPo po) {
         this.templates.clear();

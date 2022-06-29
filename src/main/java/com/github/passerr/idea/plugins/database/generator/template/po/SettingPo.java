@@ -1,7 +1,12 @@
 package com.github.passerr.idea.plugins.database.generator.template.po;
 
+import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.intellij.util.xmlb.annotations.Transient;
 import lombok.Data;
+
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * 代码生成参数设置
@@ -32,7 +37,7 @@ public class SettingPo {
     /**
      * 基础包名
      */
-    String basePackage;
+    String basePackage = StringConstants.EMPTY;
     /**
      * entity包名 默认entity
      */
@@ -40,7 +45,7 @@ public class SettingPo {
     /**
      * entity类后缀 默认空
      */
-    String entitySuffix;
+    String entitySuffix = StringConstants.EMPTY;
     /**
      * mapper包名 默认mapper
      */
@@ -85,4 +90,40 @@ public class SettingPo {
      * serviceImpl的后缀
      */
     String serviceImplSuffix = "Impl";
+
+    /**
+     * 路径加上包路径后的代码目录路径
+     * @param function 需要与{{@link #basePackage}}合并的路径
+     * @return 合并后的路径
+     */
+    public String sourcePath(Function<SettingPo, String> function) {
+        return
+            DialogConfigUtil.mergePath(
+                Paths.get(this.basePath, "src", "main", "java").toString(),
+                this.basePackage,
+                function.apply(this)
+            );
+    }
+
+    /**
+     * 路径加上包路径后的资源文件路径
+     * @param function 资源目录
+     * @return 合并后的路径
+     */
+    public String resourcePath(Function<SettingPo, String> function) {
+        return
+            DialogConfigUtil.mergePath(
+                Paths.get(this.basePath, "src", "main", "resources").toString(),
+                function.apply(this),
+                StringConstants.EMPTY
+            );
+    }
+
+    public String packages(Function<SettingPo, String> function) {
+        return DialogConfigUtil.mergePackage(this.basePackage, function.apply(this));
+    }
+
+    public String getTablePrefix() {
+        return Optional.ofNullable(tablePrefix).map(String::trim).orElse(StringConstants.EMPTY);
+    }
 }

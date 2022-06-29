@@ -39,10 +39,6 @@ public class MappingPo implements Serializable {
         return Objects.hash(jdbcType, javaType);
     }
 
-    MappingPo deepCopy() {
-        return new MappingPo().setJavaType(this.javaType).setJdbcType(this.jdbcType);
-    }
-
     /**
      * 默认jdb类型支持
      * @return {@link List}

@@ -2,8 +2,9 @@ package com.github.passerr.idea.plugins.database.generator.action.template;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
-import com.github.passerr.idea.plugins.database.generator.action.DialogConfigInfo;
-import com.github.passerr.idea.plugins.database.generator.config.ConfigPo;
+import com.github.passerr.idea.plugins.database.generator.template.po.DetailPo;
+import com.github.passerr.idea.plugins.database.generator.template.po.SettingPo;
+import com.github.passerr.idea.plugins.database.generator.template.po.TemplatePo;
 import com.github.passerr.idea.plugins.naming.NamingStyle;
 import com.github.passerr.idea.plugins.naming.NamingUtil;
 import com.github.passerr.idea.plugins.spring.web.Json5Generator;
@@ -24,8 +25,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -39,24 +40,27 @@ public enum Templates {
     /**
      * 实体模版
      */
-    ENTITY(ConfigPo::getEntity, DialogConfigInfo::getEntityPackage) {
+    ENTITY(DetailPo::getEntity, SettingPo::getEntityPackage) {
         @Override
-        void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
+        void init(DbTable table, TemplateInfo templateInfo, TemplatePo templatePo, Map<String, String> types) {
             EntityInfo entity = templateInfo.getEntity();
-            entity.setPackageName(this.getPackage(configInfo));
+            entity.setPackageName(this.getPackage(templatePo));
             entity.setTableName(table.getName());
             entity.setTableComment(table.getComment());
             // 用于生成实体的表名
-            String tableName = table.getName();
-            if (!configInfo.getTablePrefix().isEmpty()
-                && tableName.startsWith(configInfo.getTablePrefix())
-                && tableName.length() > configInfo.getTablePrefix().length()) {
-                tableName = tableName.substring(configInfo.getTablePrefix().length());
+            String tableName = table.getName(), tablePrefix = templatePo.getDetail().getSettings().getTablePrefix();
+            if (StringUtils.isNotBlank(tablePrefix)
+                && tableName.startsWith(tablePrefix = tablePrefix.trim())
+                && tableName.length() > tablePrefix.length()) {
+                tableName = tableName.substring(tablePrefix.length());
             }
+
             entity.setBaseName(NamingUtil.toggle(NamingStyle.PASCAL, tableName));
             entity.setClassName(
                 entity.getBaseName() +
-                    Optional.ofNullable(configInfo.getEntitySuffix()).map(String::trim).orElse(StringConstants.EMPTY)
+                    Optional.ofNullable(templatePo.getDetail().getSettings().getEntitySuffix())
+                        .map(String::trim)
+                        .orElse(StringConstants.EMPTY)
             );
             entity.setKebabName(NamingUtil.toggle(NamingStyle.LOWER_KEBAB, entity.getClassName()));
 
@@ -87,15 +91,18 @@ public enum Templates {
             return String.format("%s.java", templateInfo.getEntity().getClassName());
         }
     },
-    MAPPER(ConfigPo::getMapper, DialogConfigInfo::getMapperPackage) {
+    MAPPER(DetailPo::getMapper, SettingPo::getMapperPackage) {
         @Override
-        void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
+        void init(DbTable table, TemplateInfo templateInfo, TemplatePo templatePo, Map<String, String> types) {
             MapperInfo mapper = templateInfo.getMapper();
-            mapper.setPackageName(this.getPackage(configInfo));
+            mapper.setPackageName(this.getPackage(templatePo));
             mapper.setImports(TemplateUtil.imports(templateInfo.getEntity().getFullClassName()));
             mapper.setClassName(
                 templateInfo.getEntity().getBaseName() +
-                    Optional.ofNullable(configInfo.getMapperSuffix()).map(String::trim).orElse(StringConstants.EMPTY)
+                    Optional.ofNullable(templatePo.getDetail().getSettings())
+                        .map(SettingPo::getMapperSuffix)
+                        .map(String::trim)
+                        .orElse(StringConstants.EMPTY)
             );
         }
 
@@ -104,28 +111,30 @@ public enum Templates {
             return String.format("%s.java", templateInfo.getMapper().getClassName());
         }
     },
-    MAPPER_XML(ConfigPo::getMapperXml, DialogConfigInfo::getMapperXmlPath, (a, b) -> b.isNeedMapperXml()) {
+    MAPPER_XML(DetailPo::getMapperXml, SettingPo::getMapperXmlPath, a -> a.getSettings().isNeedMapperXml()) {
         @Override
-        void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
+        void init(DbTable table, TemplateInfo templateInfo, TemplatePo templatePo, Map<String, String> types) {
             // 不作处理
         }
 
         @Override
-        String getPackage(DialogConfigInfo configInfo) {
+        String getPackage(TemplatePo templatePo) {
+            SettingPo settings = templatePo.getDetail().getSettings();
             return
-                Optional.of(configInfo)
+                Optional.of(settings)
                     .filter(it -> !it.isResourcesDir())
                     .map(it -> it.packages(this.packageFunction))
-                    .orElseGet(configInfo::getMapperXmlPath);
+                    .orElseGet(settings::getMapperXmlPath);
         }
 
         @Override
-        String getPath(DialogConfigInfo configInfo) {
+        String getPath(TemplatePo templatePo) {
+            SettingPo settings = templatePo.getDetail().getSettings();
             return
-                Optional.of(configInfo)
+                Optional.of(settings)
                     .filter(it -> !it.isResourcesDir())
                     .map(it -> it.sourcePath(this.packageFunction))
-                    .orElseGet(() -> configInfo.resourcePath(this.packageFunction));
+                    .orElseGet(() -> settings.resourcePath(this.packageFunction));
         }
 
         @Override
@@ -133,14 +142,17 @@ public enum Templates {
             return String.format("%s.xml", templateInfo.getMapper().getClassName());
         }
     },
-    SERVICE(ConfigPo::getService, DialogConfigInfo::getServicePackage) {
+    SERVICE(DetailPo::getService, SettingPo::getServicePackage) {
         @Override
-        void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
+        void init(DbTable table, TemplateInfo templateInfo, TemplatePo templatePo, Map<String, String> types) {
             ServiceInfo service = templateInfo.getService();
-            service.setPackageName(this.getPackage(configInfo));
+            service.setPackageName(this.getPackage(templatePo));
             service.setClassName(
                 templateInfo.getEntity().getBaseName() +
-                    Optional.ofNullable(configInfo.getServiceSuffix()).map(String::trim).orElse(StringConstants.EMPTY)
+                    Optional.ofNullable(templatePo.getDetail().getSettings())
+                        .map(SettingPo::getServiceSuffix)
+                        .map(String::trim)
+                        .orElse(StringConstants.EMPTY)
             );
             service.setImports(
                 TemplateUtil.imports(
@@ -157,14 +169,15 @@ public enum Templates {
             return String.format("%s.java", templateInfo.getService().getClassName());
         }
     },
-    SERVICE_IMPL(ConfigPo::getServiceImpl, DialogConfigInfo::getServiceImplPackage, (a, b) -> a.isUseServiceImpl()) {
+    SERVICE_IMPL(DetailPo::getServiceImpl, SettingPo::getServiceImplPackage, DetailPo::isUseServiceImpl) {
         @Override
-        void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
+        void init(DbTable table, TemplateInfo templateInfo, TemplatePo templatePo, Map<String, String> types) {
             ServiceImplInfo serviceImpl = templateInfo.getServiceImpl();
-            serviceImpl.setPackageName(this.getPackage(configInfo));
+            serviceImpl.setPackageName(this.getPackage(templatePo));
             serviceImpl.setClassName(
                 templateInfo.getService().getClassName() +
-                    Optional.ofNullable(configInfo.getServiceImplSuffix())
+                    Optional.ofNullable(templatePo.getDetail().getSettings())
+                        .map(SettingPo::getServiceImplSuffix)
                         .map(String::trim)
                         .orElse(StringConstants.EMPTY)
             );
@@ -184,14 +197,15 @@ public enum Templates {
             return String.format("%s.java", templateInfo.getServiceImpl().getClassName());
         }
     },
-    CONTROLLER(ConfigPo::getController, DialogConfigInfo::getControllerPackage) {
+    CONTROLLER(DetailPo::getController, SettingPo::getControllerPackage) {
         @Override
-        void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo, Map<String, String> types) {
+        void init(DbTable table, TemplateInfo templateInfo, TemplatePo templatePo, Map<String, String> types) {
             ControllerInfo controller = templateInfo.getController();
-            controller.setPackageName(this.getPackage(configInfo));
+            controller.setPackageName(this.getPackage(templatePo));
             controller.setClassName(
                 templateInfo.getEntity().getBaseName() +
-                    Optional.ofNullable(configInfo.getControllerSuffix())
+                    Optional.ofNullable(templatePo.getDetail().getSettings())
+                        .map(SettingPo::getControllerSuffix)
                         .map(String::trim)
                         .orElse(StringConstants.EMPTY)
             );
@@ -214,45 +228,45 @@ public enum Templates {
         }
     };
 
-    Function<ConfigPo, String> templateFunction;
-    Function<DialogConfigInfo, String> packageFunction;
-    BiPredicate<ConfigPo, DialogConfigInfo> validPredicate;
+    Function<DetailPo, String> templateFunction;
+    Function<SettingPo, String> packageFunction;
+    Predicate<DetailPo> validPredicate;
     private static final Logger LOG = Logger.getInstance(Json5Generator.class);
 
-    Templates(Function<ConfigPo, String> templateFunction,
-              Function<DialogConfigInfo, String> packageFunction) {
-        this(templateFunction, packageFunction, (po, info) -> true);
+    Templates(Function<DetailPo, String> templateFunction,
+              Function<SettingPo, String> packageFunction) {
+        this(templateFunction, packageFunction, t -> true);
     }
 
-    abstract void init(DbTable table, TemplateInfo templateInfo, DialogConfigInfo configInfo,
+    abstract void init(DbTable table, TemplateInfo templateInfo, TemplatePo templatePo,
                        Map<String, String> types);
 
-    String getPackage(DialogConfigInfo configInfo) {
-        return configInfo.packages(this.packageFunction);
+    String getPackage(TemplatePo templatePo) {
+        return templatePo.getDetail().getSettings().packages(this.packageFunction);
     }
 
-    String getPath(DialogConfigInfo configInfo) {
-        return configInfo.sourcePath(this.packageFunction);
+    String getPath(TemplatePo templatePo) {
+        return templatePo.getDetail().getSettings().sourcePath(this.packageFunction);
     }
 
     abstract String getFileName(TemplateInfo templateInfo);
 
-    public static void generate(Map<String, Object> map, DbTable table, ConfigPo configPo,
-                                DialogConfigInfo configInfo, Map<String, String> types) {
+    public static void generate(Map<String, Object> map, DbTable table, TemplatePo templatePo,
+                                Map<String, String> types) {
         TemplateInfo templateInfo = new TemplateInfo();
         templateInfo.fill(map);
         // 模版初始化
-        Arrays.stream(Templates.values()).forEach(it -> it.init(table, templateInfo, configInfo, types));
+        Arrays.stream(Templates.values()).forEach(it -> it.init(table, templateInfo, templatePo, types));
         // 代码生成
         Arrays.stream(Templates.values())
-            .filter(it -> it.validPredicate.test(configPo, configInfo))
+            .filter(it -> it.validPredicate.test(templatePo.getDetail()))
             .forEach(it -> {
-                StringBuilder template = new StringBuilder(it.templateFunction.apply(configPo));
-                String path = it.getPath(configInfo);
+                StringBuilder template = new StringBuilder(it.templateFunction.apply(templatePo.getDetail()));
+                String path = it.getPath(templatePo);
                 String fileName = it.getFileName(templateInfo);
                 File file = Paths.get(path, fileName).toFile();
                 // 仅当允许文件覆盖或者文件不存在时写模版文件
-                if (configInfo.isOverrideFile() || !file.exists()) {
+                if (templatePo.getDetail().getSettings().isOverrideFile() || !file.exists()) {
                     FileUtilRt.createParentDirs(file);
                     if (!file.exists()) {
                         FileUtilRt.createIfNotExists(file);
