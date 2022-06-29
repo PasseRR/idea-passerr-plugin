@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<idea-plugin require-restart="false">
+<idea-plugin require-restart="false" url="https://gitee.com/PasseRR/idea-passerr-plugin">
     <id>com.github.passerr.idea.plugins</id>
     <name>PasseRR Idea Tools</name>
-    <vendor email="xie__hai@sina.com" url="https://gitee.com/PasseRR/idea-passerr-plugin">
+    <vendor email="xie__hai@sina.com" url="https://www.xiehai.zone">
         PasseRR
     </vendor>
 
@@ -90,7 +90,7 @@
       ]]>
     </change-notes>
 
-    <idea-version since-build="193"/>
+    <idea-version since-build="202"/>
 
     <depends config-file="java.xml">com.intellij.modules.java</depends>
     <depends config-file="database.xml">com.intellij.database</depends>

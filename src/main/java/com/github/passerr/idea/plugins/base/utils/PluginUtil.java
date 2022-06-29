@@ -20,4 +20,12 @@ public interface PluginUtil {
     static String version() {
         return PLUGIN_DESCRIPTOR.getVersion();
     }
+
+    /**
+     * 获得当前插件url
+     * @return url地址
+     */
+    static String url() {
+        return PLUGIN_DESCRIPTOR.getUrl();
+    }
 }

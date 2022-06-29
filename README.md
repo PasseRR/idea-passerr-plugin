@@ -12,10 +12,10 @@
 ## 1. 命名切换
 
 在camelCase, PascalCase, SNAKE_CASE, snake_case, KEBAB-CASE, kebab-case之间 默认快捷键`Alt + Shift + U`  
-![命名](./images/naming/naming.gif)
+![命名](./docs/images/naming/naming.gif)
 
 命名设置
-![命名设置](./images/naming/naming_settings.gif)
+![命名设置](./docs/images/naming/naming_settings.gif)
 
 
 ## 2. 格式化窗口
@@ -26,17 +26,17 @@
 转换在输入文本域中快捷键为`Ctrl + Enter`
 
 ### 2.1 Json格式化  
-  ![Json](./images/tool/json.gif)
+  ![Json](./docs/images/tool/json.gif)
 
 ### 2.2 Mybatis日志格式化  
-  ![Mybatis](./images/mybatis/log.gif)
+  ![Mybatis](./docs/images/mybatis/log.gif)
 
 ### 2.3 编码解码/加密解密
-  ![Encode](./images/tool/encode.gif)
+  ![Encode](./docs/images/tool/encode.gif)
 
 ## 3.Console栏直接复制mybatis日志为可执行的sql
 
-![log](./images/mybatis/log_copy.gif)
+![log](./docs/images/mybatis/log_copy.gif)
 
 注：复制的mybatis日志必须包含`Preparing:`及`Parameters:`
 
@@ -45,11 +45,11 @@
 所有复制菜单需要在方法名上，具体参考示例
 
 ### 4.1 复制rest路径
-![Json](./images/spring/path.gif)
+![Json](./docs/images/spring/path.gif)
 ### 4.2 复制返回类型为json5数据格式
-![Json](./images/spring/return_type.gif)
+![Json](./docs/images/spring/return_type.gif)
 ### 4.3 复制rest接口文档
-![Json](./images/spring/rest_doc.gif)
+![Json](./docs/images/spring/rest_doc.gif)
 ### 4.4 接口文档配置
 api文档模版基于`velocity`具体自行官网，默认为markdown的模版
-![Json](./images/spring/rest_setting.gif)
+![Json](./docs/images/spring/rest_setting.gif)

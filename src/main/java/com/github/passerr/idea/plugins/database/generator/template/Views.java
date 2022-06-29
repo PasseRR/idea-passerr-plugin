@@ -5,6 +5,7 @@ import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.base.utils.DesktopUtil;
+import com.github.passerr.idea.plugins.base.utils.PluginUtil;
 import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
 import com.github.passerr.idea.plugins.database.generator.template.po.DetailPo;
 import com.github.passerr.idea.plugins.database.generator.template.po.MappingPo;
@@ -92,8 +93,9 @@ class Views {
         JButton button = new JButton("", AllIcons.Actions.Help);
         button.setPreferredSize(JBUI.size(30, 30));
         button.setToolTipText("配置帮助文档");
-        // TODO 修改文档地址
-        button.addActionListener(e -> DesktopUtil.browser("https://www.baidu.com"));
+        button.addActionListener(e ->
+            DesktopUtil.browser(String.format("%s/tree/%s/docs/generator.md", PluginUtil.url(), PluginUtil.version()))
+        );
         tabbedPanel.setTabComponentAt(last, button);
         tabbedPanel.setEnabledAt(last, false);
         panel.add(
