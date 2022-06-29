@@ -4,8 +4,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -28,7 +26,6 @@ class TemplateInfo {
      * @param map 声明的参数map
      */
     void fill(Map<String, Object> map) {
-        map.put("date", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         Arrays.stream(TemplateInfo.class.getDeclaredFields())
             .forEach(it -> {
                 try {

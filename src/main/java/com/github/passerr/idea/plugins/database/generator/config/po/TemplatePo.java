@@ -22,7 +22,7 @@ public class TemplatePo {
     static TemplatePo serviceTemplate() {
         TemplatePo po = new TemplatePo();
         po.setName("Mybatis Plus Service");
-        po.setUrl(PluginUtil.gitTagUrl(DetailUtil.fullPath(SERVICE_TEMPLATE)));
+        po.setUrl(PluginUtil.gitRawUrl(DetailUtil.fullPath(SERVICE_TEMPLATE)));
         po.setDetail(DetailUtil.fromLocal(SERVICE_TEMPLATE));
         return po;
     }
@@ -30,7 +30,7 @@ public class TemplatePo {
     static TemplatePo serviceImplTemplate() {
         TemplatePo po = new TemplatePo();
         po.setName("Mybatis Plus Service With Impl");
-        po.setUrl(PluginUtil.gitTagUrl(DetailUtil.fullPath(SERVICE_IMPL_TEMPLATE)));
+        po.setUrl(PluginUtil.gitRawUrl(DetailUtil.fullPath(SERVICE_IMPL_TEMPLATE)));
         po.setDetail(DetailUtil.fromLocal(SERVICE_IMPL_TEMPLATE));
         return po;
     }

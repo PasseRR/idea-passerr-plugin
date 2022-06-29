@@ -94,7 +94,7 @@ class Views {
         JButton button = new JButton("", AllIcons.Actions.Help);
         button.setPreferredSize(JBUI.size(30, 30));
         button.setToolTipText("配置帮助文档");
-        button.addActionListener(e -> DesktopUtil.browser(PluginUtil.gitTagUrl("docs/generator.md")));
+        button.addActionListener(e -> DesktopUtil.browser(PluginUtil.gitBlobUrl("docs/generator.md")));
         tabbedPanel.setTabComponentAt(last, button);
         tabbedPanel.setEnabledAt(last, false);
         panel.add(

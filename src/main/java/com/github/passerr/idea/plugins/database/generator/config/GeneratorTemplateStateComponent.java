@@ -16,8 +16,8 @@ import java.util.ArrayList;
  * @date 2022/06/23 10:28
  */
 @State(
-    name = "com.github.passerr.idea.plugins.database.generator.template.po.GeneratorTemplateStateComponent",
-    storages = @Storage("com.github.passerr.idea.plugins.database.generator.template.po.GeneratorTemplateStateComponent.xml")
+    name = "com.github.passerr.idea.plugins.database.generator.config.GeneratorTemplateStateComponent",
+    storages = @Storage("com.github.passerr.idea.plugins.database.generator.config.GeneratorTemplateStateComponent.xml")
 )
 public class GeneratorTemplateStateComponent implements PersistentStateComponent<TemplatesPo> {
     private final TemplatesPo po = TemplatesPo.defaultTemplates();

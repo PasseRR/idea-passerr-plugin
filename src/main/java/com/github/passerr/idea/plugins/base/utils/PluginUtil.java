@@ -30,11 +30,20 @@ public interface PluginUtil {
     }
 
     /**
-     * 获得git分支指定路径
-     * @param path 路径
-     * @return 全路径
+     * git blob路径
+     * @param path 文件路径
+     * @return blob全路径
      */
-    static String gitTagUrl(String path) {
-        return String.format("%s/tree/%s/%s", url(), version(), path);
+    static String gitBlobUrl(String path) {
+        return String.format("%s/tree/%s/%s", PluginUtil.url(), PluginUtil.version(), path);
+    }
+
+    /**
+     * git raw路径
+     * @param path 文件路径
+     * @return raw全路径
+     */
+    static String gitRawUrl(String path) {
+        return String.format("%s/raw/%s/%s", PluginUtil.url(), PluginUtil.version(), path);
     }
 }
