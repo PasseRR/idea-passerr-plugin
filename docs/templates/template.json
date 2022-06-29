@@ -1,0 +1,18 @@
+{
+  "useServiceImpl": false,
+  "entity": "../../src/main/resources/generator/entity.vm",
+  "mapper": "../../src/main/resources/generator/mapper.vm",
+  "mapperXml": "../../src/main/resources/generator/mapper-xml.vm",
+  "service": "../../src/main/resources/generator/service/service.vm",
+  "controller": "../../src/main/resources/generator/controller.vm",
+  "types": [
+    {
+      "jdbcType": "BIT",
+      "javaType": "int"
+    },
+    {
+      "jdbcType": "BOOLEAN",
+      "javaType": "String"
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
 import com.github.passerr.idea.plugins.base.utils.GsonUtil;
+import com.github.passerr.idea.plugins.database.generator.config.po.SyncUtil;
 import com.github.passerr.idea.plugins.database.generator.config.po.TemplatePo;
 import com.github.passerr.idea.plugins.database.generator.config.po.TemplatesPo;
 import com.intellij.icons.AllIcons;
@@ -167,7 +168,7 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
                             new ToolbarDecorator.ElementActionButton("同步", AllIcons.Actions.Refresh) {
                                 @Override
                                 public void actionPerformed(@NotNull AnActionEvent e) {
-                                    // TODO 模板同步
+                                    SyncUtil.sync(copy.getTemplates().get(table.getSelectedRow()));
                                 }
 
                                 @Override

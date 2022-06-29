@@ -1,18 +1,9 @@
 package com.github.passerr.idea.plugins.database.generator.config.po;
 
 import com.github.passerr.idea.plugins.base.utils.GsonUtil;
-import com.github.passerr.idea.plugins.base.utils.NotificationUtil;
 import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -51,39 +42,16 @@ interface DetailUtil {
         return detailPo;
     }
 
+    /**
+     * 本地文件读取
+     * @param main     主文件
+     * @param supplier 路径提供器
+     * @param consumer 设置模板内容
+     */
     static void doLocal(String main, Supplier<String> supplier, Consumer<String> consumer) {
         Optional.ofNullable(supplier.get())
             .filter(StringUtils::isNotBlank)
             .map(String::trim)
             .ifPresent(it -> consumer.accept(ResourceUtil.readWithoutLr(String.format("%s/../%s", main, it))));
-    }
-
-    static DetailPo fromHttp(String url) {
-        return null;
-    }
-
-    static boolean urlContent(String contentUrl, StringBuilder sb) {
-        try {
-            URL url = new URL(contentUrl);
-            URLConnection connection = url.openConnection();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String s;
-                while (Objects.nonNull(s = reader.readLine())) {
-                    sb.append(s);
-                }
-
-                return true;
-            }
-        } catch (IOException e) {
-            NotificationUtil.notify(
-                new Notification(
-                    "generator setting",
-                    "generator config sync",
-                    "同步失败" + e.getMessage(),
-                    NotificationType.ERROR
-                )
-            );
-            return false;
-        }
     }
 }
