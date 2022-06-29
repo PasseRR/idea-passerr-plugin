@@ -11,10 +11,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.JDBCType;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * 配置同步工具
@@ -22,6 +29,14 @@ import java.util.function.Supplier;
  * @date 2022/06/29 16:47
  */
 public interface SyncUtil {
+    Set<String> JDBC_TYPES = Collections.unmodifiableSet(
+        Arrays.stream(JDBCType.values()).map(JDBCType::name).collect(Collectors.toSet())
+    );
+
+    /**
+     * 配置同步
+     * @param po {@link TemplatePo}
+     */
     static void sync(TemplatePo po) {
         StringBuilder sb = new StringBuilder();
         if (StringUtils.isBlank(po.getUrl())) {
@@ -46,6 +61,25 @@ public interface SyncUtil {
             doHttp(main, detailPo::getServiceImpl, detailPo::setServiceImpl);
         }
         doHttp(main, detailPo::getController, detailPo::setController);
+
+        // 处理类型转换
+        List<MappingPo> types = detailPo.getTypes();
+        Set<String> definedTypes = new HashSet<>();
+
+        // 移除非jdbc类型
+        types.removeIf(it -> {
+            if (!JDBC_TYPES.contains(it.getJdbcType())) {
+                return true;
+            }
+            definedTypes.add(it.getJdbcType());
+            return false;
+        });
+
+        MappingPo.defaultMappings()
+            .stream()
+            .filter(it -> !definedTypes.contains(it.getJdbcType()))
+            .forEach(types::add);
+
 
         po.setDetail(detailPo);
     }

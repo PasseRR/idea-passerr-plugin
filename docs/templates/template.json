@@ -1,7 +1,7 @@
 {
   "useServiceImpl": false,
   "entity": "../../src/main/resources/generator/entity.vm",
-  "mapper": "../../src/main/resources/generator/mapper.vm",
+  "mapper": "https://gitee.com/PasseRR/idea-passerr-plugin/raw/feature/src/main/resources/generator/mapper.vm",
   "mapperXml": "../../src/main/resources/generator/mapper-xml.vm",
   "service": "../../src/main/resources/generator/service/service.vm",
   "controller": "../../src/main/resources/generator/controller.vm",
@@ -13,6 +13,14 @@
     {
       "jdbcType": "BOOLEAN",
       "javaType": "String"
+    },
+    {
+      "jdbcType": "ARRAY",
+      "javaType": "int[]"
+    },
+    {
+      "jdbcType": "abc",
+      "javaType": "unknow"
     }
   ]
 }
