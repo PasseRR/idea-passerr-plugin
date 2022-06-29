@@ -87,7 +87,8 @@ class Views {
             VelocityUtil.velocityEditor(detail, DetailPo::getController, detail::setController)
         );
         tabbedPanel.add("类型映射", Views.typesTab(detail.getTypes()));
-        tabbedPanel.add("代码生成配置", Views.settingPanel(detail));
+        JComponent settingPanel = Views.settingPanel(detail);
+        tabbedPanel.add("代码生成配置", settingPanel);
         tabbedPanel.add("", new JPanel());
         int last = tabbedPanel.getTabCount() - 1;
         JButton button = new JButton("", AllIcons.Actions.Help);
@@ -107,10 +108,18 @@ class Views {
             )
         );
 
+        Component[] components = settingPanel.getComponents();
         Consumer<Boolean> switchEnable = selected -> {
             detail.setUseServiceImpl(selected);
             tabbedPanel.setEnabledAt(4, selected);
             tabbedPanel.getTabComponentAt(4).setEnabled(selected);
+            int c1 = components.length - 1, c2 = c1 - 1;
+            if (c1 >= 0) {
+                components[c1].setVisible(selected);
+            }
+            if (c2 >= 0) {
+                components[c2].setVisible(selected);
+            }
         };
 
         switchEnable.accept(detail.isUseServiceImpl());
@@ -210,9 +219,7 @@ class Views {
         Views.mapperXmlComp(detailPo.getSettings(), panel, row++);
         Views.serviceComp(detailPo.getSettings(), panel, row++);
         Views.controllerComp(detailPo.getSettings(), panel, row++);
-        if (detailPo.isUseServiceImpl()) {
-            Views.serviceImplComp(detailPo.getSettings(), panel, row);
-        }
+        Views.serviceImplComp(detailPo.getSettings(), panel, row);
 
         return panel;
     }
