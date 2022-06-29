@@ -4,29 +4,22 @@ import com.github.passerr.idea.plugins.base.BaseTableModel;
 import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
-import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
 import com.github.passerr.idea.plugins.base.utils.VelocityUtil;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocObjectSerialPo;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.BrowserHyperlinkListener;
 import com.intellij.ui.PanelWithButtons;
-import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.SeparatorFactory;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
 import org.jdesktop.swingx.JXTextField;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JPanel;
-import javax.swing.text.html.HTMLEditorKit;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -69,50 +62,11 @@ public abstract class ApiDocConfigViews {
     private static JPanel apiTemplatePanel(ApiDocSettingPo setting) {
         JPanel panel = new JPanel(new GridBagLayout());
 
-        JPanel templatePanel = new JPanel(new GridBagLayout());
-        templatePanel.add(
-            SeparatorFactory.createSeparator("模版:", null),
-            new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                JBUI.insetsBottom(2), 0, 0
-            )
-        );
-        templatePanel.add(
+        panel.add(
             VelocityUtil.velocityEditor(setting, ApiDocSettingPo::getTemplate, setting::setStringTemplate),
-            new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                JBUI.insetsTop(2), 0, 0
-            )
-        );
-        panel.add(
-            templatePanel,
-            new GridBagConstraints(0, 0, 1, 1, 1, 0.65, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
-                JBUI.emptyInsets(), 0, 0
-            )
-        );
-
-        // 描述模块
-        JEditorPane desc = new JEditorPane(UIUtil.HTML_MIME, "");
-        desc.setEditable(false);
-        desc.setEditorKit(new HTMLEditorKit());
-        desc.addHyperlinkListener(new BrowserHyperlinkListener());
-        desc.setText(ResourceUtil.readAsString("/api-doc/desc.html"));
-        desc.setCaretPosition(0);
-
-        JPanel descriptionPanel = new JPanel(new GridBagLayout());
-        descriptionPanel.add(
-            SeparatorFactory.createSeparator("描述:", null),
-            new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-                JBUI.insetsBottom(2), 0, 0
-            )
-        );
-        descriptionPanel.add(
-            ScrollPaneFactory.createScrollPane(desc),
-            new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                JBUI.insetsTop(2), 0, 0
-            )
-        );
-        panel.add(
-            descriptionPanel,
-            new GridBagConstraints(0, 1, 1, 1, 1, 0.35, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+            new GridBagConstraints(
+                0, 0, 1, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
                 JBUI.emptyInsets(), 0, 0
             )
         );

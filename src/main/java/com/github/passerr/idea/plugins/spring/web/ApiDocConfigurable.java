@@ -1,13 +1,18 @@
 package com.github.passerr.idea.plugins.spring.web;
 
+import com.github.passerr.idea.plugins.base.utils.DesktopUtil;
+import com.github.passerr.idea.plugins.base.utils.PluginUtil;
 import com.github.passerr.idea.plugins.spring.web.po.ApiDocSettingPo;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.components.JBTabbedPane;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import java.awt.Component;
@@ -45,6 +50,14 @@ public class ApiDocConfigurable implements SearchableConfigurable, Configurable.
         JBTabbedPane tabbedPanel = new JBTabbedPane();
         List<Pair<String, JPanel>> panels = ApiDocConfigViews.panels(this.copy);
         panels.forEach(it -> tabbedPanel.addTab(it.getFirst(), it.getSecond()));
+        tabbedPanel.addTab("", new JPanel());
+        int last = tabbedPanel.getTabCount() - 1;
+        JButton button = new JButton("", AllIcons.Actions.Help);
+        button.setPreferredSize(JBUI.size(30, 30));
+        button.setToolTipText("配置帮助文档");
+        button.addActionListener(e -> DesktopUtil.browser(PluginUtil.gitBlobUrl("docs/api-doc.md")));
+        tabbedPanel.setTabComponentAt(last, button);
+        tabbedPanel.setEnabledAt(last, false);
 
         tabbedPanel.addChangeListener(e -> {
             int selectedIndex = ((JBTabbedPane) e.getSource()).getSelectedIndex();
