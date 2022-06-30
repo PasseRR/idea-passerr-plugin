@@ -11,7 +11,7 @@ import javax.swing.JComponent;
  * @author xiehai
  * @date 2022/06/29 09:55
  */
-public class TemplateSettingDialog extends DialogWrapper {
+class TemplateSettingDialog extends DialogWrapper {
     TemplatePo copy;
 
     protected TemplateSettingDialog(TemplatePo copy) {
@@ -25,6 +25,7 @@ public class TemplateSettingDialog extends DialogWrapper {
 
     @Override
     protected @Nullable JComponent createCenterPanel() {
+        super.setSize(850, 200);
         return Views.tabsView(this.copy.getDetail());
     }
 }

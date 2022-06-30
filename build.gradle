@@ -26,7 +26,8 @@ repositories {
 
 intellij {
     updateSinceUntilBuild = false
-    version = '2020.2'
+//    version = '2020.2'
+    version = '2021.2'
     type = 'IU'
     plugins = ['java', 'DatabaseTools']
 }

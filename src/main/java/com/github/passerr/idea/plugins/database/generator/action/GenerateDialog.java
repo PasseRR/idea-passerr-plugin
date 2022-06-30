@@ -12,6 +12,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 class GenerateDialog extends DialogWrapper {
     List<DbTable> list;
+    Project project;
     Module[] modules;
     TemplatesPo templatesPo;
     DynamicCondition condition = new DynamicCondition();
@@ -56,8 +58,9 @@ class GenerateDialog extends DialogWrapper {
         super.setTitle("代码生成");
         super.setOKButtonText("确定");
         super.setCancelButtonText("取消");
-        this.modules = ModuleManager.getInstance(project).getModules();
-        condition.setModulePath(0, this.modules[0].getModuleFilePath());
+        this.project = project;
+        this.modules = ModuleManager.getInstance(this.project).getModules();
+        condition.setModulePath(this.modules[0]);
         this.templatesPo = GeneratorTemplateStateComponent.getInstance().getState().deepCopy();
         // 至少保证两条数据
         condition.setBasePackage(this.templatesPo.getTemplates().get(0).getDetail().getSettings().getBasePackage());
@@ -78,7 +81,7 @@ class GenerateDialog extends DialogWrapper {
         module.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 Module item = (Module) e.getItem();
-                this.condition.setModulePath(module.getSelectedIndex(), item.getModuleFilePath());
+                this.condition.setModulePath(item);
             }
         });
         panel.add(LabeledComponent.create(module, "模块选择", BorderLayout.WEST));
@@ -146,6 +149,8 @@ class GenerateDialog extends DialogWrapper {
                 .collect(Collectors.toMap(MappingPo::getJdbcType, MappingPo::getJavaType));
 
             this.list.forEach(it -> Templates.generate(map, it, template, types));
+            // 文件添加成功后刷新项目目录
+            ProjectUtil.guessProjectDir(this.project).refresh(false, true);
         } finally {
             NotificationUtil.notify(
                 new Notification(

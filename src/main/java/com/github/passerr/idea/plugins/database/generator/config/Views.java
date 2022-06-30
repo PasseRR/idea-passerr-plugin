@@ -17,6 +17,7 @@ import com.intellij.ui.PanelWithButtons;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.ui.JBDimension;
 import com.intellij.util.ui.JBUI;
 import org.jdesktop.swingx.JXTextField;
 import org.jetbrains.annotations.NotNull;
@@ -48,20 +49,12 @@ class Views {
      * @return {@link Component}
      */
     static JComponent tabsView(DetailPo detail) {
-        JPanel panel = new JPanel(new GridBagLayout());
+        JPanel panel = new JPanel(new BorderLayout());
         JCheckBox useServiceImpl = new JCheckBox();
         useServiceImpl.setSelected(detail.isUseServiceImpl());
-        panel.add(
-            LabeledComponent.create(useServiceImpl, "使用service实现", BorderLayout.WEST),
-            new GridBagConstraints(
-                0, 0, 1, 1, 1, 0,
-                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
-                JBUI.insetsTop(2), 0, 0
-            )
-        );
+        panel.add(LabeledComponent.create(useServiceImpl, "使用service实现", BorderLayout.WEST), BorderLayout.NORTH);
         // tab配置
         JBTabbedPane tabbedPanel = new JBTabbedPane();
-        tabbedPanel.setPreferredSize(JBUI.size(800, 350));
         tabbedPanel.addTab(
             "entity模版",
             VelocityUtil.velocityEditor(detail, DetailPo::getEntity, detail::setEntity)
@@ -97,14 +90,7 @@ class Views {
         button.addActionListener(e -> DesktopUtil.browser(PluginUtil.gitBlobUrl("docs/generator.md")));
         tabbedPanel.setTabComponentAt(last, button);
         tabbedPanel.setEnabledAt(last, false);
-        panel.add(
-            tabbedPanel,
-            new GridBagConstraints(
-                0, 1, 1, 1, 1, 1,
-                GridBagConstraints.NORTH, GridBagConstraints.BOTH,
-                JBUI.insetsTop(2), 0, 0
-            )
-        );
+        panel.add(tabbedPanel, BorderLayout.CENTER);
 
         Component[] components = settingPanel.getComponents();
         Consumer<Boolean> switchEnable = selected -> {
@@ -126,6 +112,21 @@ class Views {
             boolean selected = e.getStateChange() == ItemEvent.SELECTED;
             switchEnable.accept(selected);
         });
+
+        JBDimension size = JBUI.size(835, 200);
+        panel.setSize(size);
+        panel.setMaximumSize(size);
+        panel.setPreferredSize(size);
+        tabbedPanel.setSize(size);
+        tabbedPanel.setMaximumSize(size);
+        tabbedPanel.setPreferredSize(size);
+        Arrays.stream(tabbedPanel.getComponents()).forEach(it -> {
+            it.setSize(size);
+            it.setMaximumSize(size);
+            it.setPreferredSize(size);
+        });
+
+        panel.repaint();
 
         return panel;
     }
@@ -380,12 +381,13 @@ class Views {
             )
         );
 
-        needXml.addItemListener(e -> {
-            boolean selected = e.getStateChange() == ItemEvent.SELECTED;
+        Consumer<Boolean> switchEnable = selected -> {
             setting.setNeedMapperXml(selected);
             resourcesLabeled.setVisible(selected);
             pathLabeled.setVisible(selected);
-        });
+        };
+        switchEnable.accept(setting.isNeedMapperXml());
+        needXml.addItemListener(e -> switchEnable.accept(e.getStateChange() == ItemEvent.SELECTED));
     }
 
     static void serviceComp(SettingPo setting, JPanel panel, int row) {

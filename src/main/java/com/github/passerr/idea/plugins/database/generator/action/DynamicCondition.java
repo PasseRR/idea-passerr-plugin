@@ -1,13 +1,11 @@
 package com.github.passerr.idea.plugins.database.generator.action;
 
-import com.github.passerr.idea.plugins.base.constants.StringConstants;
 import com.github.passerr.idea.plugins.database.generator.config.po.SettingPo;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.io.IOException;
-import java.nio.file.Paths;
 
 /**
  * 动态配置部分
@@ -45,15 +43,11 @@ class DynamicCondition {
         settingPo.setOverrideFile(this.overrideFile);
     }
 
-    void setModulePath(int index, String basePath) {
-        String prefix = "../";
-        if (index == 0) {
-            prefix += prefix;
+    void setModulePath(Module module) {
+        String path = ModuleUtil.getModuleDirPath(module);
+        if (path.endsWith(".idea")) {
+            path = path.substring(0, path.length() - 4);
         }
-        try {
-            this.basePath = Paths.get(basePath, prefix).toRealPath().toString();
-        } catch (IOException ignore) {
-            this.basePath = StringConstants.EMPTY;
-        }
+        this.basePath = path;
     }
 }
