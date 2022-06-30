@@ -130,7 +130,7 @@ class GenerateDialog extends DialogWrapper {
     protected void doOKAction() {
         try {
             TemplatePo template = this.templatesPo.getTemplates().get(this.condition.getIndex());
-            this.condition.transerTo(template.getDetail().getSettings());
+            this.condition.transferTo(template.getDetail().getSettings());
             // 模版参数
             Map<String, Object> map = new HashMap<>(8);
             map.put(
@@ -149,9 +149,9 @@ class GenerateDialog extends DialogWrapper {
         } finally {
             NotificationUtil.notify(
                 new Notification(
-                    "code generate",
-                    "code generate",
-                    "code generate success!",
+                    "代码生成",
+                    "代码生成",
+                    "代码生成成功",
                     NotificationType.INFORMATION
                 )
             );

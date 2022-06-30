@@ -112,9 +112,9 @@ public class ExportSettingDialog extends DialogWrapper {
                 );
             } finally {
                 Notification notification = new Notification(
-                    "database document export",
-                    "database document export",
-                    "database document export success!",
+                    "数据库导出",
+                    "数据库导出",
+                    "数据库导出doc成功",
                     NotificationType.INFORMATION
                 );
                 notification.addAction(new NotificationAction("view") {

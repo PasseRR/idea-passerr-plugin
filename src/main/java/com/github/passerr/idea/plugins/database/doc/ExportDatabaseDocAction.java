@@ -5,8 +5,8 @@ import com.intellij.database.psi.DbElement;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.pom.Navigatable;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class ExportDatabaseDocAction extends AnAction {
 
     @Override
     public void update(@NotNull AnActionEvent e) {
-        boolean enable = Optional.ofNullable(e.getData(PlatformDataKeys.NAVIGATABLE_ARRAY))
+        boolean enable = Optional.ofNullable(e.getData(LangDataKeys.PSI_ELEMENT_ARRAY))
             .map(Arrays::stream)
             .map(s ->
                 s.anyMatch(it ->
@@ -40,7 +40,7 @@ public class ExportDatabaseDocAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        Navigatable[] data = e.getData(PlatformDataKeys.NAVIGATABLE_ARRAY);
+        PsiElement[] data = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
         if (Objects.isNull(data)) {
             return;
         }

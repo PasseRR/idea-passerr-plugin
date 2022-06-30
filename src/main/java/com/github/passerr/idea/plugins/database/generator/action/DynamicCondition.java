@@ -38,7 +38,7 @@ class DynamicCondition {
      */
     int index;
 
-    void transerTo(SettingPo settingPo) {
+    void transferTo(SettingPo settingPo) {
         settingPo.setBasePackage(this.basePackage);
         settingPo.setBasePath(this.basePath);
         settingPo.setTablePrefix(this.tablePrefix);

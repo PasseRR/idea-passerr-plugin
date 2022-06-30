@@ -61,7 +61,7 @@ class Views {
         );
         // tab配置
         JBTabbedPane tabbedPanel = new JBTabbedPane();
-        tabbedPanel.setPreferredSize(JBUI.size(700, 350));
+        tabbedPanel.setPreferredSize(JBUI.size(800, 350));
         tabbedPanel.addTab(
             "entity模版",
             VelocityUtil.velocityEditor(detail, DetailPo::getEntity, detail::setEntity)

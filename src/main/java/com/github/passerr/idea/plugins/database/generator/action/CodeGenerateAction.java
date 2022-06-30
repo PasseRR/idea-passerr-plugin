@@ -3,9 +3,9 @@ package com.github.passerr.idea.plugins.database.generator.action;
 import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.pom.Navigatable;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class CodeGenerateAction extends AnAction {
             return;
         }
 
-        Navigatable[] data = e.getData(PlatformDataKeys.NAVIGATABLE_ARRAY);
+        PsiElement[] data = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
         if (Objects.isNull(data)) {
             return;
         }
@@ -43,7 +43,7 @@ public class CodeGenerateAction extends AnAction {
     @Override
     public void update(@NotNull AnActionEvent e) {
         e.getPresentation().setVisible(
-            Optional.ofNullable(e.getData(PlatformDataKeys.NAVIGATABLE_ARRAY))
+            Optional.ofNullable(e.getData(LangDataKeys.PSI_ELEMENT_ARRAY))
                 .map(Arrays::stream)
                 .map(s -> s.anyMatch(it -> it instanceof DbTable))
                 .orElse(false)

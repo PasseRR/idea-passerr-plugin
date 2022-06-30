@@ -3,19 +3,17 @@
         <!-- 数据库设计文档导出 -->
         <action id="com.github.passerr.idea.plugins.database.doc.ExportDatabaseDocAction"
                 class="com.github.passerr.idea.plugins.database.doc.ExportDatabaseDocAction"
-                text="Export Database As Doc"
-                description="Export Database Document As Doc">
-            <add-to-group group-id="DatabaseViewPopupMenu" anchor="before"
-                          relative-to-action="Console.TableResult.ShowDumpDialogAction"/>
+                text="Export Schema As Doc"
+                description="Export Schema As Doc">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
         </action>
 
         <!-- 代码生成 -->
         <action id="com.github.passerr.idea.plugins.database.generator.action.CodeGenerateAction"
                 class="com.github.passerr.idea.plugins.database.generator.action.CodeGenerateAction"
-                text="Mybatis(Plus) Code Generate"
-                description="Mybatis/Plus Code Generate">
-            <add-to-group group-id="DatabaseViewPopupMenu" anchor="before"
-                          relative-to-action="Console.TableResult.ShowDumpDialogAction"/>
+                text="Code Generator"
+                description="Code Generator">
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
         </action>
     </actions>
 

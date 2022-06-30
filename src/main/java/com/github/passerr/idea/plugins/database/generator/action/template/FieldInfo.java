@@ -4,7 +4,7 @@ import com.github.passerr.idea.plugins.naming.NamingStyle;
 import com.github.passerr.idea.plugins.naming.NamingUtil;
 import com.intellij.database.model.DasColumn;
 import com.intellij.database.util.DasUtil;
-import javafx.util.Pair;
+import com.intellij.openapi.util.Pair;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -57,10 +57,10 @@ public class FieldInfo extends ClassInfo {
                 .setJdbcType(TemplateUtil.convertToJdbcType(column.getDataType().typeName, databaseType).name());
 
         Pair<String, String> pair = TemplateUtil.parseClass(types.get(fieldInfo.getJdbcType()));
-        if (!pair.getKey().startsWith("java.lang")) {
-            fieldInfo.setPackageName(pair.getKey());
+        if (!pair.getFirst().startsWith("java.lang")) {
+            fieldInfo.setPackageName(pair.getFirst());
         }
-        fieldInfo.setClassName(pair.getValue());
+        fieldInfo.setClassName(pair.getSecond());
         fieldInfo.setFieldName(NamingUtil.toggle(NamingStyle.CAMEL, column.getName()));
 
         return fieldInfo;

@@ -1,7 +1,7 @@
 package com.github.passerr.idea.plugins.database.generator.action.template;
 
 import com.github.passerr.idea.plugins.base.constants.StringConstants;
-import javafx.util.Pair;
+import com.intellij.openapi.util.Pair;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
