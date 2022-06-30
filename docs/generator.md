@@ -135,7 +135,7 @@ jdbc类型(参考`java.sql.JDBCType`)与java类型映射关系，默认映射列
 ## 模板同步
 选中一条模板记录，模板同步存在主配置文件以及代码模板文件，[主配置文件](templates/template.json)全配置如下：
 
-```json
+```js
 {
   // 是否使用service实现
   "useServiceImpl": true,
