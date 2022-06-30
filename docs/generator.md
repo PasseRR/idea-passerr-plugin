@@ -19,7 +19,7 @@
 |packageName|entity所在包名|字符串|
 |className|entity类名|字符串|
 |fieldName|entity作为参数时的参数名，类名的驼峰命名|字符串|
-|imports|entity需要额外引入的非`java.lang`的包|
+|imports|entity需要额外引入的非`java.lang`的包|字符串|
 |fullClassName|entity类的全名(packageName.className)|字符串|
 |tableName|表名称|字符串|
 |tableComment|表注释|字符串|
@@ -135,7 +135,7 @@ jdbc类型(参考`java.sql.JDBCType`)与java类型映射关系，默认映射列
 ## 模板同步
 选中一条模板记录，模板同步存在主配置文件以及代码模板文件，[主配置文件](templates/template.json)全配置如下：
 
-```json5
+```json
 {
   // 是否使用service实现
   "useServiceImpl": true,
