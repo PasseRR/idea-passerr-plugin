@@ -3,7 +3,7 @@
 ## Api模板
 
 模板使用[velocity](http://velocity.apache.org/engine/devel/user-guide.html#Velocity_Template_Language_VTL:_An_Introduction)配置，关于rest接口内置的velocity参数，主要包括url、http方法、查询参数、路径参数、报文体、应答报文。
-其中，查询参数及路径参数均为List类型，具体介绍如下。
+其中，查询参数及路径参数均为数组类型，具体介绍如下。
 
 ### http方法及请求路径
 
