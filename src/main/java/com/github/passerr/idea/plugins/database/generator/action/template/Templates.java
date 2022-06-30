@@ -63,6 +63,7 @@ public enum Templates {
                         .orElse(StringConstants.EMPTY)
             );
             entity.setKebabName(NamingUtil.toggle(NamingStyle.LOWER_KEBAB, entity.getClassName()));
+            entity.setSnakeName(NamingUtil.toggle(NamingStyle.LOWER_SNAKE, entity.getClassName()));
 
             DasUtil.getColumns(table)
                 .map(it -> FieldInfo.of(table.getDataSource().getDatabaseVersion().name, it, types))

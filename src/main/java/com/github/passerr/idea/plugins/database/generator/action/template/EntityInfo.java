@@ -41,9 +41,13 @@ public class EntityInfo extends ClassInfo {
      */
     FieldInfo pk;
     /**
-     * 小写蛇形命名名称
+     * 小写串行命名
      */
     String kebabName;
+    /**
+     * 小写蛇形命名
+     */
+    String snakeName;
 
     EntityInfo() {
     }
