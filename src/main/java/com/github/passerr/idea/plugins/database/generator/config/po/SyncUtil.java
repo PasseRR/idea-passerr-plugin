@@ -80,6 +80,10 @@ public interface SyncUtil {
             .filter(it -> !definedTypes.contains(it.getJdbcType()))
             .forEach(types::add);
 
+        // 设置不覆盖作者
+        if (Objects.nonNull(detailPo.getSettings()) && Objects.nonNull(po.getDetail().getSettings())) {
+            detailPo.getSettings().setAuthor(po.getDetail().getSettings().getAuthor());
+        }
 
         po.setDetail(detailPo);
     }

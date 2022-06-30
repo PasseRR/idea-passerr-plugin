@@ -171,7 +171,11 @@ jdbc类型(参考`java.sql.JDBCType`)与java类型映射关系，默认映射列
       "jdbcType": "abc",
       "javaType": "unknow"
     }
-  ]
+  ],
+  // 参考 SettingsPo属性设置
+  "settings": {
+      "needMapperXml": false
+  }
 }
 ```
 
