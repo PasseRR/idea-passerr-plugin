@@ -55,6 +55,7 @@ public enum Templates {
                 tableName = tableName.substring(tablePrefix.length());
             }
 
+            // 将去前缀的表名统一转为小写
             entity.setBaseName(NamingUtil.toggle(NamingStyle.PASCAL, tableName));
             entity.setClassName(
                 entity.getBaseName() +

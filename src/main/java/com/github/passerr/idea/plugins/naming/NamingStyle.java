@@ -145,6 +145,12 @@ public enum NamingStyle {
         boolean match(String text) {
             return true;
         }
+
+        @Override
+        String pascal(String text) {
+            // 未知类型去掉所有中线及下划线
+            return text.replace(UNDER_SCORE, StringConstants.EMPTY).replace(MINUS, StringConstants.EMPTY);
+        }
     };
     /**
      * 命名描述
