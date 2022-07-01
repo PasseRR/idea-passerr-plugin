@@ -90,7 +90,7 @@
       ]]>
     </change-notes>
 
-    <idea-version since-build="202.6397"/>
+    <idea-version since-build="202.*"/>
 
     <depends config-file="java.xml" optional="true">com.intellij.modules.java</depends>
     <depends config-file="database.xml" optional="true">com.intellij.database</depends>
