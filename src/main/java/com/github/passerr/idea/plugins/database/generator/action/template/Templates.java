@@ -215,7 +215,7 @@ public enum Templates {
                 TemplateUtil.imports(
                     Arrays.asList(
                         Optional.ofNullable(templateInfo.getEntity().getPk())
-                            .map(FieldInfo::getPackageName)
+                            .map(FieldInfo::getFullClassName)
                             .orElse(StringConstants.EMPTY),
                         templateInfo.getEntity().getFullClassName(),
                         templateInfo.getService().getFullClassName()
