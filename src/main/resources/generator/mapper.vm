@@ -5,7 +5,7 @@ ${mapper.imports}
 
 /**
  * ${entity.desc}mapper
- * @author $auther
+ * @author $author
  * @date $date
  */
 public interface ${mapper.className} extends BaseMapper<${entity.className}> {
