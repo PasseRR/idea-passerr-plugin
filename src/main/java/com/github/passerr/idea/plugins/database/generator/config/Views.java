@@ -61,7 +61,7 @@ class Views {
         );
         tabbedPanel.addTab(
             "mapper模版",
-            VelocityUtil.velocityEditor(detail, DetailPo::getMapper, detail::setEntity)
+            VelocityUtil.velocityEditor(detail, DetailPo::getMapper, detail::setMapper)
         );
         tabbedPanel.addTab(
             "mapper xml模版",
