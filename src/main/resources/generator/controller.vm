@@ -30,14 +30,14 @@ public class ${controller.className} {
     
     @PostMapping
     @ApiOperation("${entity.desc}添加")
-    public Boolean add(@RequestBody ${entity.className} entity) {
-        return this.${service.fieldName}.save(entity);
+    public Boolean add(@RequestBody ${entity.className} ${entity.fieldName}) {
+        return this.${service.fieldName}.save(${entity.fieldName});
     }
 
     @PutMapping
     @ApiOperation("${entity.desc}修改")
-    public Boolean update(@RequestBody ${entity.className} entity) {
-        return this.${service.fieldName}.updateById(entity);
+    public Boolean update(@RequestBody ${entity.className} ${entity.fieldName}) {
+        return this.${service.fieldName}.updateById(${entity.fieldName});
     }
 
     @DeleteMapping("/{${entity.pk.fieldName}}")
