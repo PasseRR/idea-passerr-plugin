@@ -74,7 +74,7 @@ public class TextFormatView extends JRootPane {
      */
     private void doInitInputTextArea() {
         this.inputTextArea.getInputMap(WHEN_FOCUSED)
-            .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK), "format");
+            .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), "format");
         this.inputTextArea.getActionMap()
             .put(
                 "format",

@@ -61,7 +61,7 @@ enum ConvertType {
                     input.setToolTipSupplier((RTextArea rt, MouseEvent me) -> {
                         int offset = 0;
                         try {
-                            offset = input.getLineOfOffset(input.viewToModel(me.getPoint()));
+                            offset = input.getLineOfOffset(input.viewToModel2D(me.getPoint()));
                         } catch (BadLocationException ignore) {
                         }
                         return offset == lineIndex ? msg : null;
@@ -91,7 +91,7 @@ enum ConvertType {
                 input.setToolTipSupplier((RTextArea rt, MouseEvent me) -> {
                     int offset = 0;
                     try {
-                        offset = input.getLineOfOffset(input.viewToModel(me.getPoint()));
+                        offset = input.getLineOfOffset(input.viewToModel2D(me.getPoint()));
                     } catch (BadLocationException ignore) {
                     }
                     return offset == 0 ? "the log you input which without \"Preparing:\" or \"Parameters:\"" : null;

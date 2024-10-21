@@ -159,7 +159,7 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
                                 public ShortcutSet getShortcut() {
                                     return
                                         new CustomShortcutSet(
-                                            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_MASK)
+                                            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK)
                                         );
                                 }
                             }
