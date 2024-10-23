@@ -30,13 +30,16 @@ interface Tips {
             return;
         }
 
+        PresentationData presentation = node.getPresentation();
         VirtualFile info = file.findChild("package-info.java");
         if (Objects.isNull(info)) {
+            presentation.setLocationString("");
             return;
         }
 
         PsiFile psifile = PsiManager.getInstance(project).findFile(info);
         if (!(psifile instanceof PsiJavaFile)) {
+            presentation.setLocationString("");
             return;
         }
 
@@ -52,9 +55,6 @@ interface Tips {
                     .map(PsiDocToken.class::cast)
                     .findFirst()
             )
-            .ifPresent(it -> {
-                PresentationData presentation = node.getPresentation();
-                presentation.setLocationString(it.getText());
-            });
+            .ifPresent(it -> presentation.setLocationString(it.getText()));
     }
 }
