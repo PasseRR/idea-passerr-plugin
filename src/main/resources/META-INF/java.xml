@@ -27,5 +27,8 @@
         <applicationService serviceImplementation="com.github.passerr.idea.plugins.spring.web.ApiDocStateComponent"/>
         <!-- api配置ui -->
         <applicationConfigurable instance="com.github.passerr.idea.plugins.spring.web.ApiDocConfigurable"/>
+        <!-- 树视图 -->
+        <projectViewNodeDecorator implementation="com.github.passerr.idea.plugins.tip.PackageTipNodeDecorator"/>
+        <treeStructureProvider implementation="com.github.passerr.idea.plugins.tip.PackageTipTreeStructureProvider"/>
     </extensions>
 </idea-plugin>

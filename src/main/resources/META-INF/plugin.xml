@@ -17,6 +17,7 @@
         <li>Copy java method return type as <a href="https://json5.org/">json5</a></li>
         <li>export database tables as doc document</li>
         <li>mybatis&spring code generator</li>
+        <li>use doc comment in package-info.java as package location tip</li>
       </ul>
       <p>CN
       <ul>
@@ -28,11 +29,16 @@
         <li>复制java方法返回类型为json5</li>
         <li>导出数据库表为word文档</li>
         <li>mybatis代码生成器</li>
+        <li>使用package-info.java中的文档注释内容作为包名提示信息</li>
       </ul>
       ]]></description>
 
     <change-notes>
         <![CDATA[
+        <p>3.0.3:
+        <ul>
+            <li>use doc comment in package-info.java as package location tip.</li>
+        </ul>
         <p>3.0.1:
         <ul>
             <li>fix database table/column upper and lower mixed naming bug</li>
@@ -54,7 +60,7 @@
             <li>compatibility settings handle</li>
           </ul>
         <p>2.0.1:
-          <ul> 
+          <ul>
             <li>version2.0.0 bug fix</li>
           </ul>
          <p>2.0.0:
