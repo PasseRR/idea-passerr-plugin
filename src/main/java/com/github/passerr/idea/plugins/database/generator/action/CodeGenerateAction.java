@@ -1,9 +1,9 @@
 package com.github.passerr.idea.plugins.database.generator.action;
 
 import com.intellij.database.psi.DbTable;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @author xiehai
  * @date 2022/06/24 13:49
  */
-public class CodeGenerateAction extends AnAction {
+public class CodeGenerateAction extends DumbAwareAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         Project project = e.getProject();

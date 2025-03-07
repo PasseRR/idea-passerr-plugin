@@ -1,10 +1,9 @@
 package com.github.passerr.idea.plugins.spring.web;
 
 import com.intellij.codeInsight.AnnotationUtil;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
@@ -20,7 +19,7 @@ import java.util.Optional;
  * @date 2021/06/30 18:57
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
-abstract class BaseWebCopyAction extends AnAction {
+abstract class BaseWebCopyAction extends DumbAwareAction {
     protected static final String REQUEST_MAPPING = "org.springframework.web.bind.annotation.RequestMapping";
     protected static final Map<String, String> MAPPINGS = new HashMap<>();
 
@@ -37,23 +36,18 @@ abstract class BaseWebCopyAction extends AnAction {
 
     @Override
     public void update(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        PsiElement data = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
-        if (data instanceof PsiMethod) {
-            e.getPresentation()
-                .setEnabled(
-                    AnnotationUtil.findAnnotations((PsiModifierListOwner) data, MAPPINGS.keySet()).length > 0
-                );
-        } else {
-            // 方法上未找到注解
-            e.getPresentation().setEnabled(false);
-        }
+        PsiElement data = e.getData(CommonDataKeys.PSI_ELEMENT);
+
+        // 方法上存在注解
+        e.getPresentation().setEnabled(
+            data instanceof PsiMethod
+                && AnnotationUtil.findAnnotations((PsiModifierListOwner) data, MAPPINGS.keySet()).length > 0
+        );
     }
 
     protected static PsiMethod method(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
         // 肯定是PsiMethod
-        return (PsiMethod) CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+        return (PsiMethod) e.getData(CommonDataKeys.PSI_ELEMENT);
     }
 
     protected static PsiAnnotation classAnnotation(PsiMethod method) {

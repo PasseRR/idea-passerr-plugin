@@ -7,7 +7,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -35,19 +34,13 @@ enum ToolMenu {
     URL_DECODE("url解码", ConvertType.TEXT) {
         @Override
         void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
-            try {
-                output.setText(URLDecoder.decode(input.getText(), StandardCharsets.UTF_8.name()));
-            } catch (UnsupportedEncodingException ignore) {
-            }
+            output.setText(URLDecoder.decode(input.getText(), StandardCharsets.UTF_8));
         }
     },
     URL_ENCODE("url编码", ConvertType.TEXT) {
         @Override
         void handle(RSyntaxTextArea input, RSyntaxTextArea output) {
-            try {
-                output.setText(URLEncoder.encode(input.getText(), StandardCharsets.UTF_8.name()));
-            } catch (UnsupportedEncodingException ignore) {
-            }
+            output.setText(URLEncoder.encode(input.getText(), StandardCharsets.UTF_8));
         }
     },
     MD5_ENCRYPTION("md5加密", ConvertType.TEXT) {

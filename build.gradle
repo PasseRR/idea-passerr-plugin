@@ -1,5 +1,5 @@
 group 'com.github.passerr'
-version '3.0.3'
+version '3.0.4'
 
 buildscript {
     repositories {
@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.0"
+        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.10.0"
     }
 }
 
@@ -26,10 +26,10 @@ repositories {
 
 intellij {
     updateSinceUntilBuild = false
-//    version = '2020.2'
-    version = '2021.2'
+    version = '2024.1.1'
+    downloadSources = true
     type = 'IU'
-    plugins = ['java', 'DatabaseTools']
+    plugins = ['com.intellij.java', 'com.intellij.database']
 }
 
 tasks.withType(JavaCompile) {
@@ -40,17 +40,13 @@ compileJava {
     options.compilerArgs << '-Xlint:deprecation'
 }
 
-runIde {
-    jbrVersion = "jbr-11_0_6b765.25"
-}
-
 buildPlugin {
     buildSearchableOptions.enabled = false
 }
 
 dependencies {
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     implementation group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '2.6.1'
     // rtf导出
     implementation('com.lowagie:itext:2.1.7') {

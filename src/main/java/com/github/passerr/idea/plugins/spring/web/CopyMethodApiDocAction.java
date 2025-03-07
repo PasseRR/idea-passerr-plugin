@@ -17,7 +17,7 @@ import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.util.ui.TextTransferable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

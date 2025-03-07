@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.ui.DocumentAdapter;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.swingx.JXTextField;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

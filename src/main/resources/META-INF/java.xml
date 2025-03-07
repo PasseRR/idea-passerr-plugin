@@ -1,4 +1,5 @@
 <idea-plugin>
+    <depends>com.intellij.java</depends>
     <actions>
         <!-- 复制json5 -->
         <action id="com.github.passerr.idea.plugins.spring.web.CopyReturnTypeAction"

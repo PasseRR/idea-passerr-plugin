@@ -1,12 +1,12 @@
 <idea-plugin>
+    <depends>com.intellij.database</depends>
     <actions>
         <!-- 数据库设计文档导出 -->
         <action id="com.github.passerr.idea.plugins.database.doc.ExportDatabaseDocAction"
                 class="com.github.passerr.idea.plugins.database.doc.ExportDatabaseDocAction"
                 text="Export Schema As Doc"
                 description="Export Schema As Doc">
-            <add-to-group group-id="DatabaseViewPopupMenu" anchor="before"
-                          relative-to-action="Console.TableResult.ShowDumpDialogAction"/>
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
         </action>
 
         <!-- 代码生成 -->
@@ -14,8 +14,7 @@
                 class="com.github.passerr.idea.plugins.database.generator.action.CodeGenerateAction"
                 text="Code Generator"
                 description="Code Generator">
-            <add-to-group group-id="DatabaseViewPopupMenu" anchor="before"
-                          relative-to-action="Console.TableResult.ShowDumpDialogAction"/>
+            <add-to-group group-id="DatabaseViewPopupMenu" anchor="first"/>
         </action>
     </actions>
 

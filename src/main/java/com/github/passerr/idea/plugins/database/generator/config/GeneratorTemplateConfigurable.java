@@ -4,14 +4,13 @@ import com.github.passerr.idea.plugins.base.BaseTableModel;
 import com.github.passerr.idea.plugins.base.IdeaDialog;
 import com.github.passerr.idea.plugins.base.IdeaJbTable;
 import com.github.passerr.idea.plugins.base.IdeaPanelWithButtons;
+import com.github.passerr.idea.plugins.base.utils.DumbAwareActionUtils;
 import com.github.passerr.idea.plugins.base.utils.GsonUtil;
 import com.github.passerr.idea.plugins.database.generator.config.po.SyncUtil;
 import com.github.passerr.idea.plugins.database.generator.config.po.TemplatePo;
 import com.github.passerr.idea.plugins.database.generator.config.po.TemplatesPo;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import com.intellij.openapi.actionSystem.ShortcutSet;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.ui.LabeledComponent;
@@ -76,7 +75,7 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
             @Override
             protected JComponent createMainComponent() {
                 BaseTableModel<TemplatePo> model =
-                    new BaseTableModel<TemplatePo>(Arrays.asList("模版名称", "同步URL"), templates) {
+                    new BaseTableModel<>(Arrays.asList("模版名称", "同步URL"), templates) {
                         @Override
                         protected List<Function<TemplatePo, Object>> columns() {
                             return Arrays.asList(TemplatePo::getName, TemplatePo::getUrl);
@@ -149,33 +148,25 @@ public class GeneratorTemplateConfigurable implements SearchableConfigurable, Co
                         .setRemoveAction(it -> model.removeRow(table.getSelectedRow()))
                         .setRemoveActionName("删除")
                         .addExtraAction(
-                            new ToolbarDecorator.ElementActionButton("模板设置", AllIcons.General.Settings) {
-                                @Override
-                                public void actionPerformed(@NotNull AnActionEvent e) {
-                                    new TemplateSettingDialog(copy.getTemplates().get(table.getSelectedRow())).show();
-                                }
-
-                                @Override
-                                public ShortcutSet getShortcut() {
-                                    return
-                                        new CustomShortcutSet(
-                                            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK)
-                                        );
-                                }
-                            }
+                            DumbAwareActionUtils.builder(
+                                    "模板设置",
+                                    AllIcons.General.Settings,
+                                    e -> new TemplateSettingDialog(copy.getTemplates().get(table.getSelectedRow())).show()
+                                )
+                                .build(
+                                    new CustomShortcutSet(
+                                        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK)
+                                    ),
+                                    this
+                                )
                         )
                         .addExtraActions(
-                            new ToolbarDecorator.ElementActionButton("同步", AllIcons.Actions.Refresh) {
-                                @Override
-                                public void actionPerformed(@NotNull AnActionEvent e) {
-                                    SyncUtil.sync(copy.getTemplates().get(table.getSelectedRow()));
-                                }
-
-                                @Override
-                                public ShortcutSet getShortcut() {
-                                    return new CustomShortcutSet(KeyEvent.VK_F5);
-                                }
-                            }
+                            DumbAwareActionUtils.builder(
+                                    "同步",
+                                    AllIcons.Actions.Refresh,
+                                    e -> SyncUtil.sync(copy.getTemplates().get(table.getSelectedRow()))
+                                )
+                                .build(new CustomShortcutSet(KeyEvent.VK_F5), this)
                         )
                         .setMoveUpAction(it -> {
                             int index = table.getSelectedRow(), next = index - 1;

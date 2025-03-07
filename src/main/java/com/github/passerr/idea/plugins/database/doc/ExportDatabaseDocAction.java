@@ -3,9 +3,9 @@ package com.github.passerr.idea.plugins.database.doc;
 import com.intellij.database.model.DasObject;
 import com.intellij.database.psi.DbElement;
 import com.intellij.database.util.DasUtil;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author xiehai
  * @date 2022/06/16 16:57
  */
-public class ExportDatabaseDocAction extends AnAction {
+public class ExportDatabaseDocAction extends DumbAwareAction {
     private static final String SCHEMA = "schema";
 
     @Override

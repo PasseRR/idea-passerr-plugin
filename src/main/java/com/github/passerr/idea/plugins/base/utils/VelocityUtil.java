@@ -47,7 +47,7 @@ public interface VelocityUtil {
      * @param map      变量
      * @return 替换后文本
      */
-    static String format(StringBuilder template, Map<?, ?> map) {
+    static String format(StringBuilder template, Map<String, Object> map) {
         StringWriter writer = new StringWriter();
         VelocityEngine velocity = VelocityFactory.getVelocityEngine();
         velocity.evaluate(
