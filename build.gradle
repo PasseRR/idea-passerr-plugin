@@ -1,35 +1,19 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.jetbrains.intellij.platform' version '2.5.0'
+}
+
 group 'com.github.passerr'
 version '3.0.4'
 
-buildscript {
-    repositories {
-        maven {
-            url 'https://maven.aliyun.com/repository/gradle-plugin'
-        }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.10.0"
-    }
-}
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: "org.jetbrains.intellij"
-
 repositories {
     maven {
-        url 'https://maven.aliyun.com/repository/public'
+        url 'https://maven.aliyun.com/repository/gradle-plugin'
     }
-    mavenCentral()
-}
-
-intellij {
-    updateSinceUntilBuild = false
-    version = '2024.1.1'
-    downloadSources = true
-    type = 'IU'
-    plugins = ['com.intellij.java', 'com.intellij.database']
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 tasks.withType(JavaCompile) {
@@ -54,5 +38,14 @@ dependencies {
     }
     implementation('com.lowagie:itext-rtf:2.1.7') {
         exclude group: 'bouncycastle'
+    }
+    testImplementation 'junit:junit:4.13.2'
+
+    intellijPlatform {
+        // intellijIdeaCommunity
+        // datagrip
+        intellijIdeaUltimate '2024.3.1'
+        bundledPlugin 'com.intellij.java'
+        bundledPlugin 'com.intellij.database'
     }
 }

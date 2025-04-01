@@ -4,7 +4,7 @@ import com.intellij.database.model.DasObject;
 import com.intellij.database.psi.DbElement;
 import com.intellij.database.util.DasUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
@@ -25,22 +25,20 @@ public class ExportDatabaseDocAction extends DumbAwareAction {
 
     @Override
     public void update(@NotNull AnActionEvent e) {
-        boolean enable = Optional.ofNullable(e.getData(LangDataKeys.PSI_ELEMENT_ARRAY))
-            .map(Arrays::stream)
-            .map(s ->
-                s.anyMatch(it ->
-                    it instanceof DbElement
-                        // 仅当选中schema有效
-                        && SCHEMA.equals(((DbElement) it).getTypeName())
+        e.getPresentation().setVisible(
+            Optional.ofNullable(e.getData(PlatformCoreDataKeys.PSI_ELEMENT_ARRAY))
+                .map(Arrays::stream)
+                .map(s ->
+                    // 仅当选中schema有效
+                    s.anyMatch(it -> it instanceof DbElement && SCHEMA.equals(((DbElement) it).getTypeName()))
                 )
-            )
-            .orElse(false);
-        e.getPresentation().setVisible(enable);
+                .orElse(false)
+        );
     }
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        PsiElement[] data = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+        PsiElement[] data = e.getData(PlatformCoreDataKeys.PSI_ELEMENT_ARRAY);
         if (Objects.isNull(data)) {
             return;
         }

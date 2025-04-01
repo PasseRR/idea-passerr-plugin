@@ -1,0 +1,30 @@
+<idea-plugin>
+    <!-- 默认工具命名切换、window工具、复制可执行sql -->
+    <actions>
+        <!-- 命名切换 -->
+        <action id="com.github.passerr.idea.plugins.naming.NamingAction"
+                class="com.github.passerr.idea.plugins.naming.NamingAction"
+                text="Toggle Naming"
+                description="Switches between CamelCase, camelCase, snake_case and SNAKE_CASE, kebab-case, KEBAB-CASE">
+            <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
+        </action>
+        <!-- 复制为可执行的sql -->
+        <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
+                class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
+                text="Copy As Executable Sql"
+                description="Convert log to executable sql">
+            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 常用工具组件 -->
+        <toolWindow id="PTools" anchor="right" icon="MyIcons.TOOL_ICON"
+                    factoryClass="com.github.passerr.idea.plugins.tool.TextHandlerToolWindow"/>
+        <!-- 命名切换配置持久化组件 -->
+        <applicationService serviceImplementation="com.github.passerr.idea.plugins.naming.NamingStateComponent"/>
+        <!-- 命名切换配置ui -->
+        <applicationConfigurable instance="com.github.passerr.idea.plugins.naming.NamingConfigurable"/>
+    </extensions>
+</idea-plugin>

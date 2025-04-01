@@ -15,9 +15,9 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocToken;
 import com.intellij.psi.util.PsiTypesUtil;
 import com.intellij.util.ui.TextTransferable;
+import groovy.json.StringEscapeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -244,20 +244,20 @@ public class CopyMethodApiDocAction extends BaseWebCopyAction {
                                             .orElseGet(f::getName)
                                     )
                                 );
-                    } else {
-                        // 基础类型
-                        return
-                            Stream.of(
-                                new Var(
-                                    Optional.ofNullable(PsiAnnotationMemberValueUtil.value(annotation, "value"))
-                                        .map(String::valueOf)
-                                        .orElseGet(it::getName),
-                                    type,
-                                    alias,
-                                    comments.getOrDefault(it.getName(), it.getName())
-                                )
-                            );
                     }
+
+                    // 基础类型
+                    return
+                        Stream.of(
+                            new Var(
+                                Optional.ofNullable(PsiAnnotationMemberValueUtil.value(annotation, "value"))
+                                    .map(String::valueOf)
+                                    .orElseGet(it::getName),
+                                type,
+                                alias,
+                                comments.getOrDefault(it.getName(), it.getName())
+                            )
+                        );
                 })
                 .collect(Collectors.toList());
     }

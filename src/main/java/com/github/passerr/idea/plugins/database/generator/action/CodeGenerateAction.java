@@ -2,7 +2,7 @@ package com.github.passerr.idea.plugins.database.generator.action;
 
 import com.intellij.database.psi.DbTable;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
 import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -26,7 +26,7 @@ public class CodeGenerateAction extends DumbAwareAction {
             return;
         }
 
-        PsiElement[] data = e.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
+        PsiElement[] data = e.getData(PlatformCoreDataKeys.PSI_ELEMENT_ARRAY);
         if (Objects.isNull(data)) {
             return;
         }
@@ -43,7 +43,7 @@ public class CodeGenerateAction extends DumbAwareAction {
     @Override
     public void update(@NotNull AnActionEvent e) {
         e.getPresentation().setVisible(
-            Optional.ofNullable(e.getData(LangDataKeys.PSI_ELEMENT_ARRAY))
+            Optional.ofNullable(e.getData(PlatformCoreDataKeys.PSI_ELEMENT_ARRAY))
                 .map(Arrays::stream)
                 .map(s -> s.anyMatch(it -> it instanceof DbTable))
                 .orElse(false)
