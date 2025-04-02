@@ -1,35 +1,19 @@
-group 'com.github.passerr'
-version '3.0.2'
-
-buildscript {
-    repositories {
-        maven {
-            url 'https://maven.aliyun.com/repository/gradle-plugin'
-        }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:1.0"
-    }
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.jetbrains.intellij.platform' version '2.5.0'
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: "org.jetbrains.intellij"
+group 'com.github.passerr'
+version '3.0.4'
 
 repositories {
     maven {
-        url 'https://maven.aliyun.com/repository/public'
+        url 'https://maven.aliyun.com/repository/gradle-plugin'
     }
-    mavenCentral()
-}
-
-intellij {
-    updateSinceUntilBuild = false
-//    version = '2020.2'
-    version = '2021.2'
-    type = 'IU'
-    plugins = ['java', 'DatabaseTools']
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 tasks.withType(JavaCompile) {
@@ -40,17 +24,13 @@ compileJava {
     options.compilerArgs << '-Xlint:deprecation'
 }
 
-runIde {
-    jbrVersion = "jbr-11_0_6b765.25"
-}
-
 buildPlugin {
     buildSearchableOptions.enabled = false
 }
 
 dependencies {
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     implementation group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '2.6.1'
     // rtf导出
     implementation('com.lowagie:itext:2.1.7') {
@@ -58,5 +38,22 @@ dependencies {
     }
     implementation('com.lowagie:itext-rtf:2.1.7') {
         exclude group: 'bouncycastle'
+    }
+    testImplementation 'junit:junit:4.13.2'
+
+    intellijPlatform {
+        // intellijIdeaCommunity
+        // datagrip
+        intellijIdeaUltimate '2024.3.1'
+        bundledPlugin 'com.intellij.java'
+        bundledPlugin 'com.intellij.database'
+    }
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = '241.*'
+        }
     }
 }

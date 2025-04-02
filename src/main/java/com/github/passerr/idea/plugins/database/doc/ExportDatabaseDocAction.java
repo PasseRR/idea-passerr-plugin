@@ -1,11 +1,13 @@
 package com.github.passerr.idea.plugins.database.doc;
 
 import com.intellij.database.model.DasObject;
+import com.intellij.database.model.ObjectKind;
 import com.intellij.database.psi.DbElement;
 import com.intellij.database.util.DasUtil;
-import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,22 +22,18 @@ import java.util.stream.Collectors;
  * @author xiehai
  * @date 2022/06/16 16:57
  */
-public class ExportDatabaseDocAction extends AnAction {
-    private static final String SCHEMA = "schema";
-
+public class ExportDatabaseDocAction extends DumbAwareAction {
     @Override
     public void update(@NotNull AnActionEvent e) {
-        boolean enable = Optional.ofNullable(e.getData(LangDataKeys.PSI_ELEMENT_ARRAY))
-            .map(Arrays::stream)
-            .map(s ->
-                s.anyMatch(it ->
-                    it instanceof DbElement
-                        // 仅当选中schema有效
-                        && SCHEMA.equals(((DbElement) it).getTypeName())
+        e.getPresentation().setEnabledAndVisible(
+            Optional.ofNullable(e.getData(LangDataKeys.PSI_ELEMENT_ARRAY))
+                .map(Arrays::stream)
+                .map(s ->
+                    // 仅当选中schema有效
+                    s.anyMatch(it -> it instanceof DbElement && ObjectKind.SCHEMA.equals(((DbElement) it).getKind()))
                 )
-            )
-            .orElse(false);
-        e.getPresentation().setVisible(enable);
+                .orElse(false)
+        );
     }
 
     @Override
@@ -48,11 +46,15 @@ public class ExportDatabaseDocAction extends AnAction {
         List<DasObject> schemas =
             Arrays.stream(data)
                 .map(DbElement.class::cast)
-                .filter(it -> SCHEMA.equals(it.getTypeName()))
                 .map(DasUtil::getSchemaObject)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
         new ExportSettingDialog(schemas).show();
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 }

@@ -1,14 +1,15 @@
 package com.github.passerr.idea.plugins.spring.web;
 
 import com.intellij.codeInsight.AnnotationUtil;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,23 +38,23 @@ abstract class BaseWebCopyAction extends AnAction {
 
     @Override
     public void update(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
-        PsiElement data = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
-        if (data instanceof PsiMethod) {
-            e.getPresentation()
-                .setEnabled(
-                    AnnotationUtil.findAnnotations((PsiModifierListOwner) data, MAPPINGS.keySet()).length > 0
-                );
-        } else {
-            // 方法上未找到注解
-            e.getPresentation().setEnabled(false);
-        }
+        PsiElement data = e.getData(CommonDataKeys.PSI_ELEMENT);
+
+        // 方法上存在注解
+        e.getPresentation().setEnabled(
+            data instanceof PsiMethod
+                && AnnotationUtil.findAnnotations((PsiModifierListOwner) data, MAPPINGS.keySet()).length > 0
+        );
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     protected static PsiMethod method(AnActionEvent e) {
-        DataContext dataContext = e.getDataContext();
         // 肯定是PsiMethod
-        return (PsiMethod) CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+        return (PsiMethod) e.getData(CommonDataKeys.PSI_ELEMENT);
     }
 
     protected static PsiAnnotation classAnnotation(PsiMethod method) {

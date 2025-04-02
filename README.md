@@ -74,3 +74,7 @@ api文档模版基于`velocity`具体自行官网，默认为markdown的模版
 [配置文档](./docs/generator.md)
 ![settings](./docs/images/database/settings.gif)
 ![generate](./docs/images/database/generate.gif)
+
+## 6. Java包名提示工具
+
+![tip](./docs/images/tip/tip.gif)

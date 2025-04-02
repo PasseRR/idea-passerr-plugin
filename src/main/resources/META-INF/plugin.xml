@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<idea-plugin require-restart="false" url="https://gitee.com/PasseRR/idea-passerr-plugin">
+<idea-plugin require-restart="false" url="https://gitee.com/PasseRR/idea-passerr-plugin"
+             xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>com.github.passerr.idea.plugins</id>
     <name>PasseRR Tools</name>
     <vendor email="xie__hai@sina.com" url="https://www.xiehai.zone">
@@ -17,6 +18,7 @@
         <li>Copy java method return type as <a href="https://json5.org/">json5</a></li>
         <li>export database tables as doc document</li>
         <li>mybatis&spring code generator</li>
+        <li>use doc comment in package-info.java as package location tip</li>
       </ul>
       <p>CN
       <ul>
@@ -28,11 +30,20 @@
         <li>复制java方法返回类型为json5</li>
         <li>导出数据库表为word文档</li>
         <li>mybatis代码生成器</li>
+        <li>使用package-info.java中的文档注释内容作为包名提示信息</li>
       </ul>
       ]]></description>
 
     <change-notes>
         <![CDATA[
+        <p>3.0.4:
+        <ul>
+            <li>fix EDT problems.</li>
+        </ul>
+        <p>3.0.3:
+        <ul>
+            <li>use doc comment in package-info.java as package location tip.</li>
+        </ul>
         <p>3.0.1:
         <ul>
             <li>fix database table/column upper and lower mixed naming bug</li>
@@ -54,7 +65,7 @@
             <li>compatibility settings handle</li>
           </ul>
         <p>2.0.1:
-          <ul> 
+          <ul>
             <li>version2.0.0 bug fix</li>
           </ul>
          <p>2.0.0:
@@ -66,40 +77,9 @@
       ]]>
     </change-notes>
 
-    <idea-version since-build="202.*"/>
+    <idea-version/>
 
+    <depends config-file="default.xml">com.intellij.modules.platform</depends>
     <depends config-file="java.xml" optional="true">com.intellij.modules.java</depends>
     <depends config-file="database.xml" optional="true">com.intellij.database</depends>
-
-    <application-components/>
-
-    <project-components/>
-
-    <actions>
-        <!-- 命名切换 -->
-        <action id="com.github.passerr.idea.plugins.naming.NamingAction"
-                class="com.github.passerr.idea.plugins.naming.NamingAction"
-                text="Toggle Naming"
-                description="Switches between CamelCase, camelCase, snake_case and SNAKE_CASE, kebab-case, KEBAB-CASE">
-            <add-to-group group-id="EditSmartGroup" anchor="after" relative-to-action="EditorToggleCase"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="shift alt u"/>
-        </action>
-        <!-- 复制为可执行的sql -->
-        <action id="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
-                class="com.github.passerr.idea.plugins.mybatis.MybatisLog2SqlAction"
-                text="Copy As Executable Sql"
-                description="Convert log to executable sql">
-            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="before" relative-to-action="ConsoleView.ClearAll"/>
-        </action>
-    </actions>
-
-    <extensions defaultExtensionNs="com.intellij">
-        <!-- 常用工具组件 -->
-        <toolWindow id="PTools" anchor="right" icon="MyIcons.TOOL_ICON"
-                    factoryClass="com.github.passerr.idea.plugins.tool.TextHandlerToolWindow"/>
-        <!-- 命名切换配置持久化组件 -->
-        <applicationService serviceImplementation="com.github.passerr.idea.plugins.naming.NamingStateComponent"/>
-        <!-- 命名切换配置ui -->
-        <applicationConfigurable instance="com.github.passerr.idea.plugins.naming.NamingConfigurable"/>
-    </extensions>
 </idea-plugin>

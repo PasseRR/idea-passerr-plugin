@@ -5,7 +5,7 @@ import com.github.passerr.idea.plugins.base.utils.GsonUtil;
 import com.github.passerr.idea.plugins.base.utils.NotificationUtil;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

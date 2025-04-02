@@ -2,7 +2,7 @@ package com.github.passerr.idea.plugins.tool;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -74,7 +74,7 @@ public class TextFormatView extends JRootPane {
      */
     private void doInitInputTextArea() {
         this.inputTextArea.getInputMap(WHEN_FOCUSED)
-            .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK), "format");
+            .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), "format");
         this.inputTextArea.getActionMap()
             .put(
                 "format",

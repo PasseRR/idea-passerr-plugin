@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 类基础信息
@@ -38,7 +38,7 @@ class ClassInfo {
         if (StringUtils.isEmpty(this.packageName)) {
             return null;
         }
-        
+
         return String.format("%s.%s", this.packageName, this.className);
     }
 

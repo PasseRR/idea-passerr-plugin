@@ -13,7 +13,7 @@ import com.intellij.ui.JBColor;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextArea;
@@ -61,7 +61,7 @@ enum ConvertType {
                     input.setToolTipSupplier((RTextArea rt, MouseEvent me) -> {
                         int offset = 0;
                         try {
-                            offset = input.getLineOfOffset(input.viewToModel(me.getPoint()));
+                            offset = input.getLineOfOffset(input.viewToModel2D(me.getPoint()));
                         } catch (BadLocationException ignore) {
                         }
                         return offset == lineIndex ? msg : null;
@@ -91,7 +91,7 @@ enum ConvertType {
                 input.setToolTipSupplier((RTextArea rt, MouseEvent me) -> {
                     int offset = 0;
                     try {
-                        offset = input.getLineOfOffset(input.viewToModel(me.getPoint()));
+                        offset = input.getLineOfOffset(input.viewToModel2D(me.getPoint()));
                     } catch (BadLocationException ignore) {
                     }
                     return offset == 0 ? "the log you input which without \"Preparing:\" or \"Parameters:\"" : null;

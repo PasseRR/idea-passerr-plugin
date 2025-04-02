@@ -2,7 +2,7 @@ package com.github.passerr.idea.plugins.database.generator.config.po;
 
 import com.github.passerr.idea.plugins.base.utils.GsonUtil;
 import com.github.passerr.idea.plugins.base.utils.ResourceUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 import java.util.function.Consumer;

@@ -137,7 +137,7 @@ class FieldsHelper {
         TYPE("类型", true, 1 << 2, false) {
             @Override
             public String value(DasColumn dasColumn) {
-                return dasColumn.getDataType().getSpecification();
+                return dasColumn.getDasType().toDataType().getSpecification();
             }
         },
         PRIMARY("是否主键", false, 1 << 3, true) {

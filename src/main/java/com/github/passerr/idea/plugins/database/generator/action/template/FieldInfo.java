@@ -54,7 +54,7 @@ public class FieldInfo extends ClassInfo {
             new FieldInfo().setColumnName(column.getName())
                 .setColumnComment(column.getComment())
                 .setPrimaryKey(DasUtil.isPrimary(column))
-                .setJdbcType(TemplateUtil.convertToJdbcType(column.getDataType().typeName, databaseType).name());
+                .setJdbcType(TemplateUtil.convertToJdbcType(column.getDasType().toDataType().typeName, databaseType).name());
 
         Pair<String, String> pair = TemplateUtil.parseClass(types.get(fieldInfo.getJdbcType()));
         if (!pair.getFirst().startsWith("java.lang")) {
