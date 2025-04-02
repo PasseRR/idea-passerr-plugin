@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<idea-plugin require-restart="false" url="https://gitee.com/PasseRR/idea-passerr-plugin">
+<idea-plugin require-restart="false" url="https://gitee.com/PasseRR/idea-passerr-plugin"
+             xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>com.github.passerr.idea.plugins</id>
     <name>PasseRR Tools</name>
     <vendor email="xie__hai@sina.com" url="https://www.xiehai.zone">
@@ -35,6 +36,10 @@
 
     <change-notes>
         <![CDATA[
+        <p>3.0.4:
+        <ul>
+            <li>fix EDT problems.</li>
+        </ul>
         <p>3.0.3:
         <ul>
             <li>use doc comment in package-info.java as package location tip.</li>
@@ -72,7 +77,7 @@
       ]]>
     </change-notes>
 
-    <idea-version since-build="241.*"/>
+    <idea-version/>
 
     <depends config-file="default.xml">com.intellij.modules.platform</depends>
     <depends config-file="java.xml" optional="true">com.intellij.modules.java</depends>

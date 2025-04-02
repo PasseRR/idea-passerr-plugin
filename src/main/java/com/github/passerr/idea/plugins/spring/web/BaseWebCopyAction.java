@@ -1,13 +1,15 @@
 package com.github.passerr.idea.plugins.spring.web;
 
 import com.intellij.codeInsight.AnnotationUtil;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.DumbAwareAction;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,7 @@ import java.util.Optional;
  * @date 2021/06/30 18:57
  * @Copyright(c) tellyes tech. inc. co.,ltd
  */
-abstract class BaseWebCopyAction extends DumbAwareAction {
+abstract class BaseWebCopyAction extends AnAction {
     protected static final String REQUEST_MAPPING = "org.springframework.web.bind.annotation.RequestMapping";
     protected static final Map<String, String> MAPPINGS = new HashMap<>();
 
@@ -43,6 +45,11 @@ abstract class BaseWebCopyAction extends DumbAwareAction {
             data instanceof PsiMethod
                 && AnnotationUtil.findAnnotations((PsiModifierListOwner) data, MAPPINGS.keySet()).length > 0
         );
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
     }
 
     protected static PsiMethod method(AnActionEvent e) {

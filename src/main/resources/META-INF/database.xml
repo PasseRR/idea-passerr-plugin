@@ -1,5 +1,4 @@
 <idea-plugin>
-    <depends>com.intellij.database</depends>
     <actions>
         <!-- 数据库设计文档导出 -->
         <action id="com.github.passerr.idea.plugins.database.doc.ExportDatabaseDocAction"
