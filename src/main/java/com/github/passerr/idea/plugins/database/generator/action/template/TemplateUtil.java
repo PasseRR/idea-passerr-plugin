@@ -69,7 +69,7 @@ interface TemplateUtil {
                 return JDBCType.DOUBLE;
             } else if (JDBCType.CHAR.name().equals(fixed)) {
                 return JDBCType.CHAR;
-            } else if (fixed.equals("INT")) {
+            } else if ("INT".equals(fixed) || JDBCType.INTEGER.name().equals(fixed)) {
                 return JDBCType.INTEGER;
             } else if (fixed.contains(JDBCType.DECIMAL.name())) {
                 return JDBCType.DECIMAL;
@@ -86,9 +86,11 @@ interface TemplateUtil {
             } else {
                 return JDBCType.VARCHAR;
             }
-        } else {
+        } else if(fixed.contains(JDBCType.REAL.name())){
             return JDBCType.REAL;
         }
+
+        return JDBCType.OTHER;
     }
 
     /**
