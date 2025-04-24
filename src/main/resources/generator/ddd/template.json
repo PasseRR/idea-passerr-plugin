@@ -1,0 +1,18 @@
+{
+  "useServiceImpl": true,
+  "entity": "../entity.vm",
+  "mapper": "../mapper.vm",
+  "mapperXml": "../mapper-xml.vm",
+  "service": "service.vm",
+  "serviceImpl": "domain-service.vm",
+  "controller": "../controller.vm",
+  "settings": {
+    "controllerPackage": "api.controller",
+    "servicePackage": "application.service",
+    "serviceImplSuffix": "DomainService",
+    "serviceImplPackage": "domain.service",
+    "entityPackage": "infrastructure.entity",
+    "mapperPackage": "infrastructure.mapper",
+    "needMapperXml": false
+  }
+}

@@ -1,0 +1,56 @@
+package ${service.packageName};
+
+import ${entity.fullClassName};
+import ${serviceImpl.fullClassName};
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+/**
+ * ${entity.desc}服务
+ * @author $author
+ * @date $date
+ */
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Service
+public class ${service.className} {
+    ${serviceImpl.className} ${serviceImpl.fieldName};
+
+    /**
+     * ${entity.desc}列表查询
+     * @return {@link List}
+     */
+    public List<${entity.className}> list() {
+        return this.${serviceImpl.fieldName}.list();
+    }
+
+    /**
+     * ${entity.desc}添加
+     * @param ${entity.fieldName} {@link ${entity.className}}
+     * @return true/false
+     */
+    public boolean save(${entity.className} ${entity.fieldName}) {
+        return this.${serviceImpl.fieldName}.save(${entity.fieldName});
+    }
+
+    /**
+     * ${entity.desc}修改
+     * @param ${entity.fieldName} {@link ${entity.className}}
+     * @return true/false
+     */
+    public boolean updateById(${entity.className} ${entity.fieldName}) {
+        return this.${serviceImpl.fieldName}.updateById(${entity.fieldName});
+    }
+
+    /**
+     * ${entity.desc}删除
+     * @param ${entity.pk.fieldName} id
+     * @return true/false
+     */
+    public boolean removeById(${entity.pk.className} ${entity.pk.fieldName}) {
+        return this.${serviceImpl.fieldName}.removeById(${entity.pk.fieldName});
+    }
+}
