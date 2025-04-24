@@ -54,9 +54,12 @@ public class FieldInfo extends ClassInfo {
             new FieldInfo().setColumnName(column.getName())
                 .setColumnComment(column.getComment())
                 .setPrimaryKey(DasUtil.isPrimary(column))
-                .setJdbcType(TemplateUtil.convertToJdbcType(column.getDasType().toDataType().typeName, databaseType).name());
+                .setJdbcType(
+                    TemplateUtil.convertToJdbcType(column.getDasType().toDataType().typeName, databaseType).name()
+                );
 
-        Pair<String, String> pair = TemplateUtil.parseClass(types.get(fieldInfo.getJdbcType()));
+        Pair<String, String> pair =
+            TemplateUtil.parseClass(types.getOrDefault(fieldInfo.getJdbcType(), String.class.getName()));
         if (!pair.getFirst().startsWith("java.lang")) {
             fieldInfo.setPackageName(pair.getFirst());
         }
