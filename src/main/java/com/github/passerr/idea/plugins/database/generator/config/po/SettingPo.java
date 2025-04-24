@@ -89,7 +89,7 @@ public class SettingPo {
     /**
      * serviceImpl的后缀
      */
-    String serviceImplSuffix = "Impl";
+    String serviceImplSuffix = "ServiceImpl";
 
     /**
      * 路径加上包路径后的代码目录路径

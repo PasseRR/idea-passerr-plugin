@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 模板配置
@@ -26,6 +25,7 @@ public class TemplatesPo {
         TemplatesPo po = new TemplatesPo();
         po.addTemplate(TemplatePo.serviceTemplate());
         po.addTemplate(TemplatePo.serviceImplTemplate());
+        po.addTemplate(TemplatePo.dddTemplate());
         return po;
     }
 
@@ -36,7 +36,7 @@ public class TemplatesPo {
 
         this.templates.add(GsonUtil.deepCopy(templatePo, TemplatePo.class));
     }
-    
+
     public TemplatesPo deepCopy() {
         return GsonUtil.deepCopy(this, TemplatesPo.class);
     }
@@ -44,9 +44,10 @@ public class TemplatesPo {
     public void from(TemplatesPo po) {
         this.templates.clear();
         this.templates.addAll(
-            po.getTemplates().stream()
+            po.getTemplates()
+                .stream()
                 .map(it -> GsonUtil.deepCopy(it, TemplatePo.class))
-                .collect(Collectors.toList())
+                .toList()
         );
     }
 }

@@ -18,6 +18,7 @@ public class TemplatePo {
     DetailPo detail = new DetailPo();
     private static final String SERVICE_TEMPLATE = "/generator/service/template.json";
     private static final String SERVICE_IMPL_TEMPLATE = "/generator/service-impl/template.json";
+    private static final String DDD_TEMPLATE = "/generator/ddd/template.json";
 
     static TemplatePo serviceTemplate() {
         TemplatePo po = new TemplatePo();
@@ -32,6 +33,14 @@ public class TemplatePo {
         po.setName("Mybatis Plus Service With Impl");
         po.setUrl(PluginUtil.gitRawUrl(DetailUtil.fullPath(SERVICE_IMPL_TEMPLATE)));
         po.setDetail(DetailUtil.fromLocal(SERVICE_IMPL_TEMPLATE));
+        return po;
+    }
+
+    static TemplatePo dddTemplate() {
+        TemplatePo po = new TemplatePo();
+        po.setName("Mybatis Plus Service With DDD");
+        po.setUrl(PluginUtil.gitRawUrl(DetailUtil.fullPath(DDD_TEMPLATE)));
+        po.setDetail(DetailUtil.fromLocal(DDD_TEMPLATE));
         return po;
     }
 }

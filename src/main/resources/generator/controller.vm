@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 ${controller.imports}
 
 /**
@@ -27,7 +28,13 @@ ${controller.imports}
 @Api(tags = "${entity.desc}管理")
 public class ${controller.className} {
     ${service.className} ${service.fieldName};
-    
+
+    @GetMapping("/list")
+    @ApiOperation("${entity.desc}列表查询")
+    public RestResponse<List<${entity.className}>> list() {
+        return RestResponse.ok(this.${service.fieldName}.list());
+    }
+
     @PostMapping
     @ApiOperation("${entity.desc}添加")
     public Boolean add(@RequestBody ${entity.className} ${entity.fieldName}) {

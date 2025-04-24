@@ -177,7 +177,7 @@ public enum Templates {
             ServiceImplInfo serviceImpl = templateInfo.getServiceImpl();
             serviceImpl.setPackageName(this.getPackage(templatePo));
             serviceImpl.setClassName(
-                templateInfo.getService().getClassName() +
+                templateInfo.getEntity().getBaseName() +
                     Optional.ofNullable(templatePo.getDetail().getSettings())
                         .map(SettingPo::getServiceImplSuffix)
                         .map(String::trim)
