@@ -65,7 +65,9 @@ api文档模版基于`velocity`具体自行官网，默认为markdown的模版
 
 ## 5.数据库工具
 
-### 5.1 导出数据库为word文档(导出为rtf格式，docx格式需要另存)
+### 5.1 导出数据库为word文档
+
+导出为rtf格式，docx格式需要另存
 
 ![doc](./docs/images/database/doc.gif)
 
